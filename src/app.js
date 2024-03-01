@@ -13942,34 +13942,82 @@ require.r = e => {
 
     function Ms(el, tooltip, options) {
         if (tooltip) {
-            var r = (options = options || {}).placement, i = void 0 === r ? "bottom" : r, a = options.classes,
-                o = void 0 === a ? [] : a, s = options.gap, l = void 0 === s ? 8 : s, c = options.horizontalParent,
-                h = options.delay,
-                u = void 0 === h ? 0 : h;
-            if (u > 0 && (ls || Date.now() > gs + 100)) return us(), options.delay = 0, void (hs = window.setTimeout((function () {
-                return Ms(el, tooltip, options)
-            }), u));
+            options = options || {}
+            let _placement = options.placement,
+                placement = void 0 === _placement ? "bottom" : _placement,
+                _classes = options.classes,
+                classes = void 0 === _classes ? [] : _classes,
+                _gap = options.gap,
+                gap = void 0 === _gap ? 8 : _gap,
+                horizontalParent = options.horizontalParent,
+                _delay = options.delay,
+                delay = void 0 === _delay ? 0 : _delay;
+            if (delay > 0 && (ls || Date.now() > gs + 100)) {
+                us()
+                options.delay = 0
+                hs = window.setTimeout(function () {
+                    return Ms(el, tooltip, options)
+                }, delay)
+                return
+            }
             if (el.isShown()) {
-                var f = el.doc, p = el.getBoundingClientRect(), d = p.top, m = p.left, v = p.width, g = p.height;
-                if (c) {
-                    var M = c.getBoundingClientRect();
-                    m = M.left, v = M.width
+                let doc = el.doc,
+                    clientRect = el.getBoundingClientRect(),
+                    top = clientRect.top,
+                    left = clientRect.left,
+                    width = clientRect.width,
+                    height = clientRect.height;
+                if (horizontalParent) {
+                    let M = horizontalParent.getBoundingClientRect();
+                    left = M.left
+                    width = M.width
                 }
-                ls && cs === el ? ls.setText(tooltip) : (onMouseUp(), ls = createDiv({cls: "tooltip", text: tooltip}));
-                var y = ls.createDiv("tooltip-arrow"), b = 0, w = 0;
-                "bottom" === i ? (b = d + g + l, w = m + v / 2) : "right" === i ? (b = d + g / 2, w = m + v + l, o.push("mod-right")) : "left" === i ? (b = d + g / 2, w = m - l, o.push("mod-left")) : "top" === i && (b = d - l - 5, w = m + v / 2, o.push("mod-top")), ls.addClasses(o), ls.style.top = "0px", ls.style.left = "0px", ls.style.width = "", ls.style.height = "", ls.parentNode || f.body.appendChild(ls);
-                var k = ls.getBoundingClientRect(), x = ["bottom", "top"].contains(i) ? k.width / 2 : k.width,
-                    C = "right" === i || "left" === i ? k.height / 2 : k.height;
-                "left" === i ? w -= x : "top" === i && (b -= C);
-                var A = f.body.clientHeight, L = f.body.clientWidth;
-                if (b + C > A && (b = A - C - l), b = Math.max(b, l), "top" === i || "bottom" === i) {
-                    if (w + x > L) w -= E = w + x + l - L, y.style.left = "initial", y.style.right = x - E - l / 2 + "px"; else if (w - l - x < 0) {
+                ls && cs === el
+                    ? ls.setText(tooltip)
+                    : (onMouseUp(), ls = createDiv({cls: "tooltip", text: tooltip}));
+                let arrowEl = ls.createDiv("tooltip-arrow"),
+                    b = 0,
+                    w = 0;
+                "bottom" === placement
+                    ? (b = top + height + gap, w = left + width / 2)
+                    : "right" === placement
+                        ? (b = top + height / 2, w = left + width + gap, classes.push("mod-right"))
+                        : "left" === placement
+                            ? (b = top + height / 2, w = left - gap, classes.push("mod-left"))
+                            : "top" === placement && (b = top - gap - 5, w = left + width / 2, classes.push("mod-top"))
+                ls.addClasses(classes)
+                ls.style.top = "0px"
+                ls.style.left = "0px"
+                ls.style.width = ""
+                ls.style.height = ""
+                ls.parentNode || doc.body.appendChild(ls)
+
+                let k = ls.getBoundingClientRect(),
+                    x = ["bottom", "top"].contains(placement) ? k.width / 2 : k.width,
+                    C = "right" === placement || "left" === placement ? k.height / 2 : k.height;
+                "left" === placement ? w -= x : "top" === placement && (b -= C);
+                let A = doc.body.clientHeight,
+                    L = doc.body.clientWidth;
+                b + C > A && (b = A - C - gap)
+                b = Math.max(b, gap)
+                if ("top" === placement || "bottom" === placement) {
+                    if (w + x > L) {
+                        w -= E = w + x + gap - L
+                        arrowEl.style.left = "initial"
+                        arrowEl.style.right = x - E - gap / 2 + "px";
+                    } else if (w - gap - x < 0) {
                         var E;
-                        w += E = -(w - l - x), y.style.right = "initial", y.style.left = x - E - l / 2 + "px"
+                        w += E = -(w - gap - x)
+                        arrowEl.style.right = "initial"
+                        arrowEl.style.left = x - E - gap / 2 + "px"
                     }
-                    w = Math.max(w, l)
+                    w = Math.max(w, gap)
                 }
-                ls.style.top = b + "px", ls.style.left = w + "px", ls.style.width = k.width + "px", ls.style.height = k.height + "px", cs = el
+                ls.style.top = b + "px"
+                ls.style.left = w + "px"
+                ls.style.width = k.width + "px"
+                ls.style.height = k.height + "px"
+                cs = el
             }
         }
     }
