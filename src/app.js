@@ -13170,72 +13170,7 @@ require.r = e => {
         return "md" === bo(t) ? Mo(t) : t
     }
 
-    const SiteCache = function () {
-        function e() {
-            this.cache = {}, this.uniqueFiles = new UniqueFileLookup, this.aliases = {}, this.permalinks = {}
-        }
 
-        e.prototype.load = function (e) {
-            return a(this, void 0, void 0, (function () {
-                var t, n, r, i, a, s, l, c, h;
-                return o(this, (function (o) {
-                    for (n in this.cache = e, t = this.uniqueFiles = new UniqueFileLookup, e) if (e.hasOwnProperty(n) && (t.add(vo(n).toLowerCase(), n), (r = e[n]) && (no(r), i = r.frontmatter))) {
-                        if (a = Rn(i)) for (s = 0, l = a; s < l.length; s++) c = l[s], this.aliases[c.toLowerCase()] = n;
-                        (h = i.permalink) && "string" == typeof h && (h.startsWith("/") && (h = h.substring(1)), this.permalinks[h] = n)
-                    }
-                    return [2]
-                }))
-            }))
-        }
-        e.prototype.getCache = function (e) {
-            var t = this.cache;
-            return t.hasOwnProperty(e) ? t[e] : null
-        }
-        e.prototype.has = function (e) {
-            return this.cache.hasOwnProperty(e)
-        }
-        e.prototype.getLinktextDest = function (e, t) {
-            var n = getLinkpath(e);
-            return this.getLinkpathDest(n, t)
-        }
-        e.prototype.getLinkpathDest = function (e, t) {
-            if ("" === e && t && this.cache.hasOwnProperty(t)) return t;
-            var n = this._getLinkpathDest(e, t);
-            if (n.length > 0) return n[0];
-            if ((n = this._getLinkpathDest(e + ".md", t)).length > 0) return n[0];
-            var r = this.aliases, i = e.toLowerCase();
-            if (r.hasOwnProperty(i)) return r[i];
-            var a = vo(e);
-            return r.hasOwnProperty(a) ? r[a] : null
-        }
-        e.prototype._getLinkpathDest = function (e, t) {
-            var n = e.toLowerCase(), r = vo(n), i = this.uniqueFiles.get(r);
-            if (!i) return [];
-            var a = go(t).toLowerCase();
-            if (n.startsWith("./") || n.startsWith("../")) {
-                if (n.startsWith("./../") && (n = n.substr(2)), n.startsWith("./")) "" !== a && (a += "/"), n = a + n.substring(2); else {
-                    for (; n.startsWith("../");) n = n.substr(3), a = go(a);
-                    "" !== a && (a += "/"), n = a + n
-                }
-                for (var o = 0, s = i; o < s.length; o++) {
-                    if ((m = (d = s[o]).toLowerCase()) === n) return [d]
-                }
-            }
-            for (var l = 0, c = i; l < c.length; l++) {
-                if ((m = (d = c[l]).toLowerCase()) === n) return [d]
-            }
-            for (var h = [], u = [], f = 0, p = i; f < p.length; f++) {
-                var d, m;
-                (m = (d = p[f]).toLowerCase()).endsWith(n) && (m.startsWith(a) ? h.push(d) : u.push(d))
-            }
-            return h.sort((function (e, t) {
-                return e.length - t.length
-            })), u.sort((function (e, t) {
-                return e.length - t.length
-            })), h.concat(u)
-        }
-        return e
-    }()
     let K_indexFile = "indexFile",
         K_siteName = "siteName",
         K_logo = "logo",
@@ -14773,33 +14708,55 @@ require.r = e => {
     }())
 
     const Modal = function () {
-        function e(e) {
-            this.publish = e, this.scope = new Scope, this.scope.register([], "Escape", this.close.bind(this)), this.containerEl = createDiv("modal-container");
-            var t = this.containerEl.createDiv("modal-bg");
-            this.modalEl = this.containerEl.createDiv("modal");
-            var n = this.closeButtonEl = this.modalEl.createDiv("modal-close-button");
-            this.titleEl = this.modalEl.createDiv("modal-title"), this.contentEl = this.modalEl.createDiv("modal-content"), n.addEventListener("click", this.close.bind(this)), t.addEventListener("click", this.close.bind(this))
+        function e(app) {
+            this.publish = app
+            this.scope = new Scope()
+            this.scope.register([], "Escape", this.close.bind(this))
+            this.containerEl = createDiv("modal-container")
+            let bgEl = this.containerEl.createDiv("modal-bg")
+            this.modalEl = this.containerEl.createDiv("modal")
+            let closeButtonEl = this.closeButtonEl = this.modalEl.createDiv("modal-close-button")
+            this.titleEl = this.modalEl.createDiv("modal-title")
+            this.contentEl = this.modalEl.createDiv("modal-content")
+            closeButtonEl.addEventListener("click", this.close.bind(this))
+            bgEl.addEventListener("click", this.close.bind(this))
         }
 
-        return e.prototype.open = function () {
-            this.publish.keymap.pushScope(this.scope), document.body.appendChild(this.containerEl), this.onOpen()
-        }, e.prototype.close = function () {
-            this.publish.keymap.popScope(this.scope), this.containerEl.remove(), this.onClose()
-        }, e.prototype.onOpen = function () {
-        }, e.prototype.onClose = function () {
-        }, e
+        e.prototype.open = function () {
+            this.publish.keymap.pushScope(this.scope)
+            document.body.appendChild(this.containerEl)
+            this.onOpen()
+        }
+        e.prototype.close = function () {
+            this.publish.keymap.popScope(this.scope)
+            this.containerEl.remove()
+            this.onClose()
+        }
+        e.prototype.onOpen = function () {
+        }
+        e.prototype.onClose = function () {
+        }
+        return e
     }()
-    const Gs = function (Modal) {
-        function t(t, n) {
-            var r = Modal.call(this, t) || this;
-            return r.done = !1, r.cb = n, r.modalEl.addClass("mod-password-required"), r.titleEl.setText("Protected site"), r.closeButtonEl.hide(), r
+    const ProtectedSiteModal = function (Modal) {
+        function t(app, cb) {
+            let _this = Modal.call(this, app) || this
+            _this.done = false
+            _this.cb = cb
+            _this.modalEl.addClass("mod-password-required")
+            _this.titleEl.setText("Protected site")
+            _this.closeButtonEl.hide()
+            return _this
         }
 
-        return extend(t, Modal), t.prototype.close = function () {
+        extend(t, Modal)
+        t.prototype.close = function () {
             this.done && Modal.prototype.close.call(this)
-        }, t.prototype.onOpen = function () {
+        }
+        t.prototype.onOpen = function () {
             this.showPasswordRequired()
-        }, t.prototype.showPasswordRequired = function () {
+        }
+        t.prototype.showPasswordRequired = function () {
             var e = this, t = this.contentEl;
             t.empty(), this.passwordIncorrectMsg = t.createDiv("message-container", (function (e) {
                 e.createDiv({cls: "message mod-error", text: "Password is incorrect, please try again."}), e.hide()
@@ -14818,7 +14775,8 @@ require.r = e => {
                     cls: "mod-cta"
                 }).addEventListener("click", e.tryUnlockSite.bind(e))
             }))
-        }, t.prototype.tryUnlockSite = function () {
+        }
+        t.prototype.tryUnlockSite = function () {
             return a(this, void 0, void 0, (function () {
                 var e, t, n, r;
                 return o(this, (function (i) {
@@ -14845,7 +14803,8 @@ require.r = e => {
                     }
                 }))
             }))
-        }, t.prototype.showPasswordCorrect = function () {
+        }
+        t.prototype.showPasswordCorrect = function () {
             var e = this, t = this.contentEl;
             t.empty(), this.titleEl.setText("Site unlocked"), t.createDiv("message-container", (function (e) {
                 e.createDiv({cls: "message mod-success", text: "Thank you, the password is correct."})
@@ -14857,15 +14816,19 @@ require.r = e => {
                     e.close()
                 }))
             }))
-        }, t
+        }
+        return t
     }(Modal)
-    const Ks = function (Modal) {
-        function t(t, n) {
-            var r = Modal.call(this, t) || this;
-            return r.tag = n, r.titleEl.createSpan({text: "Pages with tag " + n}), r
+    const TagModal = function (Modal) {
+        function t(app, tag) {
+            let _this = Modal.call(this, app) || this
+            _this.tag = tag
+            _this.titleEl.createSpan({text: "Pages with tag " + tag})
+            return _this
         }
 
-        return extend(t, Modal), t.prototype.onOpen = function () {
+        extend(t, Modal)
+        t.prototype.onOpen = function () {
             var e = this, t = this.publish, n = this.tag, r = t.site, i = r.cache.cache,
                 a = new RegExp("^" + yr(n) + "(\\/|$)", "i"), o = [];
             for (var s in i) if (i.hasOwnProperty(s)) {
@@ -14892,7 +14855,8 @@ require.r = e => {
             }, d = 0, m = o; d < m.length; d++) {
                 p(m[d])
             } else f.createDiv({cls: "files-with-tag-item", text: "There are no pages that contain this tag."})
-        }, t
+        }
+        return t
     }(Modal)
 
     const Us = {}
@@ -15238,8 +15202,8 @@ require.r = e => {
                 }), 100))
             }
         }
-        t.prototype.onTagClick = function (e, t, n) {
-            new Ks(this.publish, n).open()
+        t.prototype.onTagClick = function (e, t, tag) {
+            new TagModal(this.publish, tag).open()
         }
         t.prototype.onQueryClick = function (e, t, n) {
         }
@@ -15672,12 +15636,12 @@ require.r = e => {
     let publish_js = "publish.js"
     let favicon_re = /^favicon-([0-9]+)(x[0-9]+)?.png$/i;
 
-    function Hl(e) {
-        return !e || e.getAllResponseHeaders().toLowerCase().contains("obs-status") && null !== e.getResponseHeader("obs-status")
+    function Hl(req) {
+        return !req || req.getAllResponseHeaders().toLowerCase().contains("obs-status") && null !== req.getResponseHeader("obs-status")
     }
 
-    function Tl(e) {
-        return !e || e.headers.has("obs-status") && null !== e.headers.get("obs-status")
+    function Tl(resp) {
+        return !resp || resp.headers.has("obs-status") && null !== resp.headers.get("obs-status")
     }
 
     function detachPreloadEls() {
@@ -15695,6 +15659,330 @@ require.r = e => {
             }
         }
     }
+
+
+    const SiteCache = function () {
+        function e() {
+            this.cache = {}
+            this.uniqueFiles = new UniqueFileLookup()
+            this.aliases = {}
+            this.permalinks = {}
+        }
+
+        e.prototype.load = function (cache) {
+            return a(this, void 0, void 0, (function () {
+                let uniqueFiles, key, r, frontmatter, a, c, permalink;
+                return o(this, (function (o) {
+                    this.cache = cache
+                    uniqueFiles = this.uniqueFiles = new UniqueFileLookup()
+                    for (key in cache) {
+                        if (cache.hasOwnProperty(key)) {
+                            uniqueFiles.add(vo(key).toLowerCase(), key)
+                            r = cache[key]
+                            if (r) {
+                                no(r)
+                                frontmatter = r.frontmatter
+                                if (frontmatter) {
+                                    a = Rn(frontmatter)
+                                    if (a) {
+                                        for (let s = 0, l = a; s < l.length; s++) {
+                                            c = l[s]
+                                            this.aliases[c.toLowerCase()] = key
+                                        }
+                                    }
+                                    permalink = frontmatter.permalink
+                                    if (permalink && "string" == typeof permalink) {
+                                        if (permalink.startsWith("/")) {
+                                            permalink = permalink.substring(1)
+                                        }
+                                        this.permalinks[permalink] = key
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return [2]
+                }))
+            }))
+        }
+        e.prototype.getCache = function (e) {
+            var t = this.cache;
+            return t.hasOwnProperty(e) ? t[e] : null
+        }
+        e.prototype.has = function (e) {
+            return this.cache.hasOwnProperty(e)
+        }
+        e.prototype.getLinktextDest = function (e, t) {
+            var n = getLinkpath(e);
+            return this.getLinkpathDest(n, t)
+        }
+        e.prototype.getLinkpathDest = function (e, t) {
+            if ("" === e && t && this.cache.hasOwnProperty(t)) return t;
+            var n = this._getLinkpathDest(e, t);
+            if (n.length > 0) return n[0];
+            if ((n = this._getLinkpathDest(e + ".md", t)).length > 0) return n[0];
+            var r = this.aliases, i = e.toLowerCase();
+            if (r.hasOwnProperty(i)) return r[i];
+            var a = vo(e);
+            return r.hasOwnProperty(a) ? r[a] : null
+        }
+        e.prototype._getLinkpathDest = function (e, t) {
+            var n = e.toLowerCase(), r = vo(n), i = this.uniqueFiles.get(r);
+            if (!i) return [];
+            var a = go(t).toLowerCase();
+            if (n.startsWith("./") || n.startsWith("../")) {
+                if (n.startsWith("./../") && (n = n.substr(2)), n.startsWith("./")) "" !== a && (a += "/"), n = a + n.substring(2); else {
+                    for (; n.startsWith("../");) n = n.substr(3), a = go(a);
+                    "" !== a && (a += "/"), n = a + n
+                }
+                for (var o = 0, s = i; o < s.length; o++) {
+                    if ((m = (d = s[o]).toLowerCase()) === n) return [d]
+                }
+            }
+            for (var l = 0, c = i; l < c.length; l++) {
+                if ((m = (d = c[l]).toLowerCase()) === n) return [d]
+            }
+            for (var h = [], u = [], f = 0, p = i; f < p.length; f++) {
+                var d, m;
+                (m = (d = p[f]).toLowerCase()).endsWith(n) && (m.startsWith(a) ? h.push(d) : u.push(d))
+            }
+            return h.sort((function (e, t) {
+                return e.length - t.length
+            })), u.sort((function (e, t) {
+                return e.length - t.length
+            })), h.concat(u)
+        }
+        return e
+    }()
+    const Site = function () {
+        function e(app, siteInfo) {
+            let host = siteInfo.host
+
+            this.pwts = 0
+            this.pwsig = ""
+            this.options = {}
+            this.publish = app
+            this.id = siteInfo.uid
+            this.host = host.startsWith("127.0.0.1") || host.startsWith("localhost") ? "http://" + host : "https://" + host
+            this.status = siteInfo.status
+            this.slug = siteInfo.slug
+            this.customurl = siteInfo.customurl
+            this.hpw = localStorage[siteInfo.uid]
+            this.cache = new SiteCache()
+        }
+
+        // 加载网站缓存数据，并通过 SiteCache 实例保存在 this.cache 中
+        // https://publish-01.obsidian.md/cache/3ad46614835acbee6d56ec829aa8db5d
+        e.prototype.loadCache = function () {
+            return a(this, void 0, void 0, (function () {
+                let preloadCache, cacheResp, _siteCache, cacheLoadFn, reqConfig, resp;
+                return o(this, (function (o) {
+                    switch (o.label) {
+                        case 0:
+                            preloadCache = window.preloadCache
+                            if (!preloadCache) {
+                                return [3, 7];
+                            }
+                            o.label = 1;
+                        case 1:
+                            o.trys.push([1, 6, , 7])
+                            delete window.preloadCache
+                            return [4, preloadCache];
+                        case 2:
+                            cacheResp = o.sent()
+                            if (cacheResp.ok && Tl(cacheResp)) {
+                                _siteCache = this.cache
+                                cacheLoadFn = _siteCache.load
+                                return [4, cacheResp.json()]
+                            } else {
+                                return [3, 5]
+                            }
+                        case 3:
+                            return [4, cacheLoadFn.apply(_siteCache, [o.sent()])];
+                        case 4:
+                            o.sent()
+                            return [2];
+                        case 5:
+                            return [3, 7];
+                        case 6:
+                            o.sent()
+                            return [3, 7];
+                        case 7:
+                            reqConfig = {
+                                withCredentials: true,
+                                url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
+                            }
+                            return [4, ajaxPromise(reqConfig)];
+                        case 8:
+                            resp = o.sent()
+                            return Hl(reqConfig.req) ? [4, this.cache.load(JSON.parse(resp))] : [2];
+                        case 9:
+                            o.sent()
+                            return [2]
+                    }
+                }))
+            }))
+        }
+
+        // 加载网站配置，并保存在 this.options 中
+        // https://publish-01.obsidian.md/options/3ad46614835acbee6d56ec829aa8db5d
+        e.prototype.loadOptions = function () {
+            return a(this, void 0, void 0, (function () {
+                let preloadOptions, optionsResp, _this, reqConfig, resp, err;
+                return o(this, (function (o) {
+                    switch (o.label) {
+                        case 0:
+                            preloadOptions = window.preloadOptions
+                            if (!preloadOptions) {
+                                return [3, 6];
+                            }
+                            o.label = 1;
+                        case 1:
+                            o.trys.push([1, 5, , 6])
+                            delete window.preloadOptions
+                            return [4, preloadOptions];
+                        case 2:
+                            optionsResp = o.sent()
+                            if (optionsResp.ok && Tl(optionsResp)) {
+                                _this = this
+                                return [4, optionsResp.json()]
+                            } else {
+                                return [3, 4];
+                            }
+                        case 3:
+                            _this.options = o.sent()
+                            return [2];
+                        case 4:
+                            return [3, 6];
+                        case 5:
+                            o.sent()
+                            return [3, 6];
+                        case 6:
+                            // 从新调用接口获取 preloadOptions 数据
+                            o.trys.push([6, 8, , 9])
+                            reqConfig = {
+                                withCredentials: true,
+                                url: this.host + "/options/" + encodeURIComponent(this.id)
+                            }
+                            return [4, ajaxPromise(reqConfig)];
+                        case 7:
+                            resp = o.sent()
+                            if (Hl(reqConfig.req)) {
+                                this.options = JSON.parse(resp)
+                                return [3, 9]
+                            } else {
+                                return [2];
+                            }
+                        case 8:
+                            err = o.sent()
+                            console.error("Failed to load options", err)
+                            return [3, 9];
+                        case 9:
+                            return [2]
+                    }
+                }))
+            }))
+        }
+
+        e.prototype.getPathSuffix = function () {
+            let _this = this,
+                hpw = _this.hpw,
+                pw_ts = _this.pwts,
+                pw_sig = _this.pwsig;
+            if (!hpw) {
+                return "";
+            }
+            let now = Date.now(), a = 36e5;
+            if (pw_ts + a < now) {
+                pw_ts = this.pwts = Math.floor(now / a + 6) * a
+                pw_sig = this.pwsig = Ka().stringify(Xa()(String(pw_ts), hpw))
+            }
+
+            // return "?ts=".concat(String(pw_ts), "&sig=").concat(pw_sig)
+            return `?ts=${pw_ts}&sig=${pw_sig}`
+        }
+        e.prototype.isCustomDomain = function () {
+            return !!this.customurl
+        }
+        e.prototype.getConfig = function (name) {
+            let value = this.options[name];
+            if (undefined === value) {
+                value = defaultConfig[name]
+            }
+            return value
+        }
+        e.prototype.getSiteName = function () {
+            return this.getConfig(K_siteName) || this.slug || ""
+        }
+        e.prototype.getSiteLogoUrl = function () {
+            return this.getConfig(K_logo) || ""
+        }
+        e.prototype.encodeFilepath = function (path, t) {
+            return path.split("/").map(t ? Ls : encodeURIComponent).join("/")
+        }
+        e.prototype.getInternalUrl = function (path) {
+            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(path, false) + this.getPathSuffix()
+        }
+        e.prototype.getPublicHref = function (e) {
+            let t, n = this.cache.getCache(e);
+            "md" === bo(vo(e)) && (e = e.substr(0, e.length - 3));
+            var r = this.encodeFilepath(e, !0),
+                i = null === (t = null == n ? void 0 : n.frontmatter) || void 0 === t ? void 0 : t.permalink;
+            return i && "string" == typeof i && (i.startsWith("/") && (i = i.substring(1)), r = i), this.slug ? this.publish.origin + "/" + encodeURIComponent(this.slug) + "/" + r : this.customurl ? "https://" + this.customurl + "/" + r : ""
+        }
+        e.prototype.loadMarkdownFile = function (path) {
+            return a(this, void 0, Promise, (function () {
+                let url, preloadPage, r, i;
+                return o(this, (function (a) {
+                    switch (a.label) {
+                        case 0:
+                            url = this.getInternalUrl(path)
+                            preloadPage = window.preloadPage
+                            if (!preloadPage) {
+                                return [3, 4];
+                            }
+                            delete window.preloadPage
+                            a.label = 1;
+                        case 1:
+                            a.trys.push([1, 3, , 4])
+                            return [4, preloadPage];
+                        case 2:
+                            r = a.sent()
+                            if (r.ok && r.url === url) {
+                                return [2, r.text()]
+                            } else {
+                                return [3, 4]
+                            }
+                        case 3:
+                            a.sent()
+                            return [3, 4];
+                        case 4:
+                            a.trys.push([4, 6, , 7])
+                            return [4, ajaxPromise({withCredentials: true, url: url})];
+                        case 5:
+                            return [2, a.sent()];
+                        case 6:
+                            i = a.sent()
+                            if (i instanceof XMLHttpRequest) {
+                                if (404 === i.status) {
+                                    new Notice('"'.concat(path, '" does not exist'))
+                                } else {
+                                    new Notice('An error occurred while loading "'.concat(path, '"'))
+                                    console.error(i.response)
+                                }
+                            } else {
+                                new Notice('An error occurred while loading "'.concat(path, '"'))
+                                console.error(i)
+                            }
+                            return [3, 7];
+                        case 7:
+                            return [2]
+                    }
+                }))
+            }))
+        }
+        return e
+    }()
 
     const Publish = function (Events) {
         function n() {
@@ -15830,12 +16118,16 @@ require.r = e => {
             _this.siteLogoEl = siteLogoLinkEl.createEl("img")
             _this.siteHeaderTextEl = siteHeaderEl.createEl("a", "site-header-text")
 
+            // 创建 SearchView 和 NavView
             _this.search = new SearchView(_this)
             _this.nav = new NavView(_this, leftColumnInnerEl)
 
             let renderContainerEl = _this.renderContainerEl = centerColumnEl.createDiv("render-container")
             _this.renderContainerInnerEl = renderContainerEl.createDiv("render-container-inner")
+
+            // 创建 Render 实例
             let render = _this.render = new Renderer(_this)
+
             let footerEl = _this.footerEl = centerColumnEl.createDiv("site-footer")
             _this.notFoundEl = renderContainerEl.createDiv("not-found-container", function (el) {
                 el.createDiv("not-found-image")
@@ -15848,8 +16140,10 @@ require.r = e => {
             let rightColumnEl = _this.rightColumnEl = renderContainerEl.createDiv("site-body-right-column")
             let rightColumnInnerEl = _this.rightColumnInnerEl = rightColumnEl.createDiv("site-body-right-column-inner")
 
+            // 创建 GraphView 和 OutlineView
             _this.graph = new GraphView(_this, rightColumnInnerEl)
             _this.outline = new OutlineView(_this, rightColumnInnerEl)
+
             footerEl.createEl("a", {
                 attr: {
                     href: "https://publish.obsidian.md",
@@ -15870,8 +16164,10 @@ require.r = e => {
             _this.toggleNotFound(false)
             containerEl.removeClass("has-not-found")
             if (window.siteInfo) {
+                // 创建 Site 实例
                 _this.site = new Site(_this, window.siteInfo)
             }
+
             window.applyCss = function (cssText) {
                 _this.applyCss(cssText)
             }
@@ -16042,7 +16338,7 @@ require.r = e => {
                                 this.setNoIndex(true)
                                 renderer.renderContent("### Password protected site")
                                 return [4, new Promise(function (resolve) {
-                                    new Gs(_this, resolve).open()
+                                    new ProtectedSiteModal(_this, resolve).open()
                                 })]
                             } else {
                                 return [3, 7]
@@ -16469,224 +16765,6 @@ require.r = e => {
         }
         return n
     }(Events)
-    const Site = function () {
-        function e(app, siteInfo) {
-            let host = siteInfo.host
-
-            this.pwts = 0
-            this.pwsig = ""
-            this.options = {}
-            this.publish = app
-            this.id = siteInfo.uid
-            this.host = host.startsWith("127.0.0.1") || host.startsWith("localhost") ? "http://" + host : "https://" + host
-            this.status = siteInfo.status
-            this.slug = siteInfo.slug
-            this.customurl = siteInfo.customurl
-            this.hpw = localStorage[siteInfo.uid]
-            this.cache = new SiteCache()
-        }
-
-        e.prototype.loadCache = function () {
-            return a(this, void 0, void 0, (function () {
-                let preloadCache, t, n, r, i, a;
-                return o(this, (function (o) {
-                    switch (o.label) {
-                        case 0:
-                            preloadCache = window.preloadCache
-                            if (!preloadCache) {
-                                return [3, 7];
-                            }
-                            o.label = 1;
-                        case 1:
-                            o.trys.push([1, 6, , 7])
-                            delete window.preloadCache
-                            return [4, preloadCache];
-                        case 2:
-                            t = o.sent()
-                            if (t.ok && Tl(t)) {
-                                n = this.cache
-                                r = n.load
-                                return [4, t.json()]
-                            } else {
-                                return [3, 5]
-                            }
-                        case 3:
-                            return [4, r.apply(n, [o.sent()])];
-                        case 4:
-                            o.sent()
-                            return [2];
-                        case 5:
-                            return [3, 7];
-                        case 6:
-                            o.sent()
-                            return [3, 7];
-                        case 7:
-                            i = {
-                                withCredentials: true,
-                                url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
-                            }
-                            return [4, ajaxPromise(i)];
-                        case 8:
-                            a = o.sent()
-                            return Hl(i.req) ? [4, this.cache.load(JSON.parse(a))] : [2];
-                        case 9:
-                            o.sent()
-                            return [2]
-                    }
-                }))
-            }))
-        }
-        e.prototype.loadOptions = function () {
-            return a(this, void 0, void 0, (function () {
-                let preloadOptions, t, _this, r, i, a;
-                return o(this, (function (o) {
-                    switch (o.label) {
-                        case 0:
-                            preloadOptions = window.preloadOptions
-                            if (!preloadOptions) {
-                                return [3, 6];
-                            }
-                            o.label = 1;
-                        case 1:
-                            o.trys.push([1, 5, , 6])
-                            delete window.preloadOptions
-                            return [4, preloadOptions];
-                        case 2:
-                            t = o.sent()
-                            if (t.ok && Tl(t)) {
-                                _this = this
-                                return [4, t.json()]
-                            } else {
-                                return [3, 4];
-                            }
-                        case 3:
-                            _this.options = o.sent()
-                            return [2];
-                        case 4:
-                            return [3, 6];
-                        case 5:
-                            o.sent()
-                            return [3, 6];
-                        case 6:
-                            o.trys.push([6, 8, , 9])
-                            r = {
-                                withCredentials: true,
-                                url: this.host + "/options/" + encodeURIComponent(this.id)
-                            }
-                            return [4, ajaxPromise(r)];
-                        case 7:
-                            i = o.sent()
-                            if (Hl(r.req)) {
-                                this.options = JSON.parse(i)
-                                return [3, 9]
-                            } else {
-                                return [2];
-                            }
-                        case 8:
-                            a = o.sent()
-                            console.error("Failed to load options", a)
-                            return [3, 9];
-                        case 9:
-                            return [2]
-                    }
-                }))
-            }))
-        }
-        e.prototype.getPathSuffix = function () {
-            let _this = this, hpw = _this.hpw, pwts = _this.pwts, pwsig = _this.pwsig;
-            if (!hpw) {
-                return "";
-            }
-            let now = Date.now(), a = 36e5;
-            if (pwts + a < now) {
-                pwts = this.pwts = Math.floor(now / a + 6) * a
-                pwsig = this.pwsig = Ka().stringify(Xa()(String(pwts), hpw))
-            }
-            return "?ts=".concat(String(pwts), "&sig=").concat(pwsig)
-        }
-        e.prototype.isCustomDomain = function () {
-            return !!this.customurl
-        }
-        e.prototype.getConfig = function (name) {
-            let value = this.options[name];
-            if (void 0 === value) {
-                value = defaultConfig[name]
-            }
-            return value
-        }
-        e.prototype.getSiteName = function () {
-            return this.getConfig(K_siteName) || this.slug || ""
-        }
-        e.prototype.getSiteLogoUrl = function () {
-            return this.getConfig(K_logo) || ""
-        }
-        e.prototype.encodeFilepath = function (path, t) {
-            return path.split("/").map(t ? Ls : encodeURIComponent).join("/")
-        }
-        e.prototype.getInternalUrl = function (path) {
-            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(path, false) + this.getPathSuffix()
-        }
-        e.prototype.getPublicHref = function (e) {
-            let t, n = this.cache.getCache(e);
-            "md" === bo(vo(e)) && (e = e.substr(0, e.length - 3));
-            var r = this.encodeFilepath(e, !0),
-                i = null === (t = null == n ? void 0 : n.frontmatter) || void 0 === t ? void 0 : t.permalink;
-            return i && "string" == typeof i && (i.startsWith("/") && (i = i.substring(1)), r = i), this.slug ? this.publish.origin + "/" + encodeURIComponent(this.slug) + "/" + r : this.customurl ? "https://" + this.customurl + "/" + r : ""
-        }
-        e.prototype.loadMarkdownFile = function (path) {
-            return a(this, void 0, Promise, (function () {
-                let url, preloadPage, r, i;
-                return o(this, (function (a) {
-                    switch (a.label) {
-                        case 0:
-                            url = this.getInternalUrl(path)
-                            preloadPage = window.preloadPage
-                            if (!preloadPage) {
-                                return [3, 4];
-                            }
-                            delete window.preloadPage
-                            a.label = 1;
-                        case 1:
-                            a.trys.push([1, 3, , 4])
-                            return [4, preloadPage];
-                        case 2:
-                            r = a.sent()
-                            if (r.ok && r.url === url) {
-                                return [2, r.text()]
-                            } else {
-                                return [3, 4]
-                            }
-                        case 3:
-                            a.sent()
-                            return [3, 4];
-                        case 4:
-                            a.trys.push([4, 6, , 7])
-                            return [4, ajaxPromise({withCredentials: true, url: url})];
-                        case 5:
-                            return [2, a.sent()];
-                        case 6:
-                            i = a.sent()
-                            if (i instanceof XMLHttpRequest) {
-                                if (404 === i.status) {
-                                    new Notice('"'.concat(path, '" does not exist'))
-                                } else {
-                                    new Notice('An error occurred while loading "'.concat(path, '"'))
-                                    console.error(i.response)
-                                }
-                            } else {
-                                new Notice('An error occurred while loading "'.concat(path, '"'))
-                                console.error(i)
-                            }
-                            return [3, 7];
-                        case 7:
-                            return [2]
-                    }
-                }))
-            }))
-        }
-        return e
-    }()
-
 
     window.addEventListener("load", function () {
         debugger
