@@ -4012,11 +4012,15 @@ require.r = e => {
             }
         }
         Element.prototype.getAttr = Element.prototype.getAttribute
-        defineProperty(Element.prototype, "matchParent", function (e, t) {
-            if (this.matches(e)) return this;
-            if (this === t) return null;
-            var n = this.parentElement;
-            return n ? n.matchParent(e, t) : null
+        defineProperty(Element.prototype, "matchParent", function (selector, currentTarget) {
+            if (this.matches(selector)) {
+                return this
+            }
+            if (this === currentTarget) {
+                return null;
+            }
+            let parentElement = this.parentElement;
+            return parentElement ? parentElement.matchParent(selector, currentTarget) : null
         })
         Element.prototype.getCssPropertyValue = function (e, t) {
             return getComputedStyle(this, t).getPropertyValue(e).trim()
@@ -4148,24 +4152,33 @@ require.r = e => {
             return cb && cb(t), t
         };
 
-        let on = function (type, selector, n, options) {
-            var i = this._EVENTS;
-            i || (i = {}, this._EVENTS = i);
-            var a = i[type];
-            a || (a = [], i[type] = a);
-            var o = function (e) {
-                var r = e.target;
-                if (r.matchParent) {
-                    var i = r.matchParent(selector, e.currentTarget);
-                    i && n.call(this, e, i)
+        let on = function (type, selector, listener, options) {
+            let events = this._EVENTS
+            if (!events) {
+                events = {}
+                this._EVENTS = events
+            }
+            let queue = events[type]
+            if (!queue) {
+                queue = []
+                events[type] = queue
+            }
+            let callback = function (evt) {
+                let target = evt.target
+                if (target.matchParent) {
+                    let parent = target.matchParent(selector, evt.currentTarget);
+                    if (parent) {
+                        listener.call(this, evt, parent)
+                    }
                 }
-            };
-            a.push({
+            }
+            queue.push({
                 selector: selector,
-                listener: n,
+                listener: listener,
                 options: options,
-                callback: o
-            }), this.addEventListener(type, o, options)
+                callback: callback
+            })
+            this.addEventListener(type, callback, options)
         }
         let off = function (type, selector, n, options) {
             var i = this, a = this._EVENTS;
@@ -13874,8 +13887,8 @@ require.r = e => {
                 }))
             }, e
         }();
-    var ls = null, cs = null;
-    var hs = null;
+    let ls = null, cs = null;
+    let hs = null;
 
     function us() {
         hs && (clearTimeout(hs), hs = null)
@@ -13885,18 +13898,22 @@ require.r = e => {
         return "true" === getComputedStyle(e).getPropertyValue("--no-tooltip").trim()
     }
 
-    function onMouseOver(e, t) {
-        Sr(e, t) && (Vr(e) || fs(t) || vs(t))
+    function onMouseOver(evt, parent) {
+        if (Sr(evt, parent)) {
+            Vr(evt) || fs(parent) || vs(parent)
+        }
     }
 
-    function onMouseOut(e, t) {
-        if (Sr(e, t)) {
+    function onMouseOut(evt, parent) {
+        if (Sr(evt, parent)) {
             onMouseUp();
-            var n = e.relatedTarget;
+            let n = evt.relatedTarget;
             if (n && n.matchParent) {
-                var r = n.matchParent("[aria-label]");
+                let r = n.matchParent("[aria-label]");
                 if (r && r.instanceOf(HTMLElement)) {
-                    if (fs(r)) return;
+                    if (fs(r)) {
+                        return
+                    }
                     vs(r)
                 }
             }
@@ -13921,7 +13938,7 @@ require.r = e => {
         })
     }
 
-    var gs = 0;
+    let gs = 0
 
     function Ms(el, tooltip, options) {
         if (tooltip) {
@@ -13958,7 +13975,13 @@ require.r = e => {
     }
 
     function onMouseUp() {
-        us(), ls && (gs = Date.now(), ls.detach(), ls = null, cs = null)
+        us()
+        if (ls) {
+            gs = Date.now()
+            ls.detach()
+            ls = null
+            cs = null
+        }
     }
 
     function bs(el, options) {
