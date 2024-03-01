@@ -13920,7 +13920,7 @@ require.r = e => {
         }
     }
 
-    var ms = new WeakMap()
+    const ms = new WeakMap()
 
     function vs(e) {
         us();
@@ -13993,140 +13993,144 @@ require.r = e => {
         el.setAttribute("aria-label", tooltip), bs(el, options), cs === el && Ms(el, tooltip, options)
     }
 
-    var ks = loadScriptAsync("/lib/pixi.min.js?7.2.4"),
-        GraphView = function () {
-            function e(e, t) {
-                var n = this;
-                this.expanded = !1, this.global = !1, this.interlinks = !0, this.publish = e;
-                var r = this.outerContainerEl = t.createDiv("graph-view-outer");
-                r.createDiv("list-item published-section-header", (function (e) {
-                    e.createSpan("published-section-header-icon", (function (e) {
-                        setIcon(e, "lucide-git-fork")
-                    })), e.createSpan({text: "Interactive graph"})
-                }));
-                var i = this.outerEl = r.createDiv("graph-view-container");
-                this.containerEl = i.createDiv("graph-view");
-                var a = i.createDiv("graph-icon graph-expand");
-                a.setAttr("role", "button"), setIcon(a, "lucide-arrow-up-right"), setTooltip(a, "Expand", {placement: "top"}), a.addEventListener("click", this.onExpand.bind(this));
-                var o = i.createDiv("graph-icon graph-global");
-                o.setAttr("role", "button"), setIcon(o, "lucide-git-fork"), setTooltip(o, "Global Graph", {placement: "top"}), o.addEventListener("click", this.onGlobalGraph.bind(this));
-                var s = this.modalEl = createDiv("modal-container"), l = s.createDiv("modal-bg");
-                this.modalContainerEl = s.createDiv("graph-view-container mod-expanded"), l.addEventListener("click", (function (e) {
-                    return 0 === e.button && n.onExitExpand()
-                })), e.on("options-updated", this.updateOptions.bind(this)), e.on("navigated", this.onNavigated.bind(this))
-            }
+    const ks = loadScriptAsync("/lib/pixi.min.js?7.2.4")
+    const GraphView = function () {
+        function e(e, t) {
+            var n = this;
+            this.expanded = !1, this.global = !1, this.interlinks = !0, this.publish = e;
+            var r = this.outerContainerEl = t.createDiv("graph-view-outer");
+            r.createDiv("list-item published-section-header", (function (e) {
+                e.createSpan("published-section-header-icon", (function (e) {
+                    setIcon(e, "lucide-git-fork")
+                })), e.createSpan({text: "Interactive graph"})
+            }));
+            var i = this.outerEl = r.createDiv("graph-view-container");
+            this.containerEl = i.createDiv("graph-view");
+            var a = i.createDiv("graph-icon graph-expand");
+            a.setAttr("role", "button"), setIcon(a, "lucide-arrow-up-right"), setTooltip(a, "Expand", {placement: "top"}), a.addEventListener("click", this.onExpand.bind(this));
+            var o = i.createDiv("graph-icon graph-global");
+            o.setAttr("role", "button"), setIcon(o, "lucide-git-fork"), setTooltip(o, "Global Graph", {placement: "top"}), o.addEventListener("click", this.onGlobalGraph.bind(this));
+            var s = this.modalEl = createDiv("modal-container"), l = s.createDiv("modal-bg");
+            this.modalContainerEl = s.createDiv("graph-view-container mod-expanded"), l.addEventListener("click", (function (e) {
+                return 0 === e.button && n.onExitExpand()
+            })), e.on("options-updated", this.updateOptions.bind(this)), e.on("navigated", this.onNavigated.bind(this))
+        }
 
-            return e.prototype.updateOptions = function () {
-                var e, t, n = this, r = this.publish.site.getConfig(K_showGraph);
-                Hr && (r = !1), this.publish.containerEl.toggleClass("has-graph", r), this.containerEl.toggle(r), r && !this.renderer && (e = this.containerEl, t = function () {
-                    var e = Ea("/sim.js", {name: "Graph Worker"});
-                    ks.then((function () {
-                        return a(n, void 0, void 0, (function () {
-                            var t, n;
-                            return o(this, (function (r) {
-                                switch (r.label) {
-                                    case 0:
-                                        return this.renderer ? [2] : [4, e];
-                                    case 1:
-                                        return t = r.sent(), document.fonts ? [4, document.fonts.ready] : [3, 3];
-                                    case 2:
-                                        r.sent(), r.label = 3;
-                                    case 3:
-                                        return (n = this.renderer = new ss(this.containerEl, !1, !1, t)).onNodeClick = this.onNodeClick.bind(this), n.setScale(.5), n.targetScale = .5, n.setRenderOptions({textFadeMultiplier: -1}), this.onNavigated(), [2]
-                                }
-                            }))
+        return e.prototype.updateOptions = function () {
+            var e, t, n = this, r = this.publish.site.getConfig(K_showGraph);
+            Hr && (r = !1), this.publish.containerEl.toggleClass("has-graph", r), this.containerEl.toggle(r), r && !this.renderer && (e = this.containerEl, t = function () {
+                var e = Ea("/sim.js", {name: "Graph Worker"});
+                ks.then((function () {
+                    return a(n, void 0, void 0, (function () {
+                        var t, n;
+                        return o(this, (function (r) {
+                            switch (r.label) {
+                                case 0:
+                                    return this.renderer ? [2] : [4, e];
+                                case 1:
+                                    return t = r.sent(), document.fonts ? [4, document.fonts.ready] : [3, 3];
+                                case 2:
+                                    r.sent(), r.label = 3;
+                                case 3:
+                                    return (n = this.renderer = new ss(this.containerEl, !1, !1, t)).onNodeClick = this.onNodeClick.bind(this), n.setScale(.5), n.targetScale = .5, n.setRenderOptions({textFadeMultiplier: -1}), this.onNavigated(), [2]
+                            }
                         }))
                     }))
-                }, e.isShown() ? t() : e.onNodeInserted(t, !0))
-            }, e.prototype.onNodeClick = function (e, t, n) {
-                this.onExitExpand(), this.publish.navigate(t, "", e instanceof MouseEvent || e instanceof PointerEvent ? e : null)
-            }, e.prototype.onResize = function () {
-                this.renderer && this.renderer.onResize()
-            }, e.prototype.onExpand = function () {
-                if (!this.expanded) {
-                    this.expanded = !0;
-                    var e = this, t = e.containerEl, n = e.renderer, r = e.modalEl, i = e.modalContainerEl;
-                    document.body.appendChild(r), i.appendChild(t), n && (n.onResize(), n.zoomTo(2 * n.scale))
-                }
-            }, e.prototype.onExitExpand = function () {
-                if (this.expanded) {
-                    this.expanded = !1;
-                    var e = this, t = e.outerEl, n = e.modalEl, r = e.containerEl, i = e.renderer, a = e.global;
-                    n.detach(), t.insertBefore(r, t.firstChild), i && (i.onResize(), a || i.zoomTo(i.scale / 2)), this.global = !1, a && this.onNavigated()
-                }
-            }, e.prototype.onGlobalGraph = function () {
-                this.onExpand(), this.global = !0;
-                var e = this.renderer;
-                e && e.zoomTo(e.scale), this.onNavigated()
-            }, e.prototype.onNavigated = function () {
-                var e = this, t = e.publish, n = e.renderer, r = e.currentFilepath;
-                if (n) {
-                    var i = t.site;
-                    if (i.getConfig(K_showGraph)) {
-                        var a = t.render.currentFilepath;
-                        if (r !== a && (n.resetPan(), r = this.currentFilepath = a), n.highlightNode = null, r) {
-                            var o = {
-                                showAttachments: !1,
-                                hideUnresolved: !0,
-                                showTags: !1,
-                                showOrphans: !0,
-                                localFile: r,
-                                localJumps: 1,
-                                localInterlinks: !0,
-                                localForelinks: !0,
-                                localBacklinks: !0
-                            }, s = function (e, t) {
-                                var n = t.showAttachments, r = t.hideUnresolved, i = t.showTags, a = {},
-                                    o = function (t) {
-                                        if (e.cache.hasOwnProperty(t)) {
-                                            if (!n && "md" !== bo(t)) return "continue";
-                                            var o = (a[t] = Qo()).links, s = e.cache[t];
-                                            if (ao(s, (function (i) {
-                                                var s = getLinkpath(i.link), l = e.getLinktextDest(s, t);
-                                                if (l) {
-                                                    if (!n && "md" !== bo(l)) return;
-                                                    o[l] = !0
-                                                } else r && (o[s] = !0, a.hasOwnProperty(s) || (a[s] = Qo("unresolved")))
-                                            })), i) {
-                                                var l = getAllTags(s);
-                                                if (l && l.length > 0) for (var c = 0, h = l; c < h.length; c++) {
-                                                    var u = h[c];
-                                                    o[u] = !0, a.hasOwnProperty(u) || (a[u] = Qo("tag"))
-                                                }
-                                            }
-                                        }
-                                    };
-                                for (var s in e.cache) o(s);
-                                return {nodes: a}
-                            }(i.cache, o);
-                            this.global || (s = function (e, t) {
-                                var n = e.nodes, r = {}, i = {}, a = t.localFile, o = t.localJumps,
-                                    s = t.localInterlinks, l = t.localForelinks, c = t.localBacklinks;
-                                if (i[a] = 30, !n.hasOwnProperty(a)) return r[a] = Qo(), {nodes: r, weights: i};
-                                r[a] = Qo(n[a].type);
-                                for (var h = function (e) {
-                                    var t = {};
-                                    for (var a in n) if (n.hasOwnProperty(a)) {
-                                        var o = n[a];
-                                        if ("tag" !== o.type) {
-                                            var s = o.links;
-                                            for (var h in s) if (s.hasOwnProperty(h)) {
-                                                var u = r[a];
-                                                l && r.hasOwnProperty(a) && !r.hasOwnProperty(h) && !ts.hasOwnProperty(u.type) ? (t[h] = t[h] || es(n[h]), u.links[h] = !0) : c && r.hasOwnProperty(h) && !r.hasOwnProperty(a) && !ts.hasOwnProperty(r[h].type) && (t[a] = t[a] || es(n[a]), t[a].links[h] = !0)
+                }))
+            }, e.isShown() ? t() : e.onNodeInserted(t, !0))
+        }, e.prototype.onNodeClick = function (e, t, n) {
+            this.onExitExpand(), this.publish.navigate(t, "", e instanceof MouseEvent || e instanceof PointerEvent ? e : null)
+        }, e.prototype.onResize = function () {
+            this.renderer && this.renderer.onResize()
+        }, e.prototype.onExpand = function () {
+            if (!this.expanded) {
+                this.expanded = !0;
+                var e = this, t = e.containerEl, n = e.renderer, r = e.modalEl, i = e.modalContainerEl;
+                document.body.appendChild(r), i.appendChild(t), n && (n.onResize(), n.zoomTo(2 * n.scale))
+            }
+        }, e.prototype.onExitExpand = function () {
+            if (this.expanded) {
+                this.expanded = !1;
+                var e = this, t = e.outerEl, n = e.modalEl, r = e.containerEl, i = e.renderer, a = e.global;
+                n.detach(), t.insertBefore(r, t.firstChild), i && (i.onResize(), a || i.zoomTo(i.scale / 2)), this.global = !1, a && this.onNavigated()
+            }
+        }, e.prototype.onGlobalGraph = function () {
+            this.onExpand(), this.global = !0;
+            var e = this.renderer;
+            e && e.zoomTo(e.scale), this.onNavigated()
+        }, e.prototype.onNavigated = function () {
+            var e = this, t = e.publish, n = e.renderer, r = e.currentFilepath;
+            if (n) {
+                var i = t.site;
+                if (i.getConfig(K_showGraph)) {
+                    var a = t.render.currentFilepath;
+                    if (r !== a && (n.resetPan(), r = this.currentFilepath = a), n.highlightNode = null, r) {
+                        var o = {
+                            showAttachments: !1,
+                            hideUnresolved: !0,
+                            showTags: !1,
+                            showOrphans: !0,
+                            localFile: r,
+                            localJumps: 1,
+                            localInterlinks: !0,
+                            localForelinks: !0,
+                            localBacklinks: !0
+                        }, s = function (e, t) {
+                            var n = t.showAttachments, r = t.hideUnresolved, i = t.showTags, a = {},
+                                o = function (t) {
+                                    if (e.cache.hasOwnProperty(t)) {
+                                        if (!n && "md" !== bo(t)) return "continue";
+                                        var o = (a[t] = Qo()).links, s = e.cache[t];
+                                        if (ao(s, (function (i) {
+                                            var s = getLinkpath(i.link), l = e.getLinktextDest(s, t);
+                                            if (l) {
+                                                if (!n && "md" !== bo(l)) return;
+                                                o[l] = !0
+                                            } else r && (o[s] = !0, a.hasOwnProperty(s) || (a[s] = Qo("unresolved")))
+                                        })), i) {
+                                            var l = getAllTags(s);
+                                            if (l && l.length > 0) for (var c = 0, h = l; c < h.length; c++) {
+                                                var u = h[c];
+                                                o[u] = !0, a.hasOwnProperty(u) || (a[u] = Qo("tag"))
                                             }
                                         }
                                     }
-                                    for (var f in t) t.hasOwnProperty(f) && (r[f] = t[f], i[f] = e)
-                                }, u = 30 / o, f = 0; f < o; f++) h(30 - u * (f + 1));
-                                if (s) for (var p in r) r.hasOwnProperty(p) && n.hasOwnProperty(p) && (r[p] = n[p]);
-                                return {nodes: r, weights: i}
-                            }(s, o)), n.setData(s)
-                        } else n.setData({nodes: {}})
-                    }
+                                };
+                            for (var s in e.cache) o(s);
+                            return {nodes: a}
+                        }(i.cache, o);
+                        this.global || (s = function (e, t) {
+                            var n = e.nodes, r = {}, i = {}, a = t.localFile, o = t.localJumps,
+                                s = t.localInterlinks, l = t.localForelinks, c = t.localBacklinks;
+                            if (i[a] = 30, !n.hasOwnProperty(a)) return r[a] = Qo(), {nodes: r, weights: i};
+                            r[a] = Qo(n[a].type);
+                            for (var h = function (e) {
+                                var t = {};
+                                for (var a in n) if (n.hasOwnProperty(a)) {
+                                    var o = n[a];
+                                    if ("tag" !== o.type) {
+                                        var s = o.links;
+                                        for (var h in s) if (s.hasOwnProperty(h)) {
+                                            var u = r[a];
+                                            l && r.hasOwnProperty(a) && !r.hasOwnProperty(h) && !ts.hasOwnProperty(u.type) ? (t[h] = t[h] || es(n[h]), u.links[h] = !0) : c && r.hasOwnProperty(h) && !r.hasOwnProperty(a) && !ts.hasOwnProperty(r[h].type) && (t[a] = t[a] || es(n[a]), t[a].links[h] = !0)
+                                        }
+                                    }
+                                }
+                                for (var f in t) t.hasOwnProperty(f) && (r[f] = t[f], i[f] = e)
+                            }, u = 30 / o, f = 0; f < o; f++) h(30 - u * (f + 1));
+                            if (s) for (var p in r) r.hasOwnProperty(p) && n.hasOwnProperty(p) && (r[p] = n[p]);
+                            return {nodes: r, weights: i}
+                        }(s, o)), n.setData(s)
+                    } else n.setData({nodes: {}})
                 }
-            }, e
-        }();
-    var Cs = new Intl.Collator(void 0, {usage: "sort", sensitivity: "base", numeric: !0}).compare;
+            }
+        }, e
+    }()
+    const compareFn = new Intl.Collator(void 0, {
+        usage: "sort",
+        sensitivity: "base",
+        numeric: true
+    }).compare
 
     function As(e) {
         return decodeURIComponent(e.replace(/\+/g, "%20"))
@@ -14153,89 +14157,89 @@ require.r = e => {
                 if (a && !o) return -1;
                 if (o && !a) return 1
             }
-            return Cs(e.name, n.name)
+            return compareFn(e.name, n.name)
         }))
     }
 
-    var Ss = function (e) {
-            function t() {
-                var t = null !== e && e.apply(this, arguments) || this;
-                return t.children = null, t
-            }
+    let Ss = function (e) {
+        function t() {
+            var t = null !== e && e.apply(this, arguments) || this;
+            return t.children = null, t
+        }
 
-            return extend(t, e), t.prototype.render = function () {
-                var e = this.childrenEl, t = this.children;
-                if (null !== t) {
-                    e.setChildrenInPlace(t.map((function (e) {
-                        return e.el
-                    })));
-                    for (var n = 0, r = t; n < r.length; n++) {
-                        r[n].render()
-                    }
-                } else e.empty()
-            }, t
-        }(function () {
-            function e(e) {
-                void 0 === e && (e = "div");
-                var t = this;
-                this.collapsible = !0, this.collapsed = !1;
-                var n = this.el = createDiv("tree-item"), r = this.selfEl = this.el.createEl(e);
-                r.addClass("tree-item-self"), r.addEventListener("click", (function (e) {
-                    0 !== e.button || e.defaultPrevented || t.onSelfClick(e)
-                })), r.addEventListener("auxclick", (function (e) {
-                    1 !== e.button || e.defaultPrevented || t.onSelfClick(e)
-                })), this.coverEl = this.selfEl;
-                var i = this.collapseEl = r.createDiv({cls: "tree-item-icon collapse-icon"});
-                setIcon(i, "right-triangle"), i.addEventListener("click", this.onCollapseClick.bind(this)), this.innerEl = r.createDiv("tree-item-inner"), this.childrenEl = n.createDiv("tree-item-children")
-            }
-
-            return e.prototype.onSelfClick = function (e) {
-            }, e.prototype.onCollapseClick = function (e) {
-                0 === e.button && (e.preventDefault(), this.toggleCollapsed(!0))
-            }, e.prototype.toggleCollapsed = function (e) {
-                if (this.collapsible) return this.setCollapsed(!this.collapsed, e)
-            }, e.prototype.setCollapsed = function (e, t) {
-                if (this.collapsed !== e) return this.collapsed = e, this.updateCollapsed(t)
-            }, e.prototype.setCollapsible = function (e) {
-                if (this.collapsible !== e) {
-                    var t = this.selfEl, n = this.collapseEl;
-                    this.collapsible = e, e ? t.prepend(n) : n.detach(), t.toggleClass("mod-collapsible", e)
-                }
-            }, e.prototype.setClickable = function (e) {
-                this.selfEl.toggleClass("is-clickable", e)
-            }, e.prototype.updateCollapsed = function (e) {
-                return a(this, void 0, Promise, (function () {
-                    var t, n, r, i;
-                    return o(this, (function (a) {
-                        switch (a.label) {
-                            case 0:
-                                return n = (t = this).el, r = t.childrenEl, i = t.collapsed, Un(n, i), [4, nr(r, n, i, e)];
-                            case 1:
-                                return a.sent(), [2]
-                        }
-                    }))
-                }))
-            }, e
-        }()),
-        Hs = function () {
-            function e(e) {
-                this.children = [], this.childrenEl = e
-            }
-
-            return e.prototype.render = function () {
-                var e = this.childrenEl, t = this.children;
+        return extend(t, e), t.prototype.render = function () {
+            var e = this.childrenEl, t = this.children;
+            if (null !== t) {
                 e.setChildrenInPlace(t.map((function (e) {
                     return e.el
                 })));
                 for (var n = 0, r = t; n < r.length; n++) {
                     r[n].render()
                 }
-            }, e.prototype.addRoot = function (e) {
-                this.children.push(e)
-            }, e.prototype.clear = function () {
-                this.children = [], this.render()
-            }, e
-        }();
+            } else e.empty()
+        }, t
+    }(function () {
+        function e(e) {
+            void 0 === e && (e = "div");
+            var t = this;
+            this.collapsible = !0, this.collapsed = !1;
+            var n = this.el = createDiv("tree-item"), r = this.selfEl = this.el.createEl(e);
+            r.addClass("tree-item-self"), r.addEventListener("click", (function (e) {
+                0 !== e.button || e.defaultPrevented || t.onSelfClick(e)
+            })), r.addEventListener("auxclick", (function (e) {
+                1 !== e.button || e.defaultPrevented || t.onSelfClick(e)
+            })), this.coverEl = this.selfEl;
+            var i = this.collapseEl = r.createDiv({cls: "tree-item-icon collapse-icon"});
+            setIcon(i, "right-triangle"), i.addEventListener("click", this.onCollapseClick.bind(this)), this.innerEl = r.createDiv("tree-item-inner"), this.childrenEl = n.createDiv("tree-item-children")
+        }
+
+        return e.prototype.onSelfClick = function (e) {
+        }, e.prototype.onCollapseClick = function (e) {
+            0 === e.button && (e.preventDefault(), this.toggleCollapsed(!0))
+        }, e.prototype.toggleCollapsed = function (e) {
+            if (this.collapsible) return this.setCollapsed(!this.collapsed, e)
+        }, e.prototype.setCollapsed = function (e, t) {
+            if (this.collapsed !== e) return this.collapsed = e, this.updateCollapsed(t)
+        }, e.prototype.setCollapsible = function (e) {
+            if (this.collapsible !== e) {
+                var t = this.selfEl, n = this.collapseEl;
+                this.collapsible = e, e ? t.prepend(n) : n.detach(), t.toggleClass("mod-collapsible", e)
+            }
+        }, e.prototype.setClickable = function (e) {
+            this.selfEl.toggleClass("is-clickable", e)
+        }, e.prototype.updateCollapsed = function (e) {
+            return a(this, void 0, Promise, (function () {
+                var t, n, r, i;
+                return o(this, (function (a) {
+                    switch (a.label) {
+                        case 0:
+                            return n = (t = this).el, r = t.childrenEl, i = t.collapsed, Un(n, i), [4, nr(r, n, i, e)];
+                        case 1:
+                            return a.sent(), [2]
+                    }
+                }))
+            }))
+        }, e
+    }())
+    let Hs = function () {
+        function e(e) {
+            this.children = [], this.childrenEl = e
+        }
+
+        return e.prototype.render = function () {
+            var e = this.childrenEl, t = this.children;
+            e.setChildrenInPlace(t.map((function (e) {
+                return e.el
+            })));
+            for (var n = 0, r = t; n < r.length; n++) {
+                r[n].render()
+            }
+        }, e.prototype.addRoot = function (e) {
+            this.children.push(e)
+        }, e.prototype.clear = function () {
+            this.children = [], this.render()
+        }, e
+    }()
 
     function Ts(e, t, n) {
         var r = {type: "folder", name: "", path: "", children: [], parent: null}, i = {};
@@ -14566,7 +14570,6 @@ require.r = e => {
         return Rs[t] || "Key" + t
     }
 
-    var Us
     const Scope = function () {
         function e(e) {
             this.tabFocusContainerEl = null, this.keys = [], this.parent = e
@@ -14674,131 +14677,132 @@ require.r = e => {
     }())
 
     const Modal = function () {
-            function e(e) {
-                this.publish = e, this.scope = new Scope, this.scope.register([], "Escape", this.close.bind(this)), this.containerEl = createDiv("modal-container");
-                var t = this.containerEl.createDiv("modal-bg");
-                this.modalEl = this.containerEl.createDiv("modal");
-                var n = this.closeButtonEl = this.modalEl.createDiv("modal-close-button");
-                this.titleEl = this.modalEl.createDiv("modal-title"), this.contentEl = this.modalEl.createDiv("modal-content"), n.addEventListener("click", this.close.bind(this)), t.addEventListener("click", this.close.bind(this))
-            }
+        function e(e) {
+            this.publish = e, this.scope = new Scope, this.scope.register([], "Escape", this.close.bind(this)), this.containerEl = createDiv("modal-container");
+            var t = this.containerEl.createDiv("modal-bg");
+            this.modalEl = this.containerEl.createDiv("modal");
+            var n = this.closeButtonEl = this.modalEl.createDiv("modal-close-button");
+            this.titleEl = this.modalEl.createDiv("modal-title"), this.contentEl = this.modalEl.createDiv("modal-content"), n.addEventListener("click", this.close.bind(this)), t.addEventListener("click", this.close.bind(this))
+        }
 
-            return e.prototype.open = function () {
-                this.publish.keymap.pushScope(this.scope), document.body.appendChild(this.containerEl), this.onOpen()
-            }, e.prototype.close = function () {
-                this.publish.keymap.popScope(this.scope), this.containerEl.remove(), this.onClose()
-            }, e.prototype.onOpen = function () {
-            }, e.prototype.onClose = function () {
-            }, e
-        }(),
-        Gs = function (Modal) {
-            function t(t, n) {
-                var r = Modal.call(this, t) || this;
-                return r.done = !1, r.cb = n, r.modalEl.addClass("mod-password-required"), r.titleEl.setText("Protected site"), r.closeButtonEl.hide(), r
-            }
+        return e.prototype.open = function () {
+            this.publish.keymap.pushScope(this.scope), document.body.appendChild(this.containerEl), this.onOpen()
+        }, e.prototype.close = function () {
+            this.publish.keymap.popScope(this.scope), this.containerEl.remove(), this.onClose()
+        }, e.prototype.onOpen = function () {
+        }, e.prototype.onClose = function () {
+        }, e
+    }()
+    const Gs = function (Modal) {
+        function t(t, n) {
+            var r = Modal.call(this, t) || this;
+            return r.done = !1, r.cb = n, r.modalEl.addClass("mod-password-required"), r.titleEl.setText("Protected site"), r.closeButtonEl.hide(), r
+        }
 
-            return extend(t, Modal), t.prototype.close = function () {
-                this.done && Modal.prototype.close.call(this)
-            }, t.prototype.onOpen = function () {
-                this.showPasswordRequired()
-            }, t.prototype.showPasswordRequired = function () {
-                var e = this, t = this.contentEl;
-                t.empty(), this.passwordIncorrectMsg = t.createDiv("message-container", (function (e) {
-                    e.createDiv({cls: "message mod-error", text: "Password is incorrect, please try again."}), e.hide()
-                })), t.createEl("p", {
-                    cls: "u-center-text u-muted",
-                    text: "This site is protected by password."
-                }), t.createEl("p", {cls: "u-center-text"}, (function (t) {
-                    e.passwordEl = t.createEl("input", {type: "password"}, (function (t) {
-                        t.setAttribute("placeholder", "Enter password..."), t.addEventListener("keydown", (function (t) {
-                            t.isComposing || "Enter" !== t.key || e.tryUnlockSite()
-                        }))
-                    }))
-                })), t.createDiv("modal-button-container", (function (t) {
-                    t.createEl("button", {
-                        text: "Confirm",
-                        cls: "mod-cta"
-                    }).addEventListener("click", e.tryUnlockSite.bind(e))
-                }))
-            }, t.prototype.tryUnlockSite = function () {
-                return a(this, void 0, void 0, (function () {
-                    var e, t, n, r;
-                    return o(this, (function (i) {
-                        switch (i.label) {
-                            case 0:
-                                e = this.passwordEl.value, t = this.publish.site, i.label = 1;
-                            case 1:
-                                return i.trys.push([1, 3, , 4]), [4, ajaxPromise({
-                                    method: "POST",
-                                    url: t.host + "/pw",
-                                    data: {id: t.id, pw: e}
-                                })];
-                            case 2:
-                                if (n = i.sent()) try {
-                                    r = JSON.parse(n), this.publish.site.hpw = r.hpw, localStorage[t.id] = r.hpw
-                                } catch (e) {
-                                    console.error(e)
-                                }
-                                return this.done = !0, this.cb(), this.showPasswordCorrect(), [3, 4];
-                            case 3:
-                                return i.sent(), this.passwordIncorrectMsg.show(), [3, 4];
-                            case 4:
-                                return [2]
-                        }
+        return extend(t, Modal), t.prototype.close = function () {
+            this.done && Modal.prototype.close.call(this)
+        }, t.prototype.onOpen = function () {
+            this.showPasswordRequired()
+        }, t.prototype.showPasswordRequired = function () {
+            var e = this, t = this.contentEl;
+            t.empty(), this.passwordIncorrectMsg = t.createDiv("message-container", (function (e) {
+                e.createDiv({cls: "message mod-error", text: "Password is incorrect, please try again."}), e.hide()
+            })), t.createEl("p", {
+                cls: "u-center-text u-muted",
+                text: "This site is protected by password."
+            }), t.createEl("p", {cls: "u-center-text"}, (function (t) {
+                e.passwordEl = t.createEl("input", {type: "password"}, (function (t) {
+                    t.setAttribute("placeholder", "Enter password..."), t.addEventListener("keydown", (function (t) {
+                        t.isComposing || "Enter" !== t.key || e.tryUnlockSite()
                     }))
                 }))
-            }, t.prototype.showPasswordCorrect = function () {
-                var e = this, t = this.contentEl;
-                t.empty(), this.titleEl.setText("Site unlocked"), t.createDiv("message-container", (function (e) {
-                    e.createDiv({cls: "message mod-success", text: "Thank you, the password is correct."})
-                })), t.createEl("p", {
-                    cls: "u-muted",
-                    text: "The password will be remembered during the following sessions for your convenience."
-                }), t.createDiv("modal-button-container", (function (t) {
-                    t.createEl("button", {text: "Enter", cls: "mod-cta"}).addEventListener("click", (function () {
-                        e.close()
-                    }))
+            })), t.createDiv("modal-button-container", (function (t) {
+                t.createEl("button", {
+                    text: "Confirm",
+                    cls: "mod-cta"
+                }).addEventListener("click", e.tryUnlockSite.bind(e))
+            }))
+        }, t.prototype.tryUnlockSite = function () {
+            return a(this, void 0, void 0, (function () {
+                var e, t, n, r;
+                return o(this, (function (i) {
+                    switch (i.label) {
+                        case 0:
+                            e = this.passwordEl.value, t = this.publish.site, i.label = 1;
+                        case 1:
+                            return i.trys.push([1, 3, , 4]), [4, ajaxPromise({
+                                method: "POST",
+                                url: t.host + "/pw",
+                                data: {id: t.id, pw: e}
+                            })];
+                        case 2:
+                            if (n = i.sent()) try {
+                                r = JSON.parse(n), this.publish.site.hpw = r.hpw, localStorage[t.id] = r.hpw
+                            } catch (e) {
+                                console.error(e)
+                            }
+                            return this.done = !0, this.cb(), this.showPasswordCorrect(), [3, 4];
+                        case 3:
+                            return i.sent(), this.passwordIncorrectMsg.show(), [3, 4];
+                        case 4:
+                            return [2]
+                    }
                 }))
-            }, t
-        }(Modal),
-        Ks = function (Modal) {
-            function t(t, n) {
-                var r = Modal.call(this, t) || this;
-                return r.tag = n, r.titleEl.createSpan({text: "Pages with tag " + n}), r
-            }
+            }))
+        }, t.prototype.showPasswordCorrect = function () {
+            var e = this, t = this.contentEl;
+            t.empty(), this.titleEl.setText("Site unlocked"), t.createDiv("message-container", (function (e) {
+                e.createDiv({cls: "message mod-success", text: "Thank you, the password is correct."})
+            })), t.createEl("p", {
+                cls: "u-muted",
+                text: "The password will be remembered during the following sessions for your convenience."
+            }), t.createDiv("modal-button-container", (function (t) {
+                t.createEl("button", {text: "Enter", cls: "mod-cta"}).addEventListener("click", (function () {
+                    e.close()
+                }))
+            }))
+        }, t
+    }(Modal)
+    const Ks = function (Modal) {
+        function t(t, n) {
+            var r = Modal.call(this, t) || this;
+            return r.tag = n, r.titleEl.createSpan({text: "Pages with tag " + n}), r
+        }
 
-            return extend(t, Modal), t.prototype.onOpen = function () {
-                var e = this, t = this.publish, n = this.tag, r = t.site, i = r.cache.cache,
-                    a = new RegExp("^" + yr(n) + "(\\/|$)", "i"), o = [];
-                for (var s in i) if (i.hasOwnProperty(s)) {
-                    var l = getAllTags(i[s]);
-                    if (l) for (var c = 0, h = l; c < h.length; c++) {
-                        var u = h[c];
-                        if (a.test(u)) {
-                            o.push(s);
-                            break
-                        }
+        return extend(t, Modal), t.prototype.onOpen = function () {
+            var e = this, t = this.publish, n = this.tag, r = t.site, i = r.cache.cache,
+                a = new RegExp("^" + yr(n) + "(\\/|$)", "i"), o = [];
+            for (var s in i) if (i.hasOwnProperty(s)) {
+                var l = getAllTags(i[s]);
+                if (l) for (var c = 0, h = l; c < h.length; c++) {
+                    var u = h[c];
+                    if (a.test(u)) {
+                        o.push(s);
+                        break
                     }
                 }
-                var f = this.contentEl.createEl("ol", "files-with-tag-container");
-                if (o.length > 0) for (var p = function (n) {
-                    f.createEl("li", "files-with-tag-item", (function (i) {
-                        return i.createEl("a", {
-                            cls: "internal-link",
-                            href: r.getPublicHref(n),
-                            text: wo(n)
-                        }).addEventListener("click", (function (r) {
-                            r.preventDefault(), e.close(), t.navigate(n, "")
-                        }))
+            }
+            var f = this.contentEl.createEl("ol", "files-with-tag-container");
+            if (o.length > 0) for (var p = function (n) {
+                f.createEl("li", "files-with-tag-item", (function (i) {
+                    return i.createEl("a", {
+                        cls: "internal-link",
+                        href: r.getPublicHref(n),
+                        text: wo(n)
+                    }).addEventListener("click", (function (r) {
+                        r.preventDefault(), e.close(), t.navigate(n, "")
                     }))
-                }, d = 0, m = o; d < m.length; d++) {
-                    p(m[d])
-                } else f.createDiv({cls: "files-with-tag-item", text: "There are no pages that contain this tag."})
-            }, t
-        }(Modal);
+                }))
+            }, d = 0, m = o; d < m.length; d++) {
+                p(m[d])
+            } else f.createDiv({cls: "files-with-tag-item", text: "There are no pages that contain this tag."})
+        }, t
+    }(Modal)
 
+    const Us = {}
     !function (e) {
         e[e.Showing = 0] = "Showing", e[e.Shown = 1] = "Shown", e[e.Hiding = 2] = "Hiding", e[e.Hidden = 3] = "Hidden"
-    }(Us || (Us = {}));
+    }(Us)
     var Ys = [],
         Xs = [],
         Js = 0,
@@ -15044,7 +15048,7 @@ require.r = e => {
                                     }));
                                     var t = e.createDiv("backlink-items-container");
                                     M.sort((function (e, t) {
-                                        return Cs(e.name, t.name)
+                                        return compareFn(e.name, t.name)
                                     })), t.setChildrenInPlace(M.map((function (e) {
                                         return e.el
                                     }))), i.updateFooter()
