@@ -14115,8 +14115,8 @@ require.r = e => {
         numeric: true
     }).compare
 
-    function As(e) {
-        return decodeURIComponent(e.replace(/\+/g, "%20"))
+    function decodePathComponent(path) {
+        return decodeURIComponent(path.replace(/\+/g, "%20"))
     }
 
     function Ls(e) {
@@ -16213,7 +16213,7 @@ require.r = e => {
                     logoUrl, logoSrc, _gaConfig, D, scriptEl, obsidian_css_loaded, publish_css_loaded, Z, node, _cache,
                     U, _, filename, matchResult, sizes, K, _this = this;
                 return o(this, (function (o) {
-                    debugger
+                    // debugger
                     switch (o.label) {
                         case 0:
                             containerEl = _this.containerEl
@@ -16473,6 +16473,7 @@ require.r = e => {
             return a(this, void 0, void 0, (function () {
                 let _this, site, renderer, r, path, subpath, s, dest;
                 return o(this, (function (o) {
+                    // debugger
                     switch (o.label) {
                         case 0:
                             _this = this
@@ -16540,29 +16541,34 @@ require.r = e => {
             this.updateSlidingWindow()
         }
         n.prototype.parseUrl = function () {
-            let path, pathname = location.pathname, customurl = this.site.customurl, r = false;
+            debugger
+            let path,
+                pathname = location.pathname,
+                customurl = this.site.customurl,
+                useCustomURL = false;
             if (customurl) {
-                let i = location.host + pathname;
-                if (i.startsWith(customurl)) {
-                    pathname = i.substring(customurl.length)
-                    r = true
+                let url = location.host + pathname;
+                if (url.startsWith(customurl)) {
+                    pathname = url.substring(customurl.length)
+                    useCustomURL = true
                 }
             }
             if (pathname.startsWith("/")) {
                 pathname = pathname.substring(1)
             }
-            if (!r) {
+            if (!useCustomURL) {
                 let a = pathname.indexOf("/");
                 pathname = a >= 0 ? pathname.substring(a + 1) : ""
             }
             let permalinks = this.site.cache.permalinks;
             path = permalinks.hasOwnProperty(pathname)
                 ? permalinks[pathname]
-                : pathname.split("/").filter(e => e).map(As).join("/");
+                : pathname.split("/").filter(e => e).map(decodePathComponent).join("/");
             let hash = location.hash || ""
+            hash = hash.split("#").map(decodePathComponent).join("#")
             return {
                 path: path,
-                subpath: hash = hash.split("#").map(As).join("#")
+                subpath: hash,
             }
         }
         n.prototype.navigate = function (linktext, t, evt) {
