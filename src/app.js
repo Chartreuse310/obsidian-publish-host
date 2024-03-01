@@ -3827,13 +3827,16 @@ require.r = e => {
             }, e.prototype.unobserve = function () {
             }, e.prototype.disconnect = function () {
             }, e
-        }()), Object.isEmpty || defineProperty(Object, "isEmpty", (function (e) {
+        }())
+        Object.isEmpty || defineProperty(Object, "isEmpty", function (e) {
             for (var t in e) if (e.hasOwnProperty(t)) return !1;
             return !0
-        })), Object.each || (Object.each = function (e, t, n) {
+        })
+        Object.each || (Object.each = function (e, t, n) {
             for (var r in e) if (e.hasOwnProperty(r) && !1 === t.call(n, e[r], r)) return !1;
             return !0
-        }), Array.combine || (Array.combine = function (e) {
+        })
+        Array.combine || (Array.combine = function (e) {
             for (var t = 0, n = 0, r = e; n < r.length; n++) {
                 t += r[n].length
             }
@@ -3842,89 +3845,114 @@ require.r = e => {
                 i[a] = h, a++
             }
             return i
-        }), Array.prototype.first || defineProperty(Array.prototype, "first", (function () {
+        })
+        Array.prototype.first || defineProperty(Array.prototype, "first", function () {
             if (0 !== this.length) return this[0]
-        })), Array.prototype.last || defineProperty(Array.prototype, "last", (function () {
+        })
+        Array.prototype.last || defineProperty(Array.prototype, "last", function () {
             if (0 !== this.length) return this[this.length - 1]
-        })), Array.prototype.contains || defineProperty(Array.prototype, "contains", (function (e) {
+        })
+        Array.prototype.contains || defineProperty(Array.prototype, "contains", function (e) {
             return -1 !== this.indexOf(e)
-        })), Array.prototype.remove || defineProperty(Array.prototype, "remove", (function (e) {
+        })
+        Array.prototype.remove || defineProperty(Array.prototype, "remove", function (e) {
             for (var t = this.length - 1; t >= 0; t--) this[t] === e && this.splice(t, 1)
-        })), Array.prototype.shuffle || defineProperty(Array.prototype, "shuffle", (function () {
+        })
+        Array.prototype.shuffle || defineProperty(Array.prototype, "shuffle", function () {
             for (var e, t, n = this.length; 0 !== n;) t = Math.floor(Math.random() * n), e = this[n -= 1], this[n] = this[t], this[t] = e;
             return this
-        })), Array.prototype.findLastIndex || defineProperty(Array.prototype, "findLastIndex", (function (e) {
+        })
+        Array.prototype.findLastIndex || defineProperty(Array.prototype, "findLastIndex", function (e) {
             for (var t = this.length - 1; t <= 0; t--) if (e(this[t], t)) return t;
             return -1
-        })), Array.prototype.unique || defineProperty(Array.prototype, "unique", (function () {
+        })
+        Array.prototype.unique || defineProperty(Array.prototype, "unique", function () {
             return Array.from(new Set(this).values())
-        })), Math.clamp || (Math.clamp = function (e, t, n) {
+        })
+        Math.clamp || (Math.clamp = function (e, t, n) {
             return Math.min(Math.max(e, t), n)
-        }), Math.square || (Math.square = function (e) {
+        })
+        Math.square || (Math.square = function (e) {
             return e * e
-        }), String.isString || (String.isString = function (e) {
+        })
+        String.isString || (String.isString = function (e) {
             return "string" == typeof e || e instanceof String
-        }), String.prototype.contains || (String.prototype.contains = function (e) {
+        })
+        String.prototype.contains || (String.prototype.contains = function (e) {
             return -1 !== this.indexOf(e)
-        }), String.prototype.startsWith || (String.prototype.startsWith = function (e, t) {
+        })
+        String.prototype.startsWith || (String.prototype.startsWith = function (e, t) {
             return this.substr(!t || t < 0 ? 0 : +t, e.length) === e
-        }), String.prototype.endsWith || (String.prototype.endsWith = function (e, t) {
+        })
+        String.prototype.endsWith || (String.prototype.endsWith = function (e, t) {
             var n = void 0 === t || t > this.length ? this.length : t;
             return this.substring(n - e.length, n) === e
-        }), String.prototype.format || (String.prototype.format = function () {
+        })
+        String.prototype.format || (String.prototype.format = function () {
             for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
             return this.replace(/{(\d+)}/g, (function (t, n) {
                 return void 0 !== e[n] ? e[n] : t
             }))
-        }), Number.isNumber || defineProperty(Number, "isNumber", (function (e) {
+        })
+        Number.isNumber || defineProperty(Number, "isNumber", function (e) {
             return "number" == typeof e
-        })), defineProperty(window, "isBoolean", (function (e) {
+        })
+        defineProperty(window, "isBoolean", function (e) {
             return "boolean" == typeof e
-        }));
-        var s = function (e) {
-            var t = e.nodeType;
+        })
+
+        let s = function (node) {
+            var t = node.nodeType;
             if (1 === t || 9 === t || 11 === t) {
-                if ("string" == typeof e.textContent) return e.textContent;
-                for (var n = [], r = e.firstChild; r; r = r.nextSibling) n.push(s(r));
+                if ("string" == typeof node.textContent) return node.textContent;
+                for (var n = [], r = node.firstChild; r; r = r.nextSibling) n.push(s(r));
                 return n.join("")
             }
-            return (3 === t || 4 === t) && e.nodeValue || ""
-        };
+            return (3 === t || 4 === t) && node.nodeValue || ""
+        }
 
-        function l(e) {
+        function setCssStyles(e) {
             var t = this.style;
             for (var n in e) e.hasOwnProperty(n) && (t[n] = e[n])
         }
 
-        function c(e) {
+        function setCssProps(e) {
             var t = this.style;
             for (var n in e) e.hasOwnProperty(n) && t.setProperty(n, e[n])
         }
 
         Element.prototype.getText = function () {
             return s(this)
-        }, Element.prototype.setText = function (e) {
+        }
+        Element.prototype.setText = function (e) {
             !function (e, t) {
                 if (t instanceof DocumentFragment || t instanceof Node) return e.empty(), void e.appendChild(t);
                 String.isString(t) || (t = String(t));
                 var n = e.nodeType;
                 1 !== n && 9 !== n && 11 !== n || (e.textContent = t)
             }(this, e)
-        }, Element.prototype.addClass = function () {
+        }
+        Element.prototype.addClass = function () {
             for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
             this.addClasses(e)
-        }, Element.prototype.addClasses = function (e) {
+        }
+        Element.prototype.addClasses = function (e) {
             if (e) for (var t = 0; t < e.length; t++) this.classList.add(e[t])
-        }, Element.prototype.removeClass = function () {
+        }
+        Element.prototype.removeClass = function () {
             for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
             this.removeClasses(e)
-        }, Element.prototype.removeClasses = function (e) {
+        }
+        Element.prototype.removeClasses = function (e) {
             for (var t = 0; t < e.length; t++) this.classList.remove(e[t])
-        }, Element.prototype.toggleClass = function (e, t) {
+        }
+        Element.prototype.toggleClass = function (e, t) {
             e instanceof Array || (e = [e]), t ? this.addClasses(e) : this.removeClasses(e)
-        }, Element.prototype.hasClass = function (e) {
+        }
+        Element.prototype.hasClass = function (e) {
             return this.classList.contains(e)
-        }, [Element.prototype, Document.prototype, DocumentFragment.prototype].forEach((function (t) {
+        }
+        ;[Element.prototype, Document.prototype, DocumentFragment.prototype].forEach(function (t) {
             defineProperty(t, "prepend", (function () {
                 for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
                 for (var n = document.createDocumentFragment(), r = 0, i = e; r < i.length; r++) {
@@ -3933,15 +3961,20 @@ require.r = e => {
                 }
                 this.insertBefore(n, this.firstChild)
             }))
-        })), Node.prototype.detach = function () {
+        })
+        Node.prototype.detach = function () {
             this.parentNode && this.parentNode.removeChild(this)
-        }, Node.prototype.empty = function () {
+        }
+        Node.prototype.empty = function () {
             for (; this.lastChild;) this.removeChild(this.lastChild)
-        }, Node.prototype.insertAfter = function (e, t) {
+        }
+        Node.prototype.insertAfter = function (e, t) {
             return t ? this.insertBefore(e, t.nextSibling) : this.insertBefore(e, this.firstChild), e
-        }, Node.prototype.indexOf = function (e) {
+        }
+        Node.prototype.indexOf = function (e) {
             return Array.prototype.indexOf.call(this.childNodes, e)
-        }, Node.prototype.setChildrenInPlace = function (e) {
+        }
+        Node.prototype.setChildrenInPlace = function (e) {
             for (var t = this.firstChild, n = new Set(e), r = 0, i = e; r < i.length; r++) {
                 for (var a = i[r]; t && !n.has(t);) {
                     var o = t;
@@ -3953,31 +3986,42 @@ require.r = e => {
                 o = t;
                 t = t.nextSibling, this.removeChild(o)
             }
-        }, Node.prototype.appendText = function (e) {
+        }
+        Node.prototype.appendText = function (e) {
             this.appendChild(document.createTextNode(e))
-        }, Node.prototype.instanceOf = function (e) {
+        }
+        Node.prototype.instanceOf = function (e) {
             if (this instanceof e) return !0;
             var t = this.win[e.name];
             return !!(t && this instanceof t) || !!((t = this.constructorWin[e.name]) && this instanceof t)
-        }, defineGetter(Node.prototype, "doc", (function () {
+        }
+        defineGetter(Node.prototype, "doc", function () {
             return this.ownerDocument || document
-        })), defineGetter(Node.prototype, "win", (function () {
+        })
+        defineGetter(Node.prototype, "win", function () {
             return this.doc.defaultView || window
-        })), Node.prototype.constructorWin = window, Element.prototype.setAttr = function (e, t) {
-            null === t ? this.removeAttribute(e) : this.setAttribute(e, String(t))
-        }, Element.prototype.setAttrs = function (e) {
-            for (var t in e) if (e.hasOwnProperty(t)) {
-                var n = e[t];
+        })
+        Node.prototype.constructorWin = window
+        Element.prototype.setAttr = function (key, attr) {
+            null === attr ? this.removeAttribute(key) : this.setAttribute(key, String(attr))
+        }
+        Element.prototype.setAttrs = function (attrs) {
+            for (var t in attrs) if (attrs.hasOwnProperty(t)) {
+                var n = attrs[t];
                 this.setAttr(t, n)
             }
-        }, Element.prototype.getAttr = Element.prototype.getAttribute, defineProperty(Element.prototype, "matchParent", (function (e, t) {
+        }
+        Element.prototype.getAttr = Element.prototype.getAttribute
+        defineProperty(Element.prototype, "matchParent", function (e, t) {
             if (this.matches(e)) return this;
             if (this === t) return null;
             var n = this.parentElement;
             return n ? n.matchParent(e, t) : null
-        })), Element.prototype.getCssPropertyValue = function (e, t) {
+        })
+        Element.prototype.getCssPropertyValue = function (e, t) {
             return getComputedStyle(this, t).getPropertyValue(e).trim()
-        }, defineProperty(Element.prototype, "isActiveElement", (function () {
+        }
+        defineProperty(Element.prototype, "isActiveElement", function () {
             for (var e = this; e;) {
                 if (e.doc.activeElement !== e) return !1;
                 var t = e.win.frameElement;
@@ -3985,119 +4029,186 @@ require.r = e => {
                 e = t
             }
             return !1
-        })), HTMLElement.prototype.show || (HTMLElement.prototype.show = function () {
-            "none" === this.style.display && (this.style.display = this.getAttribute("data-display") || "", this.removeAttribute("data-display"))
-        }), HTMLElement.prototype.hide || (HTMLElement.prototype.hide = function () {
-            var e = this.style.display;
-            "none" !== e && (this.style.display = "none", e ? this.setAttribute("data-display", e) : this.removeAttribute("data-display"))
-        }), HTMLElement.prototype.toggle || (HTMLElement.prototype.toggle = function (e) {
-            e ? this.show() : this.hide()
-        }), HTMLElement.prototype.toggleVisibility || (HTMLElement.prototype.toggleVisibility = function (e) {
-            this.style.visibility = e ? "" : "hidden"
-        }), defineProperty(HTMLElement.prototype, "isShown", (function () {
-            return !!this.offsetParent
-        })), defineGetter(HTMLElement.prototype, "innerWidth", (function () {
-            var e = getComputedStyle(this), t = parseFloat(e.paddingLeft), n = parseFloat(e.paddingRight);
-            return isNaN(t) && (t = 0), isNaN(n) && (n = 0), this.scrollWidth - t - n
-        })), defineGetter(HTMLElement.prototype, "innerHeight", (function () {
-            var e = getComputedStyle(this), t = parseFloat(e.paddingTop), n = parseFloat(e.paddingBottom);
-            return isNaN(t) && (t = 0), isNaN(n) && (n = 0), this.scrollHeight - t - n
-        })), defineProperty(HTMLElement.prototype, "setCssStyles", l), defineProperty(SVGElement.prototype, "setCssStyles", l), defineProperty(HTMLElement.prototype, "setCssProps", c), defineProperty(SVGElement.prototype, "setCssProps", c), defineProperty(HTMLElement.prototype, "addEventListeners", (function (e) {
-            for (var t in e) if (e.hasOwnProperty(t)) {
-                var n = t, r = e[n];
-                "function" == typeof r && this.addEventListener(n, r)
+        })
+        HTMLElement.prototype.show || (HTMLElement.prototype.show = function () {
+            if ("none" === this.style.display) {
+                this.style.display = this.getAttribute("data-display") || ""
+                this.removeAttribute("data-display")
             }
-        })), window.fish = function (e) {
-            return document.querySelector(e)
-        }, window.fishAll = function (e) {
-            return Array.prototype.slice.call(document.querySelectorAll(e))
-        }, Element.prototype.find = function (e) {
-            return this.querySelector(e)
-        }, Element.prototype.findAll = function (e) {
-            return Array.prototype.slice.call(this.querySelectorAll(e))
-        }, Element.prototype.findAllSelf = function (e) {
-            var t = Array.prototype.slice.call(this.querySelectorAll(e));
-            return this.matches(e) && t.unshift(this), t
-        }, DocumentFragment.prototype.find = function (e) {
-            return this.querySelector(e)
-        }, DocumentFragment.prototype.findAll = function (e) {
-            return Array.prototype.slice.call(this.querySelectorAll(e))
-        }, Node.prototype.createEl = function (e, t, n) {
-            return "string" == typeof t && (t = {cls: t}), (t = t || {}).parent = this, createEl(e, t, n)
-        }, Node.prototype.createDiv = function (e, t) {
-            return this.createEl("div", e, t)
-        }, Node.prototype.createSpan = function (e, t) {
-            return this.createEl("span", e, t)
-        }, Node.prototype.createSvg = function (e, t, n) {
-            return "string" == typeof t && (t = {cls: t}), (t = t || {}).parent = this, createSvg(e, t, n)
-        }, window.createEl = function (e, t, n) {
-            var r = document.createElement(e);
-            "string" == typeof t && (t = {cls: t});
-            var i = t || {}, a = i.cls, o = i.text, s = i.attr, l = i.title, c = i.value, h = i.placeholder,
+        })
+        HTMLElement.prototype.hide || (HTMLElement.prototype.hide = function () {
+            let display = this.style.display;
+            if ("none" !== display) {
+                this.style.display = "none"
+                display
+                    ? this.setAttribute("data-display", display)
+                    : this.removeAttribute("data-display")
+            }
+        })
+        HTMLElement.prototype.toggle || (HTMLElement.prototype.toggle = function (show) {
+            show ? this.show() : this.hide()
+        })
+        HTMLElement.prototype.toggleVisibility || (HTMLElement.prototype.toggleVisibility = function (visibility) {
+            this.style.visibility = visibility ? "" : "hidden"
+        })
+        defineProperty(HTMLElement.prototype, "isShown", function () {
+            return !!this.offsetParent
+        })
+        defineGetter(HTMLElement.prototype, "innerWidth", function () {
+            let style = getComputedStyle(this),
+                paddingLeft = parseFloat(style.paddingLeft),
+                paddingRight = parseFloat(style.paddingRight);
+            isNaN(paddingLeft) && (paddingLeft = 0)
+            isNaN(paddingRight) && (paddingRight = 0)
+            return this.scrollWidth - paddingLeft - paddingRight
+        })
+        defineGetter(HTMLElement.prototype, "innerHeight", function () {
+            let style = getComputedStyle(this),
+                paddingTop = parseFloat(style.paddingTop),
+                paddingBottom = parseFloat(style.paddingBottom);
+            isNaN(paddingTop) && (paddingTop = 0)
+            isNaN(paddingBottom) && (paddingBottom = 0)
+            return this.scrollHeight - paddingTop - paddingBottom
+        })
+        defineProperty(HTMLElement.prototype, "setCssStyles", setCssStyles)
+        defineProperty(SVGElement.prototype, "setCssStyles", setCssStyles)
+        defineProperty(HTMLElement.prototype, "setCssProps", setCssProps)
+        defineProperty(SVGElement.prototype, "setCssProps", setCssProps)
+        defineProperty(HTMLElement.prototype, "addEventListeners", function (listeners) {
+            for (let key in listeners) {
+                if (listeners.hasOwnProperty(key)) {
+                    let type = key, callback = listeners[type];
+                    if ("function" == typeof callback) {
+                        this.addEventListener(type, callback)
+                    }
+                }
+            }
+        })
+        window.fish = function (selectors) {
+            return document.querySelector(selectors)
+        }
+        window.fishAll = function (selectors) {
+            return Array.prototype.slice.call(document.querySelectorAll(selectors))
+        }
+        Element.prototype.find = function (selectors) {
+            return this.querySelector(selectors)
+        }
+        Element.prototype.findAll = function (selectors) {
+            return Array.prototype.slice.call(this.querySelectorAll(selectors))
+        }
+        Element.prototype.findAllSelf = function (selectors) {
+            var t = Array.prototype.slice.call(this.querySelectorAll(selectors));
+            return this.matches(selectors) && t.unshift(this), t
+        }
+        DocumentFragment.prototype.find = function (selectors) {
+            return this.querySelector(selectors)
+        }
+        DocumentFragment.prototype.findAll = function (selectors) {
+            return Array.prototype.slice.call(this.querySelectorAll(selectors))
+        }
+
+        Node.prototype.createEl = function (tagName, options, cb) {
+            return "string" == typeof options && (options = {cls: options}), (options = options || {}).parent = this, createEl(tagName, options, cb)
+        }
+        Node.prototype.createDiv = function (options, cb) {
+            return this.createEl("div", options, cb)
+        }
+        Node.prototype.createSpan = function (options, cb) {
+            return this.createEl("span", options, cb)
+        }
+        Node.prototype.createSvg = function (qualifiedName, options, cb) {
+            return "string" == typeof options && (options = {cls: options}), (options = options || {}).parent = this, createSvg(qualifiedName, options, cb)
+        }
+
+        window.createEl = function (tagName, options, cb) {
+            var r = document.createElement(tagName);
+            "string" == typeof options && (options = {cls: options});
+            var i = options || {}, a = i.cls, o = i.text, s = i.attr, l = i.title, c = i.value, h = i.placeholder,
                 u = i.type, f = i.parent, p = i.prepend, d = i.href;
-            for (var m in a && (Array.isArray(a) ? r.className = a.join(" ") : r.className = a), o && r.setText(o), s && r.setAttrs(s), void 0 !== l && (r.title = l), void 0 !== c && (r instanceof HTMLInputElement || r instanceof HTMLSelectElement || r instanceof HTMLOptionElement) && (r.value = c), u && r instanceof HTMLInputElement && (r.type = u), u && r instanceof HTMLStyleElement && r.setAttribute("type", u), h && r instanceof HTMLInputElement && (r.placeholder = h), d && (r instanceof HTMLAnchorElement || r instanceof HTMLLinkElement || r instanceof HTMLBaseElement) && (r.href = d), n && n(r), f && (p ? f.insertBefore(r, f.firstChild) : f.appendChild(r)), t) if (t.hasOwnProperty(m) && m.startsWith("on")) {
-                var v = m, g = t[v];
+            for (var m in a && (Array.isArray(a) ? r.className = a.join(" ") : r.className = a), o && r.setText(o), s && r.setAttrs(s), void 0 !== l && (r.title = l), void 0 !== c && (r instanceof HTMLInputElement || r instanceof HTMLSelectElement || r instanceof HTMLOptionElement) && (r.value = c), u && r instanceof HTMLInputElement && (r.type = u), u && r instanceof HTMLStyleElement && r.setAttribute("type", u), h && r instanceof HTMLInputElement && (r.placeholder = h), d && (r instanceof HTMLAnchorElement || r instanceof HTMLLinkElement || r instanceof HTMLBaseElement) && (r.href = d), cb && cb(r), f && (p ? f.insertBefore(r, f.firstChild) : f.appendChild(r)), options) if (options.hasOwnProperty(m) && m.startsWith("on")) {
+                var v = m, g = options[v];
                 "function" == typeof g && r.addEventListener(v.substring(2), g)
             }
             return r
-        }, window.createDiv = function (e, t) {
-            return createEl("div", e, t)
-        }, window.createSpan = function (e, t) {
-            return createEl("span", e, t)
-        }, window.createSvg = function (e, t, n) {
-            var r, i = document.createElementNS("http://www.w3.org/2000/svg", e);
-            "string" == typeof t && (t = {cls: t});
-            var a = t || {}, o = a.cls, s = a.attr, l = a.parent, c = a.prepend;
-            return o && (Array.isArray(o) ? (r = i.classList).add.apply(r, o) : i.classList.add(o)), s && i.setAttrs(s), n && n(i), l && (c ? l.insertBefore(i, l.firstChild) : l.appendChild(i)), i
-        }, window.createFragment = function (e) {
+        }
+        window.createDiv = function (options, cb) {
+            return createEl("div", options, cb)
+        }
+        window.createSpan = function (options, cb) {
+            return createEl("span", options, cb)
+        }
+        window.createSvg = function (qualifiedName, options, cb) {
+            var r, i = document.createElementNS("http://www.w3.org/2000/svg", qualifiedName);
+            "string" == typeof options && (options = {cls: options});
+            var a = options || {}, o = a.cls, s = a.attr, l = a.parent, c = a.prepend;
+            return o && (Array.isArray(o) ? (r = i.classList).add.apply(r, o) : i.classList.add(o)), s && i.setAttrs(s), cb && cb(i), l && (c ? l.insertBefore(i, l.firstChild) : l.appendChild(i)), i
+        }
+        window.createFragment = function (cb) {
             var t = document.createDocumentFragment();
-            return e && e(t), t
+            return cb && cb(t), t
         };
-        var h = function (e, t, n, r) {
+
+        let on = function (type, selector, n, options) {
             var i = this._EVENTS;
             i || (i = {}, this._EVENTS = i);
-            var a = i[e];
-            a || (a = [], i[e] = a);
+            var a = i[type];
+            a || (a = [], i[type] = a);
             var o = function (e) {
                 var r = e.target;
                 if (r.matchParent) {
-                    var i = r.matchParent(t, e.currentTarget);
+                    var i = r.matchParent(selector, e.currentTarget);
                     i && n.call(this, e, i)
                 }
             };
-            a.push({selector: t, listener: n, options: r, callback: o}), this.addEventListener(e, o, r)
-        }, u = function (e, t, n, r) {
+            a.push({
+                selector: selector,
+                listener: n,
+                options: options,
+                callback: o
+            }), this.addEventListener(type, o, options)
+        }
+        let off = function (type, selector, n, options) {
             var i = this, a = this._EVENTS;
             if (a) {
-                var o = a[e];
-                o && (a[e] = o.filter((function (a) {
-                    if (a.selector === t && a.listener === n && a.options === r) {
+                var o = a[type];
+                o && (a[type] = o.filter((function (a) {
+                    if (a.selector === selector && a.listener === n && a.options === options) {
                         var o = a.callback;
-                        return i.removeEventListener(e, o, r), !1
+                        return i.removeEventListener(type, o, options), !1
                     }
                     return !0
                 })))
             }
-        };
-        HTMLElement.prototype.on = h, HTMLElement.prototype.off = u, Document.prototype.on = h, Document.prototype.off = u, HTMLElement.prototype.onClickEvent = function (e, t) {
-            this.addEventListener("click", e, t), this.addEventListener("auxclick", e, t)
-        }, HTMLElement.prototype.trigger = function (e) {
+        }
+        HTMLElement.prototype.on = on
+        HTMLElement.prototype.off = off
+        Document.prototype.on = on
+        Document.prototype.off = off
+        HTMLElement.prototype.onClickEvent = function (listener, options) {
+            this.addEventListener("click", listener, options), this.addEventListener("auxclick", listener, options)
+        }
+        HTMLElement.prototype.trigger = function (type) {
             var t = document.createEvent("HTMLEvents");
-            t.initEvent(e, !0, !1), this.dispatchEvent(t)
-        }, defineGetter(UIEvent.prototype, "targetNode", (function () {
+            t.initEvent(type, !0, !1), this.dispatchEvent(t)
+        }
+        defineGetter(UIEvent.prototype, "targetNode", function () {
             return this.target
-        })), defineGetter(UIEvent.prototype, "win", (function () {
+        })
+        defineGetter(UIEvent.prototype, "win", function () {
             return this.view || window
-        })), defineGetter(UIEvent.prototype, "doc", (function () {
+        })
+        defineGetter(UIEvent.prototype, "doc", function () {
             return this.win.document
-        })), UIEvent.prototype.instanceOf = function (e) {
+        })
+        UIEvent.prototype.instanceOf = function (e) {
             if (this instanceof e) return !0;
             var t = this.view;
             if (!t) return !1;
             var n = t[e.name];
             return !(!n || n === e) && this instanceof n
-        };
-        var f = new WeakMap;
+        }
+
+        let f = new WeakMap()
         HTMLElement.prototype.onNodeInserted = function (e, t) {
             var n = this, r = function (r) {
                 n.isShown() && (t && i(), "node-inserted" === r.animationName && e())
@@ -4107,43 +4218,94 @@ require.r = e => {
                 e <= 0 ? (f.delete(n), n.removeClass("node-insert-event")) : f.set(n, e)
             };
             return f.set(this, (f.get(this) || 0) + 1), this.addClass("node-insert-event"), this.addEventListener("animationstart", r), i
-        }, HTMLElement.prototype.onWindowMigrated = function (e) {
+        }
+        HTMLElement.prototype.onWindowMigrated = function (e) {
             var t = this, n = this.win;
             return this.onNodeInserted((function () {
                 var r = t.win;
                 r !== n && e(n = r)
             }))
-        }, window.ajax = function (e) {
-            var t = e.method, n = e.url, r = e.success, i = e.error, a = e.data, o = e.headers,
-                s = e.withCredentials;
-            t = t || "GET";
-            var l = new XMLHttpRequest;
-            if (e.req = l, l.open(t, n, !0), l.onload = function () {
-                var e = l.status, t = l.response;
-                e >= 200 && e < 400 ? r && r(t, l) : i && i(t, l)
-            }, l.onerror = function (e) {
-                i && i(e, l)
-            }, o) for (var c in o) o.hasOwnProperty(c) && l.setRequestHeader(c, o[c]);
-            l.withCredentials = s || !1, a ? (void 0 === s && (l.withCredentials = !0), String.isString(a) ? l.send(a) : a instanceof ArrayBuffer ? (l.setRequestHeader("Content-Type", "application/octet-stream"), l.send(a)) : (l.setRequestHeader("Content-Type", "application/json; charset=utf-8"), l.send(JSON.stringify(a)))) : l.send()
-        }, window.ajaxPromise = function (e) {
-            return new Promise((function (t, n) {
-                e.success = t, e.error = function (e, t) {
-                    return n(t)
-                }, ajax(e)
-            }))
-        }, window.ready = function (e) {
-            "loading" !== document.readyState ? e() : document.addEventListener("DOMContentLoaded", e)
-        }, window.sleep = function (e) {
-            return new Promise((function (t) {
-                return window.setTimeout(t, e)
-            }))
-        }, window.nextFrame = function () {
-            return new Promise((function (e) {
-                return window.requestAnimationFrame((function () {
-                    return e()
-                }))
-            }))
-        }, window.activeWindow = window, window.activeDocument = document
+        }
+
+
+        window.ajax = function (options) {
+            let method = options.method,
+                url = options.url,
+                success = options.success,
+                error = options.error,
+                data = options.data,
+                headers = options.headers,
+                withCredentials = options.withCredentials;
+            method = method || "GET";
+            let xhr = new XMLHttpRequest()
+            options.req = xhr
+            xhr.open(method, url, true)
+            xhr.onload = function () {
+                let status = xhr.status, response = xhr.response;
+                if (status >= 200 && status < 400) {
+                    success && success(response, xhr)
+                } else {
+                    error && error(response, xhr)
+                }
+            }
+            xhr.onerror = function (e) {
+                error && error(e, xhr)
+            }
+            if (headers) {
+                for (let key in headers) {
+                    if (headers.hasOwnProperty(key)) {
+                        xhr.setRequestHeader(key, headers[key])
+                    }
+                }
+            }
+            xhr.withCredentials = withCredentials || false
+            if (data) {
+                if (undefined === withCredentials) {
+                    xhr.withCredentials = true
+                }
+                if (String.isString(data)) {
+                    xhr.send(data)
+                } else if (data instanceof ArrayBuffer) {
+                    xhr.setRequestHeader("Content-Type", "application/octet-stream")
+                    xhr.send(data)
+                } else {
+                    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8")
+                    xhr.send(JSON.stringify(data))
+                }
+            } else {
+                xhr.send()
+            }
+        }
+        window.ajaxPromise = function (options) {
+            return new Promise(function (resolve, reject) {
+                options.success = resolve
+                options.error = function (e, t) {
+                    return reject(t)
+                }
+                ajax(options)
+            })
+        }
+        window.ready = function (cb) {
+            if ("loading" !== document.readyState) {
+                cb()
+            } else {
+                document.addEventListener("DOMContentLoaded", cb)
+            }
+        }
+        window.sleep = function (duration) {
+            return new Promise(function (resolve) {
+                return window.setTimeout(resolve, duration)
+            })
+        }
+        window.nextFrame = function () {
+            return new Promise(function (resolve) {
+                return window.requestAnimationFrame(function () {
+                    return resolve()
+                })
+            })
+        }
+        window.activeWindow = window
+        window.activeDocument = document
     }
 
     globalEnhance()
@@ -15323,7 +15485,7 @@ require.r = e => {
         return !e || e.headers.has("obs-status") && null !== e.headers.get("obs-status")
     }
 
-    function processPreloadElements() {
+    function detachPreloadEls() {
         for (let i = 0, nodes = Array.from(document.head.childNodes); i < nodes.length; i++) {
             let node = nodes[i]
             if (node instanceof HTMLLinkElement && "preload" === node.rel && "style" === node.as) {
@@ -15550,6 +15712,7 @@ require.r = e => {
                     logoUrl, logoSrc, _gaConfig, D, scriptEl, obsidian_css_loaded, publish_css_loaded, Z, node, _cache,
                     U, _, filename, matchResult, sizes, K, _this = this;
                 return o(this, (function (o) {
+                    debugger
                     switch (o.label) {
                         case 0:
                             containerEl = _this.containerEl
@@ -15572,14 +15735,14 @@ require.r = e => {
                                 siteCache = site.loadCache()
                                 return [4, siteOptions]
                             } else {
-                                processPreloadElements()
+                                detachPreloadEls()
                                 containerEl.show()
                                 renderer.renderContent("### Site not found.")
                                 return [2]
                             }
                         case 1:
                             o.sent()
-                            processPreloadElements()
+                            detachPreloadEls()
                             containerEl.show()
                             leftColumnInnerEl = _this.leftColumnInnerEl
                             rightColumnInnerEl = _this.rightColumnInnerEl
