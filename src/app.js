@@ -9269,7 +9269,7 @@ require.r = e => {
         return !n || !t.contains(n)
     }
 
-    var Hr = /bot|crawl|spider/i.test(navigator.userAgent);
+    const isBotAgent = /bot|crawl|spider/i.test(navigator.userAgent);
     var Tr = {sx: 0, sy: 0, ex: 0, ey: 0, t: 0};
 
     function Vr(e) {
@@ -14066,7 +14066,7 @@ require.r = e => {
 
         return e.prototype.updateOptions = function () {
             var e, t, n = this, r = this.publish.site.getConfig(K_showGraph);
-            Hr && (r = !1), this.publish.containerEl.toggleClass("has-graph", r), this.containerEl.toggle(r), r && !this.renderer && (e = this.containerEl, t = function () {
+            isBotAgent && (r = !1), this.publish.containerEl.toggleClass("has-graph", r), this.containerEl.toggle(r), r && !this.renderer && (e = this.containerEl, t = function () {
                 var e = Ea("/sim.js", {name: "Graph Worker"});
                 ks.then((function () {
                     return a(n, void 0, void 0, (function () {
@@ -14211,11 +14211,13 @@ require.r = e => {
 
     let Ss = function (e) {
         function t() {
-            var t = null !== e && e.apply(this, arguments) || this;
-            return t.children = null, t
+            let _this = null !== e && e.apply(this, arguments) || this
+            _this.children = null
+            return _this
         }
 
-        return extend(t, e), t.prototype.render = function () {
+        extend(t, e)
+        t.prototype.render = function () {
             var e = this.childrenEl, t = this.children;
             if (null !== t) {
                 e.setChildrenInPlace(t.map((function (e) {
@@ -14225,37 +14227,52 @@ require.r = e => {
                     r[n].render()
                 }
             } else e.empty()
-        }, t
+        }
+        return t
     }(function () {
-        function e(e) {
-            void 0 === e && (e = "div");
-            var t = this;
-            this.collapsible = !0, this.collapsed = !1;
-            var n = this.el = createDiv("tree-item"), r = this.selfEl = this.el.createEl(e);
-            r.addClass("tree-item-self"), r.addEventListener("click", (function (e) {
-                0 !== e.button || e.defaultPrevented || t.onSelfClick(e)
-            })), r.addEventListener("auxclick", (function (e) {
-                1 !== e.button || e.defaultPrevented || t.onSelfClick(e)
-            })), this.coverEl = this.selfEl;
-            var i = this.collapseEl = r.createDiv({cls: "tree-item-icon collapse-icon"});
-            setIcon(i, "right-triangle"), i.addEventListener("click", this.onCollapseClick.bind(this)), this.innerEl = r.createDiv("tree-item-inner"), this.childrenEl = n.createDiv("tree-item-children")
+        function e(tagName) {
+            void 0 === tagName && (tagName = "div")
+            let _this = this
+            this.collapsible = true
+            this.collapsed = false
+            let el = this.el = createDiv("tree-item")
+            let selfEl = this.selfEl = this.el.createEl(tagName)
+            selfEl.addClass("tree-item-self")
+            selfEl.addEventListener("click", function (e) {
+                0 !== e.button || e.defaultPrevented || _this.onSelfClick(e)
+            })
+            selfEl.addEventListener("auxclick", function (e) {
+                1 !== e.button || e.defaultPrevented || _this.onSelfClick(e)
+            })
+            this.coverEl = this.selfEl
+            let collapseEl = this.collapseEl = selfEl.createDiv({cls: "tree-item-icon collapse-icon"})
+            setIcon(collapseEl, "right-triangle")
+            collapseEl.addEventListener("click", this.onCollapseClick.bind(this))
+            this.innerEl = selfEl.createDiv("tree-item-inner")
+            this.childrenEl = el.createDiv("tree-item-children")
         }
 
-        return e.prototype.onSelfClick = function (e) {
-        }, e.prototype.onCollapseClick = function (e) {
+        e.prototype.onSelfClick = function (e) {
+        }
+        e.prototype.onCollapseClick = function (e) {
             0 === e.button && (e.preventDefault(), this.toggleCollapsed(!0))
-        }, e.prototype.toggleCollapsed = function (e) {
+        }
+        e.prototype.toggleCollapsed = function (e) {
             if (this.collapsible) return this.setCollapsed(!this.collapsed, e)
-        }, e.prototype.setCollapsed = function (e, t) {
+        }
+        e.prototype.setCollapsed = function (e, t) {
             if (this.collapsed !== e) return this.collapsed = e, this.updateCollapsed(t)
-        }, e.prototype.setCollapsible = function (e) {
+        }
+        e.prototype.setCollapsible = function (e) {
             if (this.collapsible !== e) {
                 var t = this.selfEl, n = this.collapseEl;
                 this.collapsible = e, e ? t.prepend(n) : n.detach(), t.toggleClass("mod-collapsible", e)
             }
-        }, e.prototype.setClickable = function (e) {
+        }
+        e.prototype.setClickable = function (e) {
             this.selfEl.toggleClass("is-clickable", e)
-        }, e.prototype.updateCollapsed = function (e) {
+        }
+        e.prototype.updateCollapsed = function (e) {
             return a(this, void 0, Promise, (function () {
                 var t, n, r, i;
                 return o(this, (function (a) {
@@ -14267,14 +14284,16 @@ require.r = e => {
                     }
                 }))
             }))
-        }, e
+        }
+        return e
     }())
     let Hs = function () {
-        function e(e) {
-            this.children = [], this.childrenEl = e
+        function e(childrenEl) {
+            this.children = []
+            this.childrenEl = childrenEl
         }
 
-        return e.prototype.render = function () {
+        e.prototype.render = function () {
             var e = this.childrenEl, t = this.children;
             e.setChildrenInPlace(t.map((function (e) {
                 return e.el
@@ -14282,11 +14301,14 @@ require.r = e => {
             for (var n = 0, r = t; n < r.length; n++) {
                 r[n].render()
             }
-        }, e.prototype.addRoot = function (e) {
+        }
+        e.prototype.addRoot = function (e) {
             this.children.push(e)
-        }, e.prototype.clear = function () {
+        }
+        e.prototype.clear = function () {
             this.children = [], this.render()
-        }, e
+        }
+        return e
     }()
 
     function Ts(e, t, n) {
@@ -14315,47 +14337,56 @@ require.r = e => {
         return d(r), Es(r.children, t), r
     }
 
-    var NavC = function () {
-            function e(e, t) {
-                this.initialized = !1, this.publish = e;
-                var n = this.outerEl = t.createDiv("nav-view-outer");
-                this.containerEl = n.createDiv("nav-view"), this.treeView = new Is(this.containerEl, this.publish, this.onItemClick.bind(this)), e.on("options-updated", this.updateOptions.bind(this)), e.on("navigated", this.onNavigated.bind(this))
-            }
+    const NavView = function () {
+        function e(app, el) {
+            this.initialized = false
+            this.publish = app
+            let outerEl = this.outerEl = el.createDiv("nav-view-outer");
+            this.containerEl = outerEl.createDiv("nav-view")
+            this.treeView = new Is(this.containerEl, this.publish, this.onItemClick.bind(this))
+            app.on("options-updated", this.updateOptions.bind(this))
+            app.on("navigated", this.onNavigated.bind(this))
+        }
 
-            return e.prototype.getOuterEl = function () {
-                return this.outerEl
-            }, e.prototype.updateOptions = function () {
-                var e = this, t = this.publish.site.getConfig(K_showNavigation);
-                if (Hr && (t = !1), this.containerEl.toggle(t), this.publish.containerEl.toggleClass("has-navigation", t), t) {
-                    this.init();
-                    try {
-                        window.matchMedia("(max-width: 750px)").addEventListener("change", (function () {
-                            return e.init()
-                        }))
-                    } catch (e) {
-                        console.error(e)
-                    }
+        e.prototype.getOuterEl = function () {
+            return this.outerEl
+        }
+        e.prototype.updateOptions = function () {
+            var e = this, t = this.publish.site.getConfig(K_showNavigation);
+            if (isBotAgent && (t = !1), this.containerEl.toggle(t), this.publish.containerEl.toggleClass("has-navigation", t), t) {
+                this.init();
+                try {
+                    window.matchMedia("(max-width: 750px)").addEventListener("change", (function () {
+                        return e.init()
+                    }))
+                } catch (e) {
+                    console.error(e)
                 }
-            }, e.prototype.init = function (e) {
-                if (void 0 === e && (e = !1), !this.initialized) {
-                    var t = this.publish.site;
-                    if (t.getConfig(K_showNavigation) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
-                        this.initialized = !0;
-                        for (var n = t.getConfig(K_navigationOrdering), r = new Set(t.getConfig(K_navigationHiddenItems)), i = {}, a = 0; a < n.length; a++) {
-                            i[n[a]] = a
-                        }
-                        var o = Ts(Object.keys(t.cache.cache), i, r);
-                        this.treeView.renderTree(o), this.treeView.setActiveItem(this.publish.render.currentFilepath)
+            }
+        }
+        e.prototype.init = function (e) {
+            if (void 0 === e && (e = !1), !this.initialized) {
+                var t = this.publish.site;
+                if (t.getConfig(K_showNavigation) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
+                    this.initialized = !0;
+                    for (var n = t.getConfig(K_navigationOrdering), r = new Set(t.getConfig(K_navigationHiddenItems)), i = {}, a = 0; a < n.length; a++) {
+                        i[n[a]] = a
                     }
+                    var o = Ts(Object.keys(t.cache.cache), i, r);
+                    this.treeView.renderTree(o), this.treeView.setActiveItem(this.publish.render.currentFilepath)
                 }
-            }, e.prototype.onNavigated = function () {
-                this.treeView.setActiveItem(this.publish.render.currentFilepath)
-            }, e.prototype.onItemClick = function (e, t) {
-                var n = this.publish;
-                t.preventDefault(), n.containerEl.removeClass("is-left-column-open"), n.navigate(e.getItemPath(), "", t)
-            }, e
-        }(),
-        Os = function (e) {
+            }
+        }
+        e.prototype.onNavigated = function () {
+            this.treeView.setActiveItem(this.publish.render.currentFilepath)
+        }
+        e.prototype.onItemClick = function (e, t) {
+            var n = this.publish;
+            t.preventDefault(), n.containerEl.removeClass("is-left-column-open"), n.navigate(e.getItemPath(), "", t)
+        }
+        return e
+    }()
+    var Os = function (e) {
             function t(t, n, r) {
                 void 0 === r && (r = "div");
                 var i = e.call(this, r) || this;
@@ -14465,134 +14496,151 @@ require.r = e => {
             }, t.prototype.setActive = function (e) {
                 this.selfEl.toggleClass("mod-active", e)
             }, t
-        }(Ss),
-        qs = function (e) {
-            function t(t, n) {
-                var r = e.call(this, t) || this;
-                return r.collapsible = !0, r.highlighted = null, r.allItems = [], r.onItemClick = n, r
-            }
+        }(Ss)
 
-            return extend(t, e), t.prototype.renderOutline = function (e) {
-                for (var t = [], n = this.allItems = [], r = 0, i = e; r < i.length; r++) {
-                    for (var a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;) t.pop(), l = t.last();
-                    t.push(s), l ? (l.children = l.children || [], l.children.push(s)) : this.addRoot(s), n.push(s)
-                }
-                this.highlighted = null, this.render()
-            }, t.prototype.highlightLine = function (e) {
-                for (var t = this.highlighted, n = null, r = 0, i = this.allItems; r < i.length; r++) {
-                    var a = i[r];
-                    if (!(a.heading.position.start.line <= e)) break;
-                    n = a
-                }
-                n !== t && (t && t.setActive(!1), this.highlighted = n, n && n.setActive(!0))
-            }, t
-        }(Hs),
-        OutlineView = function () {
-            function e(e, t) {
-                this.publish = e;
-                var n = this.containerEl = t.createDiv("outline-view-outer");
-                n.createDiv("list-item published-section-header", (function (e) {
-                    e.createSpan("published-section-header-icon", (function (e) {
-                        setIcon(e, "lucide-list")
-                    })), e.createSpan({text: "On this page"})
-                }));
-                var r = n.createDiv("outline-view");
-                (this.treeView = new qs(r, this.onItemClick.bind(this))).collapsible = !1, e.on("options-updated", this.updateOptions.bind(this)), e.on("navigated", this.onNavigated.bind(this))
-            }
-
-            return e.prototype.updateOptions = function () {
-                var e = this.publish.site.getConfig(K_showOutline);
-                Hr && (e = !1), this.publish.containerEl.toggleClass("has-outline", e), this.containerEl.toggle(e), e && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
-            }, e.prototype.onItemClick = function (e) {
-                var t = this.publish;
-                t.render.scrollToLoc(e.position.start);
-                var n = t.site.getPublicHref(t.render.currentFilepath) + "#" + stripHeadingForLink(e.heading);
-                history.replaceState(null, null, n)
-            }, e.prototype.onNavigated = function () {
-                var e = this, t = e.publish, n = e.treeView, r = e.containerEl, i = t.site;
-                if (i.getConfig(K_showOutline) && (n.clear(), r.isShown())) {
-                    var a = t.render.currentFilepath, o = i.cache.getCache(a);
-                    o && o.headings && 0 !== o.headings.length ? (r.toggleVisibility(!0), n.renderOutline(o.headings), this.highlightLine(0)) : r.toggleVisibility(!1)
-                }
-            }, e.prototype.highlightLine = function (e) {
-                this.treeView.highlightLine(e)
-            }, e
-        }(),
-        Rs = {
-            3: "Cancel",
-            6: "Help",
-            8: "Backspace",
-            9: "Tab",
-            12: "Clear",
-            13: "Enter",
-            16: "Shift",
-            17: "Control",
-            18: "Alt",
-            19: "Pause",
-            20: "CapsLock",
-            27: "Escape",
-            28: "Convert",
-            29: "NonConvert",
-            30: "Accept",
-            31: "ModeChange",
-            32: " ",
-            33: "PageUp",
-            34: "PageDown",
-            35: "End",
-            36: "Home",
-            37: "ArrowLeft",
-            38: "ArrowUp",
-            39: "ArrowRight",
-            40: "ArrowDown",
-            41: "Select",
-            42: "Print",
-            43: "Execute",
-            44: "PrintScreen",
-            45: "Insert",
-            46: "Delete",
-            48: "0",
-            49: "1",
-            50: "2",
-            51: "3",
-            52: "4",
-            53: "5",
-            54: "6",
-            55: "7",
-            56: "8",
-            57: "9",
-            91: "OS",
-            93: "ContextMenu",
-            95: "Sleep",
-            106: "*",
-            107: "+",
-            109: "-",
-            110: ".",
-            111: "/",
-            144: "NumLock",
-            145: "ScrollLock",
-            181: "VolumeMute",
-            182: "VolumeDown",
-            183: "VolumeUp",
-            186: ";",
-            187: "=",
-            188: ",",
-            189: "-",
-            190: ".",
-            191: "/",
-            192: "`",
-            219: "[",
-            220: "\\",
-            221: "]",
-            222: "'",
-            224: "Meta",
-            225: "AltGraph",
-            246: "Attn",
-            247: "CrSel",
-            248: "ExSel",
-            249: "EraseEof",
-            250: "Play",
-            251: "ZoomOut"
+    const TreeView = function (e) {
+        function t(t, onItemClick) {
+            let _this = e.call(this, t) || this;
+            _this.collapsible = true
+            _this.highlighted = null
+            _this.allItems = []
+            _this.onItemClick = onItemClick
+            return _this
         }
+
+        extend(t, e)
+        t.prototype.renderOutline = function (e) {
+            for (var t = [], n = this.allItems = [], r = 0, i = e; r < i.length; r++) {
+                for (var a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;) t.pop(), l = t.last();
+                t.push(s), l ? (l.children = l.children || [], l.children.push(s)) : this.addRoot(s), n.push(s)
+            }
+            this.highlighted = null, this.render()
+        }
+        t.prototype.highlightLine = function (e) {
+            for (var t = this.highlighted, n = null, r = 0, i = this.allItems; r < i.length; r++) {
+                var a = i[r];
+                if (!(a.heading.position.start.line <= e)) break;
+                n = a
+            }
+            n !== t && (t && t.setActive(!1), this.highlighted = n, n && n.setActive(!0))
+        }
+        return t
+    }(Hs)
+
+    const OutlineView = function () {
+        function e(app, el) {
+            this.publish = app
+            let containerEl = this.containerEl = el.createDiv("outline-view-outer");
+            containerEl.createDiv("list-item published-section-header", function (e) {
+                e.createSpan("published-section-header-icon", (function (e) {
+                    setIcon(e, "lucide-list")
+                })), e.createSpan({text: "On this page"})
+            })
+            let viewEl = containerEl.createDiv("outline-view");
+            this.treeView = new TreeView(viewEl, this.onItemClick.bind(this))
+            this.treeView.collapsible = false
+            app.on("options-updated", this.updateOptions.bind(this))
+            app.on("navigated", this.onNavigated.bind(this))
+        }
+
+        e.prototype.updateOptions = function () {
+            var e = this.publish.site.getConfig(K_showOutline);
+            isBotAgent && (e = !1), this.publish.containerEl.toggleClass("has-outline", e), this.containerEl.toggle(e), e && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
+        }
+        e.prototype.onItemClick = function (e) {
+            var t = this.publish;
+            t.render.scrollToLoc(e.position.start);
+            var n = t.site.getPublicHref(t.render.currentFilepath) + "#" + stripHeadingForLink(e.heading);
+            history.replaceState(null, null, n)
+        }
+        e.prototype.onNavigated = function () {
+            var e = this, t = e.publish, n = e.treeView, r = e.containerEl, i = t.site;
+            if (i.getConfig(K_showOutline) && (n.clear(), r.isShown())) {
+                var a = t.render.currentFilepath, o = i.cache.getCache(a);
+                o && o.headings && 0 !== o.headings.length ? (r.toggleVisibility(!0), n.renderOutline(o.headings), this.highlightLine(0)) : r.toggleVisibility(!1)
+            }
+        }
+        e.prototype.highlightLine = function (e) {
+            this.treeView.highlightLine(e)
+        }
+        return e
+    }()
+
+    var Rs = {
+        3: "Cancel",
+        6: "Help",
+        8: "Backspace",
+        9: "Tab",
+        12: "Clear",
+        13: "Enter",
+        16: "Shift",
+        17: "Control",
+        18: "Alt",
+        19: "Pause",
+        20: "CapsLock",
+        27: "Escape",
+        28: "Convert",
+        29: "NonConvert",
+        30: "Accept",
+        31: "ModeChange",
+        32: " ",
+        33: "PageUp",
+        34: "PageDown",
+        35: "End",
+        36: "Home",
+        37: "ArrowLeft",
+        38: "ArrowUp",
+        39: "ArrowRight",
+        40: "ArrowDown",
+        41: "Select",
+        42: "Print",
+        43: "Execute",
+        44: "PrintScreen",
+        45: "Insert",
+        46: "Delete",
+        48: "0",
+        49: "1",
+        50: "2",
+        51: "3",
+        52: "4",
+        53: "5",
+        54: "6",
+        55: "7",
+        56: "8",
+        57: "9",
+        91: "OS",
+        93: "ContextMenu",
+        95: "Sleep",
+        106: "*",
+        107: "+",
+        109: "-",
+        110: ".",
+        111: "/",
+        144: "NumLock",
+        145: "ScrollLock",
+        181: "VolumeMute",
+        182: "VolumeDown",
+        183: "VolumeUp",
+        186: ";",
+        187: "=",
+        188: ",",
+        189: "-",
+        190: ".",
+        191: "/",
+        192: "`",
+        219: "[",
+        220: "\\",
+        221: "]",
+        222: "'",
+        224: "Meta",
+        225: "AltGraph",
+        246: "Attn",
+        247: "CrSel",
+        248: "ExSel",
+        249: "EraseEof",
+        250: "Play",
+        251: "ZoomOut"
+    }
     for (var Zs = 1; Zs < 25; Zs++) {
         Rs[111 + Zs] = "F" + Zs;
     }
@@ -15395,30 +15443,54 @@ require.r = e => {
     }
 
     const Chooser = function () {
-        function e(e, t, n) {
-            var r = this;
-            this.chooser = e, this.containerEl = t, this.values = [], this.suggestions = [], this.selectedItem = 0, t.on("click", ".suggestion-item", this.onSuggestionClick.bind(this)), t.on("auxclick", ".suggestion-item", this.onSuggestionClick.bind(this)), t.on("mousemove", ".suggestion-item", this.onSuggestionMouseover.bind(this)), this.moveUp = this.moveUp.bind(this), this.moveDown = this.moveDown.bind(this), n.register([], "ArrowUp", this.moveUp), n.register([], "ArrowDown", this.moveDown), n.register([], "PageUp", this.pageUp.bind(this)), n.register([], "PageDown", this.pageDown.bind(this)), n.register([], "Home", (function (e) {
-                return r.setSelectedItem(0, e), !1
-            })), n.register([], "End", (function (e) {
-                return r.setSelectedItem(r.suggestions.length - 1, e), !1
-            })), (Platform.isMacOS || Platform.isIosApp) && (n.register(["Ctrl"], "p", this.moveUp), n.register(["Ctrl"], "n", this.moveDown)), n.register([], "Enter", (function (e) {
-                if (!e.isComposing) return r.useSelectedItem(e), !1
+        function e(chooser, containerEl, scope) {
+            let _this = this
+            this.chooser = chooser
+            this.containerEl = containerEl
+            this.values = []
+            this.suggestions = []
+            this.selectedItem = 0
+            containerEl.on("click", ".suggestion-item", this.onSuggestionClick.bind(this))
+            containerEl.on("auxclick", ".suggestion-item", this.onSuggestionClick.bind(this))
+            containerEl.on("mousemove", ".suggestion-item", this.onSuggestionMouseover.bind(this))
+            this.moveUp = this.moveUp.bind(this)
+            this.moveDown = this.moveDown.bind(this)
+            scope.register([], "ArrowUp", this.moveUp)
+            scope.register([], "ArrowDown", this.moveDown)
+            scope.register([], "PageUp", this.pageUp.bind(this))
+            scope.register([], "PageDown", this.pageDown.bind(this))
+            scope.register([], "Home", function (e) {
+                return _this.setSelectedItem(0, e), !1
+            })
+            scope.register([], "End", function (e) {
+                return _this.setSelectedItem(_this.suggestions.length - 1, e), !1
+            })
+            if (Platform.isMacOS || Platform.isIosApp) {
+                scope.register(["Ctrl"], "p", this.moveUp)
+                scope.register(["Ctrl"], "n", this.moveDown)
+            }
+            scope.register([], "Enter", (function (e) {
+                if (!e.isComposing) return _this.useSelectedItem(e), !1
             }))
         }
 
-        return e.prototype.moveUp = function (e) {
+        e.prototype.moveUp = function (e) {
             if (!e.isComposing) return this.setSelectedItem(this.selectedItem - 1, e), !1
-        }, e.prototype.moveDown = function (e) {
+        }
+        e.prototype.moveDown = function (e) {
             if (!e.isComposing) return this.setSelectedItem(this.selectedItem + 1, e), !1
-        }, Object.defineProperty(e.prototype, "rowHeight", {
+        }
+        Object.defineProperty(e.prototype, "rowHeight", {
             get: function () {
                 return this.suggestions[this.selectedItem].clientHeight
             }, enumerable: !1, configurable: !0
-        }), Object.defineProperty(e.prototype, "numVisibleItems", {
+        })
+        Object.defineProperty(e.prototype, "numVisibleItems", {
             get: function () {
                 return Math.floor(this.containerEl.clientHeight / this.rowHeight)
             }, enumerable: !1, configurable: !0
-        }), e.prototype.pageUp = function (e) {
+        })
+        e.prototype.pageUp = function (e) {
             if (!e.isComposing) {
                 var t = this, n = t.containerEl, r = t.numVisibleItems, i = t.rowHeight,
                     a = n.scrollTop - parseFloat(getComputedStyle(n).paddingTop), o = Math.floor(a / i);
@@ -15426,7 +15498,8 @@ require.r = e => {
                 var s = Math.max(0, o);
                 return this.setSelectedItem(s, e), !1
             }
-        }, e.prototype.pageDown = function (e) {
+        }
+        e.prototype.pageDown = function (e) {
             if (!e.isComposing) {
                 var t = this, n = t.containerEl, r = t.numVisibleItems, i = t.rowHeight,
                     a = n.scrollTop - parseFloat(getComputedStyle(n).paddingTop), o = Math.floor(a / i) + (r - 1);
@@ -15434,7 +15507,8 @@ require.r = e => {
                 var s = Math.min(this.suggestions.length - 1, o);
                 return this.setSelectedItem(s, e), !1
             }
-        }, e.prototype.setSuggestions = function (e) {
+        }
+        e.prototype.setSuggestions = function (e) {
             var t = this.containerEl;
             t.empty();
             var n = [];
@@ -15443,70 +15517,104 @@ require.r = e => {
                 this.chooser.renderSuggestion(a, o), n.push(o)
             }
             this.values = e, this.suggestions = n, this.setSelectedItem(0, null)
-        }, e.prototype.addMessage = function (e) {
+        }
+        e.prototype.addMessage = function (e) {
             this.containerEl.createDiv({cls: "suggestion-empty", text: e})
-        }, e.prototype.setSelectedItem = function (e, t) {
+        }
+        e.prototype.setSelectedItem = function (e, t) {
             var n = this.suggestions;
             0 !== n.length && (e < 0 ? e = n.length - 1 : e >= n.length && (e = 0), this.forceSetSelectedItem(e, t))
-        }, e.prototype.forceSetSelectedItem = function (e, t) {
+        }
+        e.prototype.forceSetSelectedItem = function (e, t) {
             var n, r, i = this.suggestions, a = i[this.selectedItem];
             a && a.removeClass("is-selected"), this.selectedItem = e;
             var o = i[this.selectedItem];
             o && (o.addClass("is-selected"), t && t.instanceOf(KeyboardEvent) && o.scrollIntoView({block: "nearest"})), null === (r = (n = this.chooser).onSelectedChange) || void 0 === r || r.call(n, this.values[e], t)
-        }, e.prototype.onSuggestionClick = function (e, t) {
+        }
+        e.prototype.onSuggestionClick = function (e, t) {
             e.preventDefault();
             var n = this.suggestions.indexOf(t);
             this.setSelectedItem(n, e), this.useSelectedItem(e)
-        }, e.prototype.onSuggestionMouseover = function (e, t) {
+        }
+        e.prototype.onSuggestionMouseover = function (e, t) {
             var n = this.suggestions.indexOf(t);
             this.setSelectedItem(n, e)
-        }, e.prototype.useSelectedItem = function (e) {
+        }
+        e.prototype.useSelectedItem = function (e) {
             if (!this.values) return !1;
             var t = this.values[this.selectedItem];
             return void 0 !== t && (this.chooser.selectSuggestion(t, e), !0)
-        }, e
+        }
+        return e
     }()
-    const SearchC = function () {
-        function e(e) {
-            this.publish = e;
-            var t = this.outerContainerEl = createDiv("search-view-outer"),
-                n = this.containerEl = t.createDiv("search-view-container");
-            n.createSpan("published-search-icon", (function (e) {
-                setIcon(e, "lucide-search")
-            }));
-            var r = this.inputEl = n.createEl("input", {cls: "search-bar", type: "text"});
-            r.setAttribute("placeholder", "Search page or heading..."), this.resultEl = createDiv("search-results");
-            var i = this.scope = new Scope;
-            this.chooser = new Chooser(this, this.resultEl, i), e.on("options-updated", this.updateOptions.bind(this)), r.addEventListener("input", kr(this.updateSearch.bind(this), 100, !0)), r.addEventListener("keydown", this.onKeydown.bind(this)), document.addEventListener("click", this.onDocumentClick.bind(this))
+    const SearchView = function () {
+        function e(app) {
+            this.publish = app
+            let outerContainerEl = this.outerContainerEl = createDiv("search-view-outer")
+            let containerEl = this.containerEl = outerContainerEl.createDiv("search-view-container")
+            containerEl.createSpan("published-search-icon", function (el) {
+                setIcon(el, "lucide-search")
+            })
+            let inputEl = this.inputEl = containerEl.createEl("input", {cls: "search-bar", type: "text"})
+            inputEl.setAttribute("placeholder", "Search page or heading...")
+            this.resultEl = createDiv("search-results");
+            let scope = this.scope = new Scope()
+            this.chooser = new Chooser(this, this.resultEl, scope)
+            app.on("options-updated", this.updateOptions.bind(this))
+            inputEl.addEventListener("input", kr(this.updateSearch.bind(this), 100, true))
+            inputEl.addEventListener("keydown", this.onKeydown.bind(this))
+            document.addEventListener("click", this.onDocumentClick.bind(this))
         }
 
-        return e.prototype.onDocumentClick = function (e) {
-            e.defaultPrevented || this.resultEl.remove()
-        }, e.prototype.updateOptions = function () {
-            var e = this.publish.site.getConfig(K_showSearch);
-            Hr && (e = !1), this.outerContainerEl.toggle(e)
-        }, e.prototype.updateSearch = function () {
-            var e = this.resultEl, t = this.inputEl, n = t.value;
-            if (e.empty(), !n) return this.inputEl.removeClass("has-no-results"), void e.detach();
-            document.body.appendChild(e), Pr(t.getBoundingClientRect(), e, {gap: 5});
-            var r = n.toLowerCase().split(" "), i = this.publish.site.cache, a = [];
-            for (var o in i.cache) if (i.cache.hasOwnProperty(o) && "md" === bo(o)) {
-                var s = yo(o), l = vo(s), c = yl(r, n, l), h = yl(r, n, s);
-                c ? (c.score += .8, gl(c.matches, s.length - l.length), a.push({
-                    type: "file",
-                    path: s,
-                    match: c
-                })) : h && (h.score += .5, a.push({type: "file", path: s, match: h}));
-                var u = i.getCache(o);
-                if (u) {
-                    var f = Rn(u.frontmatter);
-                    if (f) for (var p = 0, d = f; p < d.length; p++) {
-                        var m = d[p];
-                        (M = yl(r, n, m)) && a.push({type: "alias", alias: m, path: s, match: M})
-                    }
-                    if (u.headings) for (var v = 0, g = u.headings; v < g.length; v++) {
-                        var M, y = g[v];
-                        (M = yl(r, n, y.heading)) && a.push({type: "heading", path: s, heading: y, match: M})
+        e.prototype.onDocumentClick = function (evt) {
+            evt.defaultPrevented || this.resultEl.remove()
+        }
+        e.prototype.updateOptions = function () {
+            let showSearch = this.publish.site.getConfig(K_showSearch)
+            if (isBotAgent) {
+                showSearch = false
+            }
+            this.outerContainerEl.toggle(showSearch)
+        }
+        e.prototype.updateSearch = function () {
+            let resultEl = this.resultEl,
+                inputEl = this.inputEl,
+                inputValue = inputEl.value;
+            resultEl.empty()
+            if (!inputValue) {
+                this.inputEl.removeClass("has-no-results")
+                resultEl.detach()
+                return
+            }
+            document.body.appendChild(resultEl)
+            Pr(inputEl.getBoundingClientRect(), resultEl, {gap: 5});
+            let r = inputValue.toLowerCase().split(" "),
+                i = this.publish.site.cache,
+                a = [];
+            for (let o in i.cache) {
+                if (i.cache.hasOwnProperty(o) && "md" === bo(o)) {
+                    var s = yo(o), l = vo(s), c = yl(r, inputValue, l), h = yl(r, inputValue, s);
+                    c ? (c.score += .8, gl(c.matches, s.length - l.length), a.push({
+                        type: "file",
+                        path: s,
+                        match: c
+                    })) : h && (h.score += .5, a.push({type: "file", path: s, match: h}));
+                    var u = i.getCache(o);
+                    if (u) {
+                        var f = Rn(u.frontmatter);
+                        if (f) for (var p = 0, d = f; p < d.length; p++) {
+                            var m = d[p];
+                            (M = yl(r, inputValue, m)) && a.push({type: "alias", alias: m, path: s, match: M})
+                        }
+                        if (u.headings) for (var v = 0, g = u.headings; v < g.length; v++) {
+                            var M, y = g[v];
+                            (M = yl(r, inputValue, y.heading)) && a.push({
+                                type: "heading",
+                                path: s,
+                                heading: y,
+                                match: M
+                            })
+                        }
                     }
                 }
             }
@@ -15514,13 +15622,23 @@ require.r = e => {
                 e.sort((function (e, t) {
                     return t.match.score - e.match.score
                 }))
-            }(a), a = a.slice(0, 50), this.chooser.setSuggestions(a), this.inputEl.toggleClass("has-no-results", 0 === a.length), 0 === a.length && this.chooser.addMessage("No results found.")
-        }, e.prototype.onKeydown = function (e) {
+            }(a)
+            a = a.slice(0, 50)
+            this.chooser.setSuggestions(a)
+            this.inputEl.toggleClass("has-no-results", 0 === a.length)
+            0 === a.length && this.chooser.addMessage("No results found.")
+        }
+        e.prototype.onKeydown = function (evt) {
             if (this.inputEl === document.activeElement) {
-                var t = {modifiers: Keymap.getModifiers(e), key: js(e), vkey: Fs(e)};
-                this.scope.handleKey(e, t)
+                let t = {
+                    modifiers: Keymap.getModifiers(evt),
+                    key: js(evt),
+                    vkey: Fs(evt)
+                };
+                this.scope.handleKey(evt, t)
             }
-        }, e.prototype.renderSuggestion = function (e, t) {
+        }
+        e.prototype.renderSuggestion = function (e, t) {
             t.addClass("mod-complex");
             var n = t.createDiv("suggestion-content"), r = t.createDiv("suggestion-aux"),
                 i = n.createDiv("suggestion-title"), a = n.createDiv("suggestion-note");
@@ -15540,9 +15658,11 @@ require.r = e => {
                 text: "H",
                 prepend: !0
             }))
-        }, e.prototype.selectSuggestion = function (e, t) {
+        }
+        e.prototype.selectSuggestion = function (e, t) {
             "file" === e.type || "alias" === e.type ? this.publish.navigate(e.path, "", t instanceof MouseEvent ? t : null) : "heading" === e.type && this.publish.navigate(e.path + "#" + stripHeadingForLink(e.heading.heading), "", t instanceof MouseEvent ? t : null), this.inputEl.value = "", this.updateSearch(), this.publish.containerEl.removeClass("is-left-column-open")
-        }, e
+        }
+        return e
     }()
 
     let xl = 700
@@ -15709,8 +15829,10 @@ require.r = e => {
             siteLogoLinkEl.hide()
             _this.siteLogoEl = siteLogoLinkEl.createEl("img")
             _this.siteHeaderTextEl = siteHeaderEl.createEl("a", "site-header-text")
-            _this.search = new SearchC(_this)
-            _this.nav = new NavC(_this, leftColumnInnerEl)
+
+            _this.search = new SearchView(_this)
+            _this.nav = new NavView(_this, leftColumnInnerEl)
+
             let renderContainerEl = _this.renderContainerEl = centerColumnEl.createDiv("render-container")
             _this.renderContainerInnerEl = renderContainerEl.createDiv("render-container-inner")
             let render = _this.render = new Renderer(_this)
