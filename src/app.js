@@ -12995,7 +12995,6 @@ require.r = e => {
         return "md" === bo(t) ? Mo(t) : t
     }
 
-    var ko
     const SiteCache = function () {
         function e() {
             this.cache = {}, this.uniqueFiles = new UniqueFileLookup, this.aliases = {}, this.permalinks = {}
@@ -13062,30 +13061,52 @@ require.r = e => {
         }
         return e
     }()
-    var Co = "indexFile",
-        Ao = "siteName",
-        Lo = "logo",
-        Eo = "noindex",
-        So = "defaultTheme",
-        Ho = "showThemeToggle",
-        To = "showNavigation",
-        Vo = "showGraph",
-        Oo = "showOutline",
-        No = "showSearch",
-        Po = "googleAnalytics",
-        Io = "hideTitle",
-        Do = "readableLineLength",
-        qo = "strictLineBreaks",
-        zo = "showHoverPreview",
-        Ro = "showBacklinks",
-        Zo = "slidingWindowMode",
-        Bo = "navigationOrdering",
-        jo = "navigationHiddenItems",
-        Fo = ((ko = {})[Co] = "", ko[Lo] = "", ko[Ao] = "", ko[Eo] = !1, ko[So] = "light", ko[Ho] = !1, ko[To] = !0, ko[Vo] = !0, ko[Oo] = !1, ko[No] = !1, ko[Po] = "", ko[Io] = !1, ko[Do] = !0, ko[qo] = !1, ko[zo] = !1, ko[Ro] = !1, ko[Zo] = !1, ko[Bo] = [], ko[jo] = [], ko),
-        Uo = function (e) {
-            return 255 & parseInt(e)
-        },
-        _o = /^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[\d.]+\s*)?\)$/i;
+    let K_indexFile = "indexFile",
+        K_siteName = "siteName",
+        K_logo = "logo",
+        K_noindex = "noindex",
+        K_defaultTheme = "defaultTheme",
+        K_showThemeToggle = "showThemeToggle",
+        K_showNavigation = "showNavigation",
+        K_showGraph = "showGraph",
+        K_showOutline = "showOutline",
+        K_showSearch = "showSearch",
+        K_googleAnalytics = "googleAnalytics",
+        K_hideTitle = "hideTitle",
+        K_readableLineLength = "readableLineLength",
+        K_strictLineBreaks = "strictLineBreaks",
+        K_showHoverPreview = "showHoverPreview",
+        K_showBacklinks = "showBacklinks",
+        K_slidingWindowMode = "slidingWindowMode",
+        K_navigationOrdering = "navigationOrdering",
+        K_navigationHiddenItems = "navigationHiddenItems"
+
+    let ko = {}
+    ko[K_indexFile] = ""
+    ko[K_siteName] = ""
+    ko[K_logo] = ""
+    ko[K_noindex] = false
+    ko[K_defaultTheme] = "light"
+    ko[K_showThemeToggle] = false
+    ko[K_showNavigation] = true
+    ko[K_showGraph] = true
+    ko[K_showOutline] = false
+    ko[K_showSearch] = false
+    ko[K_googleAnalytics] = ""
+    ko[K_hideTitle] = false
+    ko[K_readableLineLength] = true
+    ko[K_strictLineBreaks] = false
+    ko[K_showHoverPreview] = false
+    ko[K_showBacklinks] = false
+    ko[K_slidingWindowMode] = false
+    ko[K_navigationOrdering] = []
+    ko[K_navigationHiddenItems] = []
+    const Fo = ko
+
+    var Uo = function (e) {
+        return 255 & parseInt(e)
+    }
+    var _o = /^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[\d.]+\s*)?\)$/i;
 
     function $o(e) {
         var t = e.match(_o);
@@ -13788,7 +13809,7 @@ require.r = e => {
     }
 
     var ks = loadScriptAsync("/lib/pixi.min.js?7.2.4"),
-        xs = function () {
+        Graph = function () {
             function e(e, t) {
                 var n = this;
                 this.expanded = !1, this.global = !1, this.interlinks = !0, this.publish = e;
@@ -13811,7 +13832,7 @@ require.r = e => {
             }
 
             return e.prototype.updateOptions = function () {
-                var e, t, n = this, r = this.publish.site.getConfig(Vo);
+                var e, t, n = this, r = this.publish.site.getConfig(K_showGraph);
                 Hr && (r = !1), this.publish.containerEl.toggleClass("has-graph", r), this.containerEl.toggle(r), r && !this.renderer && (e = this.containerEl, t = function () {
                     var e = Ea("/sim.js", {name: "Graph Worker"});
                     ks.then((function () {
@@ -13856,7 +13877,7 @@ require.r = e => {
                 var e = this, t = e.publish, n = e.renderer, r = e.currentFilepath;
                 if (n) {
                     var i = t.site;
-                    if (i.getConfig(Vo)) {
+                    if (i.getConfig(K_showGraph)) {
                         var a = t.render.currentFilepath;
                         if (r !== a && (n.resetPan(), r = this.currentFilepath = a), n.highlightNode = null, r) {
                             var o = {
@@ -14057,7 +14078,7 @@ require.r = e => {
         return d(r), Es(r.children, t), r
     }
 
-    var Vs = function () {
+    var NavC = function () {
             function e(e, t) {
                 this.initialized = !1, this.publish = e;
                 var n = this.outerEl = t.createDiv("nav-view-outer");
@@ -14067,7 +14088,7 @@ require.r = e => {
             return e.prototype.getOuterEl = function () {
                 return this.outerEl
             }, e.prototype.updateOptions = function () {
-                var e = this, t = this.publish.site.getConfig(To);
+                var e = this, t = this.publish.site.getConfig(K_showNavigation);
                 if (Hr && (t = !1), this.containerEl.toggle(t), this.publish.containerEl.toggleClass("has-navigation", t), t) {
                     this.init();
                     try {
@@ -14081,9 +14102,9 @@ require.r = e => {
             }, e.prototype.init = function (e) {
                 if (void 0 === e && (e = !1), !this.initialized) {
                     var t = this.publish.site;
-                    if (t.getConfig(To) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
+                    if (t.getConfig(K_showNavigation) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
                         this.initialized = !0;
-                        for (var n = t.getConfig(Bo), r = new Set(t.getConfig(jo)), i = {}, a = 0; a < n.length; a++) {
+                        for (var n = t.getConfig(K_navigationOrdering), r = new Set(t.getConfig(K_navigationHiddenItems)), i = {}, a = 0; a < n.length; a++) {
                             i[n[a]] = a
                         }
                         var o = Ts(Object.keys(t.cache.cache), i, r);
@@ -14229,7 +14250,7 @@ require.r = e => {
                 n !== t && (t && t.setActive(!1), this.highlighted = n, n && n.setActive(!0))
             }, t
         }(Hs),
-        zs = function () {
+        Outline = function () {
             function e(e, t) {
                 this.publish = e;
                 var n = this.containerEl = t.createDiv("outline-view-outer");
@@ -14243,7 +14264,7 @@ require.r = e => {
             }
 
             return e.prototype.updateOptions = function () {
-                var e = this.publish.site.getConfig(Oo);
+                var e = this.publish.site.getConfig(K_showOutline);
                 Hr && (e = !1), this.publish.containerEl.toggleClass("has-outline", e), this.containerEl.toggle(e), e && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
             }, e.prototype.onItemClick = function (e) {
                 var t = this.publish;
@@ -14252,7 +14273,7 @@ require.r = e => {
                 history.replaceState(null, null, n)
             }, e.prototype.onNavigated = function () {
                 var e = this, t = e.publish, n = e.treeView, r = e.containerEl, i = t.site;
-                if (i.getConfig(Oo) && (n.clear(), r.isShown())) {
+                if (i.getConfig(K_showOutline) && (n.clear(), r.isShown())) {
                     var a = t.render.currentFilepath, o = i.cache.getCache(a);
                     o && o.headings && 0 !== o.headings.length ? (r.toggleVisibility(!0), n.renderOutline(o.headings), this.highlightLine(0)) : r.toggleVisibility(!1)
                 }
@@ -14367,7 +14388,7 @@ require.r = e => {
             }
 
             return e.prototype.register = function (e, t, n) {
-                var r = {scope: this, modifiers: e ? $s.compileModifiers(e) : null, key: t, func: n};
+                var r = {scope: this, modifiers: e ? Keymap.compileModifiers(e) : null, key: t, func: n};
                 return this.keys.push(r), r
             }, e.prototype.unregister = function (e) {
                 this.keys.remove(e)
@@ -14376,7 +14397,7 @@ require.r = e => {
             }, e.prototype.handleKey = function (e, t) {
                 for (var n = 0, r = this.keys; n < r.length; n++) {
                     var i = r[n];
-                    if ($s.isMatch(i, t)) {
+                    if (Keymap.isMatch(i, t)) {
                         var a = i.func(e, t);
                         if (void 0 !== a) return a;
                         if (null !== i.key || null !== i.modifiers) return a
@@ -14385,7 +14406,7 @@ require.r = e => {
                 if (this.parent) return this.parent.handleKey(e, t)
             }, e
         }(),
-        $s = (function (e) {
+        Keymap = (function (e) {
             function t(t, n) {
                 var r = e.call(this, t) || this;
                 return r.cb = n, r
@@ -14750,7 +14771,7 @@ require.r = e => {
         canvas_extensions = ["canvas"];
     [].concat(image_extensions, audio_extensions, video_extensions, pdf_extensions, md_extensions, canvas_extensions);
 
-    var dl = function (e) {
+    var Render = function (e) {
             function t(t) {
                 var n = this, r = createDiv("publish-renderer");
                 n = e.call(this, t, r) || this;
@@ -14768,7 +14789,7 @@ require.r = e => {
                     return o(this, (function (o) {
                         switch (o.label) {
                             case 0:
-                                return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = vo(e), c = bo(l), h = wo(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(Io) || f.createDiv({
+                                return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = vo(e), c = bo(l), h = wo(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(K_hideTitle) || f.createDiv({
                                     cls: "page-header",
                                     text: h
                                 }), i.updateHeader(), i.clear(), p = i.footer, (d = p.el).empty(), i.updateFooter(), "md" !== c ? [3, 2] : [4, s.loadMarkdownFile(e)]);
@@ -14777,7 +14798,7 @@ require.r = e => {
                             case 2:
                                 i.set("![[" + e + "]]"), o.label = 3;
                             case 3:
-                                if (r.trigger("navigated"), t && (v = s.getPublicHref(e) + t.split("#").map(Ls).join("#"), history.replaceState(null, null, v)), s.getConfig(Ro)) {
+                                if (r.trigger("navigated"), t && (v = s.getPublicHref(e) + t.split("#").map(Ls).join("#"), history.replaceState(null, null, v)), s.getConfig(K_showBacklinks)) {
                                     for (b in g = s.cache.cache, M = [], y = function (t) {
                                         if (!g.hasOwnProperty(t) || t === e) return "continue";
                                         if (ao(g[t], (function (n) {
@@ -14816,7 +14837,7 @@ require.r = e => {
                 }))
             }, t.prototype.onScroll = function () {
                 var e = this.publish, t = this.renderer;
-                if (e.site.getConfig(Oo)) {
+                if (e.site.getConfig(K_showOutline)) {
                     var n = t.getScroll();
                     e.outline.highlightLine(Math.round(n))
                 }
@@ -14857,7 +14878,7 @@ require.r = e => {
             }, t.prototype.onExternalLinkRightClick = function (e, t, n) {
             }, t.prototype.onInternalLinkMouseover = function (e, t, n) {
                 var r = this;
-                if (this.publish.site.getConfig(zo)) {
+                if (this.publish.site.getConfig(K_showHoverPreview)) {
                     var i = this.hoverPopover;
                     i && i.state !== Us.Hidden && i.targetEl === t || (i = new HoverPopover(this, t), setTimeout((function () {
                         return a(r, void 0, void 0, (function () {
@@ -15162,7 +15183,7 @@ require.r = e => {
         return e.prototype.onDocumentClick = function (e) {
             e.defaultPrevented || this.resultEl.remove()
         }, e.prototype.updateOptions = function () {
-            var e = this.publish.site.getConfig(No);
+            var e = this.publish.site.getConfig(K_showSearch);
             Hr && (e = !1), this.outerContainerEl.toggle(e)
         }, e.prototype.updateSearch = function () {
             var e = this.resultEl, t = this.inputEl, n = t.value;
@@ -15196,7 +15217,7 @@ require.r = e => {
             }(a), a = a.slice(0, 50), this.chooser.setSuggestions(a), this.inputEl.toggleClass("has-no-results", 0 === a.length), 0 === a.length && this.chooser.addMessage("No results found.")
         }, e.prototype.onKeydown = function (e) {
             if (this.inputEl === document.activeElement) {
-                var t = {modifiers: $s.getModifiers(e), key: js(e), vkey: Fs(e)};
+                var t = {modifiers: Keymap.getModifiers(e), key: js(e), vkey: Fs(e)};
                 this.scope.handleKey(e, t)
             }
         }, e.prototype.renderSuggestion = function (e, t) {
@@ -15255,110 +15276,171 @@ require.r = e => {
         }
     }
 
-    const Publish = function (t) {
+    const Publish = function (Events) {
         function n() {
-            var n = t.call(this) || this;
-            n.stack = [], n.origin = location.origin, n.slidingWindowMode = !1, n.keymap = new $s, n.scope = n.keymap.getRootScope();
-            var r = {
-                "allow-downloads": !0,
-                "allow-forms": !0,
-                "allow-modals": !0,
-                "allow-orientation-lock": !0,
-                "allow-pointer-lock": !0,
-                "allow-popups": !0,
-                "allow-presentation": !0,
-                "allow-same-origin": !0,
-                "allow-scripts": !0
-            };
-            DOMPurify.addHook("afterSanitizeAttributes", (function (e) {
-                e.instanceOf(HTMLIFrameElement) && (e.hasAttribute("sandbox") ? function (e, t, n, r) {
-                    for (var i = e.getAttribute(t), a = [], o = 0, s = i.split(n); o < s.length; o++) {
-                        var l = s[o];
-                        l = l.trim().toLowerCase(), r.hasOwnProperty(l) && r[l] && a.push(l)
+            let _this = Events.call(this) || this
+            _this.stack = []
+            _this.origin = location.origin
+            _this.slidingWindowMode = false
+            _this.keymap = new Keymap()
+            _this.scope = _this.keymap.getRootScope();
+            const r = {
+                "allow-downloads": true,
+                "allow-forms": true,
+                "allow-modals": true,
+                "allow-orientation-lock": true,
+                "allow-pointer-lock": true,
+                "allow-popups": true,
+                "allow-presentation": true,
+                "allow-same-origin": true,
+                "allow-scripts": true,
+            }
+            DOMPurify.addHook("afterSanitizeAttributes", function (el) {
+                if (el.instanceOf(HTMLIFrameElement)) {
+                    if (el.hasAttribute("sandbox")) {
+                        (function (e, t, n, r) {
+                            for (var i = e.getAttribute(t), a = [], o = 0, s = i.split(n); o < s.length; o++) {
+                                var l = s[o];
+                                l = l.trim().toLowerCase(), r.hasOwnProperty(l) && r[l] && a.push(l)
+                            }
+                            var c = a.join(n);
+                            c !== i && e.setAttribute(t, c)
+                        }(el, "sandbox", " ", r))
+                    } else {
+                        el.setAttribute("sandbox", "allow-forms allow-modals allow-presentation allow-popups allow-same-origin allow-scripts")
                     }
-                    var c = a.join(n);
-                    c !== i && e.setAttribute(t, c)
-                }(e, "sandbox", " ", r) : e.setAttribute("sandbox", "allow-forms allow-modals allow-presentation allow-popups allow-same-origin allow-scripts"))
-            })), function () {
+                }
+            })
+
+            // polyfill localStorage
+            ;(function () {
                 try {
-                    window.localStorage.setItem("obsidian", "obsidian"), window.localStorage.removeItem("obsidian")
+                    window.localStorage.setItem("obsidian", "obsidian")
+                    window.localStorage.removeItem("obsidian")
                 } catch (t) {
-                    var e = Object.defineProperties({}, {
+                    const storage = Object.defineProperties({}, {
                         length: {
                             get: function () {
                                 return Object.keys(this).length
                             }
-                        }, clear: {
+                        },
+                        clear: {
                             value: function () {
                                 for (var e in this) Object.prototype.hasOwnProperty.call(this, e) && delete this[e]
                             }
-                        }, getItem: {
+                        },
+                        getItem: {
                             value: function (e) {
                                 return Object.prototype.hasOwnProperty.call(this, e) ? null : this[e]
                             }
-                        }, key: {
+                        },
+                        key: {
                             value: function (e) {
                                 var t = Object.keys(this);
                                 return e < 0 || e >= t.length ? null : t[e]
                             }
-                        }, removeItem: {
+                        },
+                        removeItem: {
                             value: function (e) {
                                 Object.prototype.hasOwnProperty.call(this, e) || delete this[e]
                             }
-                        }, setItem: {
+                        },
+                        setItem: {
                             value: function (e, t) {
                                 this[e] = t
                             }
                         }
-                    });
-                    Object.defineProperty(window, "localStorage", {value: e})
+                    })
+                    Object.defineProperty(window, "localStorage", {value: storage})
                 }
-            }(), Na = !!1, isMacOS && document.body.addClass("native-scrollbars");
-            var i = n.noindexEl = createEl("meta");
-            i.name = "robots", i.content = "noindex";
-            var s = n.containerEl = document.body.createDiv("published-container print");
-            s.hide();
-            var l = s.createDiv("site-body"), c = n.leftColumnEl = l.createDiv("site-body-left-column"),
-                h = n.leftColumnInnerEl = c.createDiv("site-body-left-column-inner"),
-                u = n.leftSiteHeaderLogoLinkEl = h.createEl("a", "site-body-left-column-site-logo"),
-                f = n.leftSiteHeaderLogoEl = u.createEl("img");
-            f.setAttr("aria-hidden", !0), f.hide(), n.leftSiteHeaderEl = h.createEl("a", "site-body-left-column-site-name"), (n.leftSiteThemeToggleEl = h.createDiv("site-body-left-column-site-theme-toggle")).hide();
-            var p = l.createDiv("site-body-center-column"), d = n.siteHeaderEl = p.createDiv("site-header");
-            d.createDiv("clickable-icon", (function (e) {
+            })()
+
+            Na = true
+            if (isMacOS) {
+                document.body.addClass("native-scrollbars")
+            }
+            let noindexEl = _this.noindexEl = createEl("meta")
+            noindexEl.name = "robots"
+            noindexEl.content = "noindex"
+
+            let containerEl = _this.containerEl = document.body.createDiv("published-container print")
+            containerEl.hide()
+
+            let siteBodyEl = containerEl.createDiv("site-body")
+            let leftColumnEl = _this.leftColumnEl = siteBodyEl.createDiv("site-body-left-column")
+            let leftColumnInnerEl = _this.leftColumnInnerEl = leftColumnEl.createDiv("site-body-left-column-inner")
+
+            let leftSiteHeaderLogoLinkEl = _this.leftSiteHeaderLogoLinkEl = leftColumnInnerEl.createEl("a", "site-body-left-column-site-logo")
+            let leftSiteHeaderLogoEl = _this.leftSiteHeaderLogoEl = leftSiteHeaderLogoLinkEl.createEl("img")
+            leftSiteHeaderLogoEl.setAttr("aria-hidden", true)
+            leftSiteHeaderLogoEl.hide()
+
+            _this.leftSiteHeaderEl = leftColumnInnerEl.createEl("a", "site-body-left-column-site-name")
+            _this.leftSiteThemeToggleEl = leftColumnInnerEl.createDiv("site-body-left-column-site-theme-toggle")
+            _this.leftSiteThemeToggleEl.hide()
+
+            let centerColumnEl = siteBodyEl.createDiv("site-body-center-column")
+            let siteHeaderEl = _this.siteHeaderEl = centerColumnEl.createDiv("site-header")
+            siteHeaderEl.createDiv("clickable-icon", function (e) {
                 wi(e, "lucide-menu"), e.addEventListener("click", (function () {
-                    s.classList.toggle("is-left-column-open"), n.site.getConfig(To) && n.nav.init(!0)
+                    containerEl.classList.toggle("is-left-column-open"), _this.site.getConfig(K_showNavigation) && _this.nav.init(!0)
                 }))
-            })), s.createDiv("nav-backdrop", (function (e) {
+            })
+
+            containerEl.createDiv("nav-backdrop", function (e) {
                 e.addEventListener("click", (function () {
-                    s.removeClass("is-left-column-open")
+                    containerEl.removeClass("is-left-column-open")
                 }))
-            }));
-            var m = n.siteLogoLinkEl = d.createEl("a", "site-header-logo");
-            m.setAttr("aria-hidden", !0), m.hide(), n.siteLogoEl = m.createEl("img"), n.siteHeaderTextEl = d.createEl("a", "site-header-text"), n.search = new SearchC(n), n.nav = new Vs(n, h);
-            var v = n.renderContainerEl = p.createDiv("render-container");
-            n.renderContainerInnerEl = v.createDiv("render-container-inner");
-            var g = n.render = new dl(n), M = n.footerEl = p.createDiv("site-footer");
-            n.notFoundEl = v.createDiv("not-found-container", (function (e) {
+            })
+            let siteLogoLinkEl = _this.siteLogoLinkEl = siteHeaderEl.createEl("a", "site-header-logo")
+            siteLogoLinkEl.setAttr("aria-hidden", true)
+            siteLogoLinkEl.hide()
+            _this.siteLogoEl = siteLogoLinkEl.createEl("img")
+            _this.siteHeaderTextEl = siteHeaderEl.createEl("a", "site-header-text")
+            _this.search = new SearchC(_this)
+            _this.nav = new NavC(_this, leftColumnInnerEl)
+            let renderContainerEl = _this.renderContainerEl = centerColumnEl.createDiv("render-container")
+            _this.renderContainerInnerEl = renderContainerEl.createDiv("render-container-inner")
+            let render = _this.render = new Render(_this)
+            let footerEl = _this.footerEl = centerColumnEl.createDiv("site-footer")
+            _this.notFoundEl = renderContainerEl.createDiv("not-found-container", function (e) {
                 e.createDiv("not-found-image"), e.createDiv({
                     cls: "not-found-title",
                     text: "Not found"
                 }), e.createDiv({cls: "not-found-description", text: "This page does not exist"})
-            }));
-            var y = n.rightColumnEl = v.createDiv("site-body-right-column"),
-                b = n.rightColumnInnerEl = y.createDiv("site-body-right-column-inner");
-            return n.graph = new xs(n, b), n.outline = new zs(n, b), M.createEl("a", {
+            })
+            let rightColumnEl = _this.rightColumnEl = renderContainerEl.createDiv("site-body-right-column")
+            let rightColumnInnerEl = _this.rightColumnInnerEl = rightColumnEl.createDiv("site-body-right-column-inner")
+
+            _this.graph = new Graph(_this, rightColumnInnerEl)
+            _this.outline = new Outline(_this, rightColumnInnerEl)
+            footerEl.createEl("a", {
                 attr: {
                     href: "https://publish.obsidian.md",
                     target: "_blank"
-                }, text: "Powered by Obsidian Publish"
-            }), window.addEventListener("popstate", (function () {
-                return n.loadFromUrl()
-            })), window.addEventListener("resize", kr((function () {
-                return n.onResize()
-            }), 50, !0)), n.on("navigated", n.onNavigated.bind(n)), n.stack.push(g), n.toggleNotFound(!1), s.removeClass("has-not-found"), window.siteInfo && (n.site = new Site(n, window.siteInfo)), window.applyCss = function (e) {
-                n.applyCss(e)
-            }, window.applyCssByLink = function (e) {
-                return a(n, void 0, void 0, (function () {
+                },
+                text: "Powered by ck"
+            })
+
+            window.addEventListener("popstate", function () {
+                return _this.loadFromUrl()
+            })
+            window.addEventListener("resize", kr(function () {
+                return _this.onResize()
+            }, 50, true))
+
+            _this.on("navigated", _this.onNavigated.bind(_this))
+            _this.stack.push(render)
+            _this.toggleNotFound(false)
+            containerEl.removeClass("has-not-found")
+            if (window.siteInfo) {
+                _this.site = new Site(_this, window.siteInfo)
+            }
+            window.applyCss = function (e) {
+                _this.applyCss(e)
+            }
+            window.applyCssByLink = function (e) {
+                return a(_this, void 0, void 0, (function () {
                     var t, n;
                     return o(this, (function (r) {
                         switch (r.label) {
@@ -15373,12 +15455,17 @@ require.r = e => {
                         }
                     }))
                 }))
-            }, window.require = function () {
+            }
+            window.require = function () {
                 return obsidian_api
-            }, window.publish = n, n.load(), n
+            }
+            window.publish = _this
+            _this.load()
+            return _this
         }
 
-        return extend(n, t), n.prototype.load = function () {
+        extend(n, Events)
+        n.prototype.load = function () {
             return a(this, void 0, void 0, (function () {
                 var e, t, n, r, i, a, s, l, c, h, u, f, p, d, m, v, g, M, y, b, w, k, x, C, A, L, E, S, H, T, V, O,
                     N, P, I, D, q, z, R, Z, B, j, F, U, _, $, W, G, K, Y = this;
@@ -15392,9 +15479,9 @@ require.r = e => {
                                 }, text: "here"
                             }), i.appendText(".")), a = n.loadOptions(), s = n.loadCache(), [4, a]) : (processPreloadElements(), t.show(), r.renderContent("### Site not found."), [2]);
                         case 1:
-                            o.sent(), processPreloadElements(), t.show(), c = (l = this).leftColumnInnerEl, h = l.rightColumnInnerEl, u = l.siteHeaderEl, f = l.siteHeaderTextEl, p = l.siteLogoEl, d = l.siteLogoLinkEl, m = l.leftSiteHeaderEl, v = l.leftSiteHeaderLogoEl, g = l.leftSiteHeaderLogoLinkEl, M = l.renderContainerEl, y = n.getConfig(To), b = n.getConfig(Vo), w = n.getConfig(Oo), k = this.search.outerContainerEl, y ? c.insertBefore(k, this.leftSiteThemeToggleEl.nextSibling) : b || w ? h.prepend(k) : u.prepend(k), x = n.getSiteName(), f.setText(x), m.setText(x), m.setAttr("aria-label", x), g.setAttr("aria-label", "".concat(x, " logo")), "system" === (C = n.getConfig(So)) ? (A = window.matchMedia("(prefers-color-scheme: dark)"), L = function () {
+                            o.sent(), processPreloadElements(), t.show(), c = (l = this).leftColumnInnerEl, h = l.rightColumnInnerEl, u = l.siteHeaderEl, f = l.siteHeaderTextEl, p = l.siteLogoEl, d = l.siteLogoLinkEl, m = l.leftSiteHeaderEl, v = l.leftSiteHeaderLogoEl, g = l.leftSiteHeaderLogoLinkEl, M = l.renderContainerEl, y = n.getConfig(K_showNavigation), b = n.getConfig(K_showGraph), w = n.getConfig(K_showOutline), k = this.search.outerContainerEl, y ? c.insertBefore(k, this.leftSiteThemeToggleEl.nextSibling) : b || w ? h.prepend(k) : u.prepend(k), x = n.getSiteName(), f.setText(x), m.setText(x), m.setAttr("aria-label", x), g.setAttr("aria-label", "".concat(x, " logo")), "system" === (C = n.getConfig(K_defaultTheme)) ? (A = window.matchMedia("(prefers-color-scheme: dark)"), L = function () {
                                 A.matches ? Y.setTheme("dark") : Y.setTheme("light")
-                            }, A.addEventListener("change", L), L()) : this.setTheme(C), n.getConfig(Ho) && (E = function (e) {
+                            }, A.addEventListener("change", L), L()) : this.setTheme(C), n.getConfig(K_showThemeToggle) && (E = function (e) {
                                 var t = "dark" === Y.themeInEffect, n = t ? "light" : "dark";
                                 Y.setTheme(n), Y.leftSiteThemeToggleEl.toggleClass("is-dark", !t), e.toggleClass("is-enabled", !t), localStorage.setItem("site-theme", n), Y.graph.renderer && Y.graph.renderer.testCSS()
                             }, (S = localStorage.getItem("site-theme")) && this.setTheme(S), this.leftSiteThemeToggleEl.createSpan({cls: "option mod-dark"}, (function (e) {
@@ -15405,7 +15492,7 @@ require.r = e => {
                                 }))
                             })), this.leftSiteThemeToggleEl.createSpan({cls: "option mod-light"}, (function (e) {
                                 wi(e, "lucide-sun")
-                            })), this.leftSiteThemeToggleEl.show()), (H = n.getConfig(Zo)) && (M.on("click", ".publish-renderer", this.onPublishRendererClick.bind(this)), M.addEventListener("scroll", this.onSlidingWindowScroll.bind(this))), T = !H && !!n.getConfig(Do), this.containerEl.toggleClass("is-readable-line-width", T), On.globalOptions.breaks = !n.getConfig(qo), r.renderContent("### Loading site..."), o.label = 2;
+                            })), this.leftSiteThemeToggleEl.show()), (H = n.getConfig(K_slidingWindowMode)) && (M.on("click", ".publish-renderer", this.onPublishRendererClick.bind(this)), M.addEventListener("scroll", this.onSlidingWindowScroll.bind(this))), T = !H && !!n.getConfig(K_readableLineLength), this.containerEl.toggleClass("is-readable-line-width", T), On.globalOptions.breaks = !n.getConfig(K_strictLineBreaks), r.renderContent("### Loading site..."), o.label = 2;
                         case 2:
                             return o.trys.push([2, 4, , 9]), [4, s];
                         case 3:
@@ -15423,7 +15510,7 @@ require.r = e => {
                         case 8:
                             return [3, 9];
                         case 9:
-                            if (O = document.head, (N = n.getSiteLogoUrl()) && n.cache.has(N) && (P = n.getInternalUrl(N), d.show(), p.setAttribute("src", P), v.show(), v.setAttribute("src", P)), this.addLinkToSiteRoot(f), this.addLinkToSiteRoot(m), this.addLinkToSiteRoot(g), this.addLinkToSiteRoot(d), I = n.getConfig(Po), n.isCustomDomain() && I) try {
+                            if (O = document.head, (N = n.getSiteLogoUrl()) && n.cache.has(N) && (P = n.getInternalUrl(N), d.show(), p.setAttribute("src", P), v.show(), v.setAttribute("src", P)), this.addLinkToSiteRoot(f), this.addLinkToSiteRoot(m), this.addLinkToSiteRoot(g), this.addLinkToSiteRoot(d), I = n.getConfig(K_googleAnalytics), n.isCustomDomain() && I) try {
                                 I.startsWith("G-") ? (window.dataLayer = window.dataLayer || [], window.gtag = function () {
                                     window.dataLayer.push(arguments)
                                 }, window.gtag("js", new Date), window.gtag("config", I), (q = O.createEl("script")).async = !0, q.src = "https://www.googletagmanager.com/gtag/js?id=" + I) : (window.GoogleAnalyticsObject = "ga", (D = window.ga = function () {
@@ -15463,30 +15550,36 @@ require.r = e => {
                     }
                 }))
             }))
-        }, n.prototype.loadFromUrl = function () {
+        }
+        n.prototype.loadFromUrl = function () {
             return a(this, void 0, void 0, (function () {
                 var e, t, n, r, i, a, s, l;
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            return t = (e = this).site, n = e.render, r = this.parseUrl(), i = r.path, a = r.subpath, s = i, "" === i && (s = t.getConfig(Co), a = ""), this.toggleNotFound(!1), (l = t.cache.getLinktextDest(s, "")) ? [4, n.loadFile(l, a)] : (n.currentFilepath = "", this.setNoIndex(!0), "" === i ? (n.renderContent("### Welcome to " + t.getSiteName()), this.setNoIndex(!1), [2]) : (n.renderContent(""), this.toggleNotFound(!0), [2]));
+                            return t = (e = this).site, n = e.render, r = this.parseUrl(), i = r.path, a = r.subpath, s = i, "" === i && (s = t.getConfig(K_indexFile), a = ""), this.toggleNotFound(!1), (l = t.cache.getLinktextDest(s, "")) ? [4, n.loadFile(l, a)] : (n.currentFilepath = "", this.setNoIndex(!0), "" === i ? (n.renderContent("### Welcome to " + t.getSiteName()), this.setNoIndex(!1), [2]) : (n.renderContent(""), this.toggleNotFound(!0), [2]));
                         case 1:
                             return o.sent(), [2]
                     }
                 }))
             }))
-        }, n.prototype.toggleNotFound = function (e) {
+        }
+        n.prototype.toggleNotFound = function (e) {
             this.containerEl.toggleClass("has-not-found", e), this.notFoundEl.toggle(e)
-        }, n.prototype.setTheme = function (e) {
+        }
+        n.prototype.setTheme = function (e) {
             ["light", "dark"].contains(e) ? (document.body.removeClasses(["theme-light", "theme-dark"]), document.body.addClass("theme-".concat(e)), this.themeInEffect = e) : console.error("Not a valid theme: ", e)
-        }, n.prototype.addLinkToSiteRoot = function (e) {
-            var t = this, n = this.site, r = n.getConfig(Co);
+        }
+        n.prototype.addLinkToSiteRoot = function (e) {
+            var t = this, n = this.site, r = n.getConfig(K_indexFile);
             e.setAttr("href", n.getPublicHref(r)), e.addEventListener("click", (function (e) {
                 e.preventDefault(), t.slidingWindowMode && (t.stack = []), t.navigate(r, "", e)
             }))
-        }, n.prototype.onResize = function () {
+        }
+        n.prototype.onResize = function () {
             this.render.onResize(), this.graph.onResize(), this.updateSlidingWindow()
-        }, n.prototype.parseUrl = function () {
+        }
+        n.prototype.parseUrl = function () {
             var e, t = location.pathname, n = this.site.customurl, r = !1;
             if (n) {
                 var i = location.host + t;
@@ -15502,13 +15595,14 @@ require.r = e => {
             })).map(As).join("/");
             var s = location.hash || "";
             return {path: e, subpath: s = s.split("#").map(As).join("#")}
-        }, n.prototype.navigate = function (e, t, n) {
+        }
+        n.prototype.navigate = function (e, t, n) {
             var r = this.site;
             if (r) {
                 this.toggleNotFound(!1);
                 var i = parseLinktext(e), a = i.path, o = i.subpath, s = r.cache.getLinkpathDest(a, t);
                 if (s) {
-                    if (n && $s.isModEvent(n)) window.open(r.getPublicHref(s)); else if (this.slidingWindowMode) {
+                    if (n && Keymap.isModEvent(n)) window.open(r.getPublicHref(s)); else if (this.slidingWindowMode) {
                         for (var l = this.stack, c = 0, h = l; c < h.length; c++) {
                             var u = h[c];
                             if (u.currentFilepath === s) return u.loadFile(s, o), void this.scrollToWindow(u)
@@ -15522,7 +15616,7 @@ require.r = e => {
                                 }
                             }
                         }
-                        var m = new dl(this);
+                        var m = new Render(this);
                         l.push(m), m.loadFile(s, o), this.render = m, this.updateSlidingWindow(), this.scrollToWindow(m)
                     } else this.render.loadFile(s, o);
                     if (r.isCustomDomain()) try {
@@ -15531,16 +15625,18 @@ require.r = e => {
                     }
                 } else new Notice('The link destination "'.concat(e, '" does not exist.'))
             }
-        }, n.prototype.closeRenderer = function (e) {
+        }
+        n.prototype.closeRenderer = function (e) {
             if (this.slidingWindowMode) {
                 var t = this.stack, n = t.indexOf(e);
                 -1 !== n && (t.remove(e), e === this.render && (n = Math.min(n, t.length - 1), this.scrollToWindow(t[n])), this.updateSlidingWindow())
             }
-        }, n.prototype.updateSlidingWindow = function () {
+        }
+        n.prototype.updateSlidingWindow = function () {
             var e = this.site, t = this.renderContainerInnerEl;
             if (e) {
                 var n = document.body.clientWidth - this.leftColumnEl.clientWidth - this.rightColumnEl.clientWidth,
-                    r = e.getConfig(Zo) && n >= xl, i = this.slidingWindowMode !== r;
+                    r = e.getConfig(K_slidingWindowMode) && n >= xl, i = this.slidingWindowMode !== r;
                 if (i && (this.slidingWindowMode = r, this.stack = [this.render], document.body.toggleClass("sliding-windows", r)), r || i) for (var a = this.stack, o = 0; o < a.length; o++) {
                     var s = a[o].renderContainerEl.style;
                     r ? (s.minWidth = "700px", s.left = o * Cl + "px", s.right = (a.length - o) * Cl - xl + "px") : (s.minWidth = "", s.left = "", s.right = "")
@@ -15549,7 +15645,8 @@ require.r = e => {
                     return e.renderContainerEl
                 })))
             }
-        }, n.prototype.scrollToWindow = function (e) {
+        }
+        n.prototype.scrollToWindow = function (e) {
             var t = this.stack, n = this.renderContainerEl, r = t.indexOf(e);
             if (-1 !== r) {
                 this.render = e, this.trigger("navigated");
@@ -15560,7 +15657,8 @@ require.r = e => {
                     behavior: "smooth"
                 })
             }
-        }, n.prototype.onPublishRendererClick = function (e, t) {
+        }
+        n.prototype.onPublishRendererClick = function (e, t) {
             if (!e.defaultPrevented) for (var n = 0, r = this.stack; n < r.length; n++) {
                 var i = r[n];
                 if (i.renderContainerEl === t) {
@@ -15568,12 +15666,14 @@ require.r = e => {
                     break
                 }
             }
-        }, n.prototype.onSlidingWindowScroll = function () {
+        }
+        n.prototype.onSlidingWindowScroll = function () {
             for (var e = this.stack, t = this.renderContainerEl, n = t.scrollLeft, r = n + t.clientWidth, i = 0; i < e.length; i++) {
                 var a = e[i];
                 a.renderContainerEl.toggleClass("mod-overlay", i > 0 && n > 664 * (i - 1) || i * xl + (e.length - i - 1) * Cl > r), a.renderContainerEl.toggleClass("mod-squished", n >= 664 * (i + 1) || i * xl + (e.length - i) * Cl >= r)
             }
-        }, n.prototype.onNavigated = function () {
+        }
+        n.prototype.onNavigated = function () {
             var e = this.site, t = this.render.currentFilepath, n = e.isCustomDomain() ? "" : " - Obsidian Publish";
             if (t) {
                 this.setNoIndex(!1);
@@ -15582,35 +15682,68 @@ require.r = e => {
                 var i = e.getPublicHref(t);
                 location.href !== i && history.pushState(null, null, i)
             } else this.setNoIndex(!0), document.title = e.getSiteName() + n
-        }, n.prototype.setNoIndex = function (e) {
-            this.site.getConfig(Eo) && (e = !0);
-            var t = this.noindexEl;
-            e && !t.parentNode ? document.head.appendChild(t) : !e && t.parentNode && t.detach()
-        }, n.prototype.applyCss = function (e) {
-            this.styleEl || (this.styleEl = createEl("style", {type: "text/css"}), document.head.appendChild(this.styleEl)), this.styleEl.setText(e)
-        }, Object.defineProperty(n.prototype, "currentFilepath", {
+        }
+        n.prototype.setNoIndex = function (e) {
+            if (this.site.getConfig(K_noindex)) {
+                e = true
+            }
+            let noindexEl = this.noindexEl
+            e && !noindexEl.parentNode ? document.head.appendChild(noindexEl) : !e && noindexEl.parentNode && noindexEl.detach()
+        }
+        n.prototype.applyCss = function (cssText) {
+            if (!this.styleEl) {
+                this.styleEl = createEl("style", {type: "text/css"})
+                document.head.appendChild(this.styleEl)
+            }
+            this.styleEl.setText(cssText)
+        }
+        Object.defineProperty(n.prototype, "currentFilepath", {
             get: function () {
                 return this.render.currentFilepath
-            }, enumerable: !1, configurable: !0
-        }), n.prototype.registerMarkdownPostProcessor = function (e, t) {
-            return MarkdownPreviewRenderer.registerPostProcessor(e, t), e
-        }, n.prototype.registerMarkdownCodeBlockProcessor = function (e, t, n) {
-            var r = MarkdownPreviewRenderer.createCodeBlockPostProcessor(e, t);
-            return MarkdownPreviewRenderer.registerPostProcessor(r, n), MarkdownPreviewRenderer.registerCodeBlockPostProcessor(e, t), r
-        }, n.prototype.trigger = function (e) {
-            for (var n = [], r = 1; r < arguments.length; r++) n[r - 1] = arguments[r];
-            t.prototype.trigger.apply(this, s([e], n, !1))
-        }, n.prototype.on = function (e, n, r) {
-            return t.prototype.on.call(this, e, n, r)
-        }, n
+            },
+            enumerable: false,
+            configurable: true,
+        })
+        n.prototype.registerMarkdownPostProcessor = function (e, t) {
+            MarkdownPreviewRenderer.registerPostProcessor(e, t)
+            return e
+        }
+        n.prototype.registerMarkdownCodeBlockProcessor = function (e, t, n) {
+            let r = MarkdownPreviewRenderer.createCodeBlockPostProcessor(e, t);
+            MarkdownPreviewRenderer.registerPostProcessor(r, n)
+            MarkdownPreviewRenderer.registerCodeBlockPostProcessor(e, t)
+            return r
+        }
+        n.prototype.trigger = function (name, ...args) {
+            // let args = []
+            // for (let i = 1; i < arguments.length; i++) {
+            //     args[i - 1] = arguments[i]
+            // }
+            Events.prototype.trigger.apply(this, s([name], args, false))
+        }
+        n.prototype.on = function (name, callback, ctx) {
+            return Events.prototype.on.call(this, name, callback, ctx)
+        }
+        return n
     }(Events)
     const Site = function () {
-        function e(e, t) {
-            var n;
-            this.pwts = 0, this.pwsig = "", this.options = {}, this.publish = e, this.id = t.uid, this.host = (n = t.host).startsWith("127.0.0.1") || n.startsWith("localhost") ? "http://" + n : "https://" + n, this.status = t.status, this.slug = t.slug, this.customurl = t.customurl, this.hpw = localStorage[t.uid], this.cache = new SiteCache
+        function e(app, siteInfo) {
+            let host = siteInfo.host
+
+            this.pwts = 0
+            this.pwsig = ""
+            this.options = {}
+            this.publish = app
+            this.id = siteInfo.uid
+            this.host = host.startsWith("127.0.0.1") || host.startsWith("localhost") ? "http://" + host : "https://" + host
+            this.status = siteInfo.status
+            this.slug = siteInfo.slug
+            this.customurl = siteInfo.customurl
+            this.hpw = localStorage[siteInfo.uid]
+            this.cache = new SiteCache()
         }
 
-        return e.prototype.loadCache = function () {
+        e.prototype.loadCache = function () {
             return a(this, void 0, void 0, (function () {
                 var e, t, n, r, i, a;
                 return o(this, (function (o) {
@@ -15642,7 +15775,8 @@ require.r = e => {
                     }
                 }))
             }))
-        }, e.prototype.loadOptions = function () {
+        }
+        e.prototype.loadOptions = function () {
             return a(this, void 0, void 0, (function () {
                 var e, t, n, r, i, a;
                 return o(this, (function (o) {
@@ -15674,31 +15808,40 @@ require.r = e => {
                     }
                 }))
             }))
-        }, e.prototype.getPathSuffix = function () {
+        }
+        e.prototype.getPathSuffix = function () {
             var e = this, t = e.hpw, n = e.pwts, r = e.pwsig;
             if (!t) return "";
             var i = Date.now(), a = 36e5;
             return n + a < i && (n = this.pwts = Math.floor(i / a + 6) * a, r = this.pwsig = Ka().stringify(Xa()(String(n), t))), "?ts=".concat(String(n), "&sig=").concat(r)
-        }, e.prototype.isCustomDomain = function () {
+        }
+        e.prototype.isCustomDomain = function () {
             return !!this.customurl
-        }, e.prototype.getConfig = function (e) {
+        }
+        e.prototype.getConfig = function (e) {
             var t = this.options[e];
             return void 0 === t && (t = Fo[e]), t
-        }, e.prototype.getSiteName = function () {
-            return this.getConfig(Ao) || this.slug || ""
-        }, e.prototype.getSiteLogoUrl = function () {
-            return this.getConfig(Lo) || ""
-        }, e.prototype.encodeFilepath = function (e, t) {
+        }
+        e.prototype.getSiteName = function () {
+            return this.getConfig(K_siteName) || this.slug || ""
+        }
+        e.prototype.getSiteLogoUrl = function () {
+            return this.getConfig(K_logo) || ""
+        }
+        e.prototype.encodeFilepath = function (e, t) {
             return e.split("/").map(t ? Ls : encodeURIComponent).join("/")
-        }, e.prototype.getInternalUrl = function (e) {
+        }
+        e.prototype.getInternalUrl = function (e) {
             return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(e, !1) + this.getPathSuffix()
-        }, e.prototype.getPublicHref = function (e) {
+        }
+        e.prototype.getPublicHref = function (e) {
             var t, n = this.cache.getCache(e);
             "md" === bo(vo(e)) && (e = e.substr(0, e.length - 3));
             var r = this.encodeFilepath(e, !0),
                 i = null === (t = null == n ? void 0 : n.frontmatter) || void 0 === t ? void 0 : t.permalink;
             return i && "string" == typeof i && (i.startsWith("/") && (i = i.substring(1)), r = i), this.slug ? this.publish.origin + "/" + encodeURIComponent(this.slug) + "/" + r : this.customurl ? "https://" + this.customurl + "/" + r : ""
-        }, e.prototype.loadMarkdownFile = function (e) {
+        }
+        e.prototype.loadMarkdownFile = function (e) {
             return a(this, void 0, Promise, (function () {
                 var t, n, r, i;
                 return o(this, (function (a) {
@@ -15723,7 +15866,8 @@ require.r = e => {
                     }
                 }))
             }))
-        }, e
+        }
+        return e
     }()
 
     window.addEventListener("load", function () {
