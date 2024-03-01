@@ -15595,19 +15595,25 @@ require.r = e => {
                 "allow-same-origin": true,
                 "allow-scripts": true,
             }
-            DOMPurify.addHook("afterSanitizeAttributes", function (el) {
-                if (el.instanceOf(HTMLIFrameElement)) {
-                    if (el.hasAttribute("sandbox")) {
-                        (function (e, t, n, r) {
-                            for (var i = e.getAttribute(t), a = [], o = 0, s = i.split(n); o < s.length; o++) {
-                                var l = s[o];
-                                l = l.trim().toLowerCase(), r.hasOwnProperty(l) && r[l] && a.push(l)
+            DOMPurify.addHook("afterSanitizeAttributes", function (iframeEl) {
+                if (iframeEl.instanceOf(HTMLIFrameElement)) {
+                    if (iframeEl.hasAttribute("sandbox")) {
+                        let sandboxValue = iframeEl.getAttribute("sandbox")
+                        let a = []
+                        let features = sandboxValue.split(" ")
+                        for (let i = 0; i < features.length; i++) {
+                            let feature = features[i]
+                            feature = feature.trim().toLowerCase()
+                            if (r.hasOwnProperty(feature) && r[feature]) {
+                                a.push(feature)
                             }
-                            var c = a.join(n);
-                            c !== i && e.setAttribute(t, c)
-                        }(el, "sandbox", " ", r))
+                        }
+                        let c = a.join(" ");
+                        if (c !== sandboxValue) {
+                            iframeEl.setAttribute("sandbox", c)
+                        }
                     } else {
-                        el.setAttribute("sandbox", "allow-forms allow-modals allow-presentation allow-popups allow-same-origin allow-scripts")
+                        iframeEl.setAttribute("sandbox", "allow-forms allow-modals allow-presentation allow-popups allow-same-origin allow-scripts")
                     }
                 }
             })
