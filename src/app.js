@@ -6551,7 +6551,7 @@ require.r = module => {
         Events: () => Events,
         MarkdownPreviewRenderer: () => MarkdownPreviewRenderer,
         MarkdownRenderChild: () => MarkdownRenderChild,
-        Publish: () => Publish,
+        Publish: () => App,
     })
 
     let setPrototypeOf = function (obj, proto) {
@@ -22092,7 +22092,7 @@ require.r = module => {
             }(e, t, n ? n.matches : null, r)
     }
 
-    var wl = function () {
+    const Chooser = function () {
         function e(e, t, n) {
             var r = this;
             this.chooser = e,
@@ -22237,27 +22237,26 @@ require.r = module => {
         }
         return e
     }()
-        , kl = function () {
-        function e(e) {
-            this.publish = e;
-            var t = this.outerContainerEl = createDiv("search-view-outer")
-                , n = this.containerEl = t.createDiv("search-view-container");
-            n.createSpan("published-search-icon", (function (e) {
-                    wi(e, "lucide-search")
-                }
-            ));
-            var r = this.inputEl = n.createEl("input", {
+    const SearchC = function () {
+        function e(app) {
+            this.publish = app
+            let searchViewOuterEl = this.outerContainerEl = createDiv("search-view-outer")
+            let searchViewContainerEl = this.containerEl = searchViewOuterEl.createDiv("search-view-container");
+            searchViewContainerEl.createSpan("published-search-icon", function (e) {
+                wi(e, "lucide-search")
+            })
+            let inputEl = this.inputEl = searchViewContainerEl.createEl("input", {
                 cls: "search-bar",
                 type: "text"
-            });
-            r.setAttribute("placeholder", "Search page or heading..."),
-                this.resultEl = createDiv("search-results");
-            var i = this.scope = new Scope;
-            this.chooser = new wl(this, this.resultEl, i),
-                e.on("options-updated", this.updateOptions.bind(this)),
-                r.addEventListener("input", kr(this.updateSearch.bind(this), 100, !0)),
-                r.addEventListener("keydown", this.onKeydown.bind(this)),
-                document.addEventListener("click", this.onDocumentClick.bind(this))
+            })
+            inputEl.setAttribute("placeholder", "Search page or heading...")
+            this.resultEl = createDiv("search-results")
+            let scope = this.scope = new Scope()
+            this.chooser = new Chooser(this, this.resultEl, scope)
+            app.on("options-updated", this.updateOptions.bind(this))
+            inputEl.addEventListener("input", kr(this.updateSearch.bind(this), 100, true))
+            inputEl.addEventListener("keydown", this.onKeydown.bind(this))
+            document.addEventListener("click", this.onDocumentClick.bind(this))
         }
 
         e.prototype.onDocumentClick = function (e) {
@@ -22386,12 +22385,12 @@ require.r = module => {
         }
         return e
     }();
-    var xl = 700
-        , Cl = 36
-        , Al = "obsidian.css"
-        , Ll = "publish.css"
-        , El = "publish.js"
-        , Sl = /^favicon-([0-9]+)(x[0-9]+)?.png$/i;
+    let xl = 700
+    let Cl = 36
+    let obsidian_css = "obsidian.css"
+    let publish_css = "publish.css"
+    let publish_js = "publish.js"
+    let favicon_re = /^favicon-([0-9]+)(x[0-9]+)?.png$/i;
 
     function Hl(e) {
         return !e || e.getAllResponseHeaders().toLowerCase().contains("obs-status") && null !== e.getResponseHeader("obs-status")
@@ -22401,20 +22400,23 @@ require.r = module => {
         return !e || e.headers.has("obs-status") && null !== e.headers.get("obs-status")
     }
 
-    function Vl() {
-        for (var e = 0, t = Array.from(document.head.childNodes); e < t.length; e++) {
-            var n = t[e];
-            n instanceof HTMLLinkElement && "preload" === n.rel && "style" === n.as && (n.onload = null,
-                n.rel = "stylesheet")
-        }
-        var r = fishAll(".preload");
-        if (r)
-            for (var i = 0, a = r; i < a.length; i++) {
-                a[i].detach()
+    function processPreloadElements() {
+        for (let i = 0, nodes = Array.from(document.head.childNodes); i < nodes.length; i++) {
+            let node = nodes[i]
+            if (node instanceof HTMLLinkElement && "preload" === node.rel && "style" === node.as) {
+                node.onload = null
+                node.rel = "stylesheet"
             }
+        }
+        let preloadEls = fishAll(".preload");
+        if (preloadEls) {
+            for (let i = 0; i < preloadEls.length; i++) {
+                preloadEls[i].detach()
+            }
+        }
     }
 
-    const Publish = function (Events) {
+    const App = function (Events) {
         function n() {
             let _this = Events.call(this) || this;
             _this.stack = []
@@ -22538,7 +22540,7 @@ require.r = module => {
             siteLogoLinkEl.hide()
             _this.siteLogoEl = siteLogoLinkEl.createEl("img")
             _this.siteHeaderTextEl = siteHeaderEl.createEl("a", "site-header-text")
-            _this.search = new kl(_this)
+            _this.search = new SearchC(_this)
             _this.nav = new Vs(_this, leftColumnInnerEl)
             let renderContainerEl = _this.renderContainerEl = centerColumnEl.createDiv("render-container");
             _this.renderContainerInnerEl = renderContainerEl.createDiv("render-container-inner");
@@ -22649,14 +22651,14 @@ require.r = module => {
                                 siteCache = site.loadCache()
                                 return [4, siteOptions]
                             } else {
-                                Vl()
+                                processPreloadElements()
                                 containerEl.show()
                                 render.renderContent("### Site not found.")
                                 return [2]
                             }
                         case 1:
                             o.sent()
-                            Vl()
+                            processPreloadElements()
                             containerEl.show()
                             c = (l = this).leftColumnInnerEl
                             h = l.rightColumnInnerEl
@@ -22797,17 +22799,17 @@ require.r = module => {
                             Z = 0
                             B = Array.from(O.childNodes)
                             for (; Z < B.length; Z++) {
-                                (j = B[Z]) instanceof HTMLLinkElement && "stylesheet" === j.rel && (j.href.contains(Al) && (z = !0),
-                                j.href.contains(Ll) && (R = !0))
+                                (j = B[Z]) instanceof HTMLLinkElement && "stylesheet" === j.rel && (j.href.contains(obsidian_css) && (z = !0),
+                                j.href.contains(publish_css) && (R = !0))
                             }
-                            for (_ in !z && site.cache.has(Al) && O.createEl("link", {
-                                href: site.getInternalUrl(Al),
+                            for (_ in !z && site.cache.has(obsidian_css) && O.createEl("link", {
+                                href: site.getInternalUrl(obsidian_css),
                                 attr: {
                                     rel: "stylesheet"
                                 }
                             }),
-                            !R && site.cache.has(Ll) && O.createEl("link", {
-                                href: site.getInternalUrl(Ll),
+                            !R && site.cache.has(publish_css) && O.createEl("link", {
+                                href: site.getInternalUrl(publish_css),
                                 attr: {
                                     rel: "stylesheet"
                                 }
@@ -22826,7 +22828,7 @@ require.r = module => {
                                         U && U.detach();
                                         continue
                                     }
-                                    (W = $.match(Sl)) && (G = W[1] + (W[2] || "x" + W[1]),
+                                    (W = $.match(favicon_re)) && (G = W[1] + (W[2] || "x" + W[1]),
                                         O.createEl("link", {
                                             href: site.getInternalUrl(_),
                                             attr: {
@@ -22839,8 +22841,8 @@ require.r = module => {
                             }
                             this.trigger("options-updated")
                             this.updateSlidingWindow()
-                            return site.isCustomDomain() && site.cache.has(El) ? ((K = createEl("script")).async = !0,
-                                K.src = site.getInternalUrl(El),
+                            return site.isCustomDomain() && site.cache.has(publish_js) ? ((K = createEl("script")).async = !0,
+                                K.src = site.getInternalUrl(publish_js),
                                 [4, new Promise((function (e) {
                                         K.addEventListener("load", e),
                                             K.addEventListener("error", e),
@@ -23140,47 +23142,54 @@ require.r = module => {
 
         e.prototype.loadCache = function () {
             return a(this, void 0, void 0, (function () {
-                    var e, t, n, r, i, a;
-                    return o(this, (function (o) {
-                            switch (o.label) {
-                                case 0:
-                                    if (!(e = window.preloadCache))
-                                        return [3, 7];
-                                    o.label = 1;
-                                case 1:
-                                    return o.trys.push([1, 6, , 7]),
-                                        delete window.preloadCache,
-                                        [4, e];
-                                case 2:
-                                    return (t = o.sent()).ok && Tl(t) ? (r = (n = this.cache).load,
-                                        [4, t.json()]) : [3, 5];
-                                case 3:
-                                    return [4, r.apply(n, [o.sent()])];
-                                case 4:
-                                    return o.sent(),
-                                        [2];
-                                case 5:
-                                    return [3, 7];
-                                case 6:
-                                    return o.sent(),
-                                        [3, 7];
-                                case 7:
-                                    return i = {
-                                        withCredentials: !0,
-                                        url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
-                                    },
-                                        [4, ajaxPromise(i)];
-                                case 8:
-                                    return a = o.sent(),
-                                        Hl(i.req) ? [4, this.cache.load(JSON.parse(a))] : [2];
-                                case 9:
-                                    return o.sent(),
-                                        [2]
+                let preloadCache, t, n, r, i, a;
+                return o(this, (function (o) {
+                    debugger
+                    switch (o.label) {
+                        case 0:
+                            preloadCache = window.preloadCache
+                            if (!preloadCache) {
+                                return [3, 7];
                             }
-                        }
-                    ))
-                }
-            ))
+                            o.label = 1;
+                        case 1:
+                            o.trys.push([1, 6, , 7])
+                            delete window.preloadCache
+                            return [4, preloadCache];
+                        case 2:
+                            t = o.sent()
+                            if (t.ok && Tl(t)) {
+                                n = this.cache
+                                r = n.load
+                                return [4, t.json()]
+                            } else {
+                                return [3, 5]
+                            }
+                        case 3:
+                            return [4, r.apply(n, [o.sent()])];
+                        case 4:
+                            o.sent()
+                            return [2]
+                        case 5:
+                            return [3, 7];
+                        case 6:
+                            o.sent()
+                            return [3, 7]
+                        case 7:
+                            i = {
+                                withCredentials: !0,
+                                url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
+                            }
+                            return [4, ajaxPromise(i)];
+                        case 8:
+                            a = o.sent()
+                            return Hl(i.req) ? [4, this.cache.load(JSON.parse(a))] : [2];
+                        case 9:
+                            o.sent()
+                            return [2]
+                    }
+                }))
+            }))
         }
         e.prototype.loadOptions = function () {
             return a(this, void 0, void 0, (function () {
@@ -23316,7 +23325,7 @@ require.r = module => {
     }()
 
     window.addEventListener("load", function () {
-        window.app = new Publish()
+        window.app = new App()
 
         let body = document.body;
         body.on("mouseover", "[aria-label]", ps)
