@@ -13081,27 +13081,27 @@ require.r = e => {
         K_navigationOrdering = "navigationOrdering",
         K_navigationHiddenItems = "navigationHiddenItems"
 
-    let ko = {}
-    ko[K_indexFile] = ""
-    ko[K_siteName] = ""
-    ko[K_logo] = ""
-    ko[K_noindex] = false
-    ko[K_defaultTheme] = "light"
-    ko[K_showThemeToggle] = false
-    ko[K_showNavigation] = true
-    ko[K_showGraph] = true
-    ko[K_showOutline] = false
-    ko[K_showSearch] = false
-    ko[K_googleAnalytics] = ""
-    ko[K_hideTitle] = false
-    ko[K_readableLineLength] = true
-    ko[K_strictLineBreaks] = false
-    ko[K_showHoverPreview] = false
-    ko[K_showBacklinks] = false
-    ko[K_slidingWindowMode] = false
-    ko[K_navigationOrdering] = []
-    ko[K_navigationHiddenItems] = []
-    const Fo = ko
+    let defaultConfig = {}
+    defaultConfig[K_indexFile] = ""
+    defaultConfig[K_siteName] = ""
+    defaultConfig[K_logo] = ""
+    defaultConfig[K_noindex] = false
+    defaultConfig[K_defaultTheme] = "light"
+    defaultConfig[K_showThemeToggle] = false
+    defaultConfig[K_showNavigation] = true
+    defaultConfig[K_showGraph] = true
+    defaultConfig[K_showOutline] = false
+    defaultConfig[K_showSearch] = false
+    defaultConfig[K_googleAnalytics] = ""
+    defaultConfig[K_hideTitle] = false
+    defaultConfig[K_readableLineLength] = true
+    defaultConfig[K_strictLineBreaks] = false
+    defaultConfig[K_showHoverPreview] = false
+    defaultConfig[K_showBacklinks] = false
+    defaultConfig[K_slidingWindowMode] = false
+    defaultConfig[K_navigationOrdering] = []
+    defaultConfig[K_navigationHiddenItems] = []
+
 
     var Uo = function (e) {
         return 255 & parseInt(e)
@@ -13723,13 +13723,13 @@ require.r = e => {
         return "true" === getComputedStyle(e).getPropertyValue("--no-tooltip").trim()
     }
 
-    function ps(e, t) {
+    function onMouseOver(e, t) {
         Sr(e, t) && (Vr(e) || fs(t) || vs(t))
     }
 
-    function ds(e, t) {
+    function onMouseOut(e, t) {
         if (Sr(e, t)) {
-            ys();
+            onMouseUp();
             var n = e.relatedTarget;
             if (n && n.matchParent) {
                 var r = n.matchParent("[aria-label]");
@@ -13776,7 +13776,7 @@ require.r = e => {
                     var M = c.getBoundingClientRect();
                     m = M.left, v = M.width
                 }
-                ls && cs === el ? ls.setText(tooltip) : (ys(), ls = createDiv({cls: "tooltip", text: tooltip}));
+                ls && cs === el ? ls.setText(tooltip) : (onMouseUp(), ls = createDiv({cls: "tooltip", text: tooltip}));
                 var y = ls.createDiv("tooltip-arrow"), b = 0, w = 0;
                 "bottom" === i ? (b = d + g + l, w = m + v / 2) : "right" === i ? (b = d + g / 2, w = m + v + l, o.push("mod-right")) : "left" === i ? (b = d + g / 2, w = m - l, o.push("mod-left")) : "top" === i && (b = d - l - 5, w = m + v / 2, o.push("mod-top")), ls.addClasses(o), ls.style.top = "0px", ls.style.left = "0px", ls.style.width = "", ls.style.height = "", ls.parentNode || f.body.appendChild(ls);
                 var k = ls.getBoundingClientRect(), x = ["bottom", "top"].contains(i) ? k.width / 2 : k.width,
@@ -13795,7 +13795,7 @@ require.r = e => {
         }
     }
 
-    function ys() {
+    function onMouseUp() {
         us(), ls && (gs = Date.now(), ls.detach(), ls = null, cs = null)
     }
 
@@ -13809,7 +13809,7 @@ require.r = e => {
     }
 
     var ks = loadScriptAsync("/lib/pixi.min.js?7.2.4"),
-        Graph = function () {
+        GraphView = function () {
             function e(e, t) {
                 var n = this;
                 this.expanded = !1, this.global = !1, this.interlinks = !0, this.publish = e;
@@ -14250,7 +14250,7 @@ require.r = e => {
                 n !== t && (t && t.setActive(!1), this.highlighted = n, n && n.setActive(!0))
             }, t
         }(Hs),
-        Outline = function () {
+        OutlineView = function () {
             function e(e, t) {
                 this.publish = e;
                 var n = this.containerEl = t.createDiv("outline-view-outer");
@@ -14381,112 +14381,112 @@ require.r = e => {
         return Rs[t] || "Key" + t
     }
 
-    var Us,
-        Scope = function () {
-            function e(e) {
-                this.tabFocusContainerEl = null, this.keys = [], this.parent = e
-            }
+    var Us
+    const Scope = function () {
+        function e(e) {
+            this.tabFocusContainerEl = null, this.keys = [], this.parent = e
+        }
 
-            return e.prototype.register = function (e, t, n) {
-                var r = {scope: this, modifiers: e ? Keymap.compileModifiers(e) : null, key: t, func: n};
-                return this.keys.push(r), r
-            }, e.prototype.unregister = function (e) {
-                this.keys.remove(e)
-            }, e.prototype.setTabFocusContainerEl = function (e) {
-                this.tabFocusContainerEl = e
-            }, e.prototype.handleKey = function (e, t) {
-                for (var n = 0, r = this.keys; n < r.length; n++) {
-                    var i = r[n];
-                    if (Keymap.isMatch(i, t)) {
-                        var a = i.func(e, t);
-                        if (void 0 !== a) return a;
-                        if (null !== i.key || null !== i.modifiers) return a
+        return e.prototype.register = function (e, t, n) {
+            var r = {scope: this, modifiers: e ? Keymap.compileModifiers(e) : null, key: t, func: n};
+            return this.keys.push(r), r
+        }, e.prototype.unregister = function (e) {
+            this.keys.remove(e)
+        }, e.prototype.setTabFocusContainerEl = function (e) {
+            this.tabFocusContainerEl = e
+        }, e.prototype.handleKey = function (e, t) {
+            for (var n = 0, r = this.keys; n < r.length; n++) {
+                var i = r[n];
+                if (Keymap.isMatch(i, t)) {
+                    var a = i.func(e, t);
+                    if (void 0 !== a) return a;
+                    if (null !== i.key || null !== i.modifiers) return a
+                }
+            }
+            if (this.parent) return this.parent.handleKey(e, t)
+        }, e
+    }()
+    const Keymap = (function (e) {
+        function t(t, n) {
+            var r = e.call(this, t) || this;
+            return r.cb = n, r
+        }
+
+        extend(t, e), t.prototype.handleKey = function (t, n) {
+            var r = this.cb();
+            return r ? r.handleKey(t, n) : e.prototype.handleKey.call(this, t, n)
+        }
+    }(Scope), function () {
+        function e() {
+            this.modifiers = "", this.rootScope = new Scope, this.scope = this.rootScope, this.prevScopes = [], window.addEventListener("keydown", this.onKeyEvent.bind(this), !0), window.addEventListener("focusin", this.onFocusIn.bind(this))
+        }
+
+        return e.init = function () {
+            return e.global || (e.global = new e), e.global
+        }, e.prototype.getRootScope = function () {
+            return this.rootScope
+        }, e.prototype.pushScope = function (e) {
+            this.scope !== e && (this.prevScopes.push(this.scope), this.scope = e)
+        }, e.prototype.popScope = function (e) {
+            e !== this.rootScope && (this.scope === e ? this.scope = this.prevScopes.pop() || this.rootScope : this.prevScopes.remove(e))
+        }, e.prototype.onKeyEvent = function (t) {
+            this.updateModifiers(t);
+            var n = this.scope;
+            if (n) {
+                var r = js(t);
+                if (!e.isModifierKey(r)) {
+                    var i = Fs(t);
+                    54 === t.which && "^" == t.key && "KeyI" === t.code && (i = "KeyI");
+                    var a = {modifiers: this.modifiers, key: r, vkey: i};
+                    return !1 === n.handleKey(t, a) ? (t.preventDefault(), t.stopPropagation(), !1) : void 0
+                }
+            }
+        }, e.prototype.onFocusIn = function (e) {
+            var t = this, n = this.scope;
+            if (n && n.tabFocusContainerEl) {
+                var r = n.tabFocusContainerEl, i = e.targetNode;
+                i && i !== activeDocument.body && i.instanceOf(Element) && !r.contains(i) && setTimeout((function () {
+                    if (!(t.scope !== n || (a = r.querySelector(["a[href]", "button", "input", "select", "textarea", '[contenteditable]:not([contenteditable="false"])', "[tabindex]"].map((function (e) {
+                        return e + ':not([disabled]):not([tabindex="-1"])'
+                    })).join(","))) && (a.instanceOf(HTMLElement) || a.instanceOf(SVGElement)) && (a.focus(i), a))) {
+                        var e = activeDocument.activeElement;
+                        e && e instanceof HTMLElement && e.blur()
                     }
-                }
-                if (this.parent) return this.parent.handleKey(e, t)
-            }, e
-        }(),
-        Keymap = (function (e) {
-            function t(t, n) {
-                var r = e.call(this, t) || this;
-                return r.cb = n, r
+                    var i, a
+                }), 0)
             }
-
-            extend(t, e), t.prototype.handleKey = function (t, n) {
-                var r = this.cb();
-                return r ? r.handleKey(t, n) : e.prototype.handleKey.call(this, t, n)
-            }
-        }(Scope), function () {
-            function e() {
-                this.modifiers = "", this.rootScope = new Scope, this.scope = this.rootScope, this.prevScopes = [], window.addEventListener("keydown", this.onKeyEvent.bind(this), !0), window.addEventListener("focusin", this.onFocusIn.bind(this))
-            }
-
-            return e.init = function () {
-                return e.global || (e.global = new e), e.global
-            }, e.prototype.getRootScope = function () {
-                return this.rootScope
-            }, e.prototype.pushScope = function (e) {
-                this.scope !== e && (this.prevScopes.push(this.scope), this.scope = e)
-            }, e.prototype.popScope = function (e) {
-                e !== this.rootScope && (this.scope === e ? this.scope = this.prevScopes.pop() || this.rootScope : this.prevScopes.remove(e))
-            }, e.prototype.onKeyEvent = function (t) {
-                this.updateModifiers(t);
-                var n = this.scope;
-                if (n) {
-                    var r = js(t);
-                    if (!e.isModifierKey(r)) {
-                        var i = Fs(t);
-                        54 === t.which && "^" == t.key && "KeyI" === t.code && (i = "KeyI");
-                        var a = {modifiers: this.modifiers, key: r, vkey: i};
-                        return !1 === n.handleKey(t, a) ? (t.preventDefault(), t.stopPropagation(), !1) : void 0
-                    }
-                }
-            }, e.prototype.onFocusIn = function (e) {
-                var t = this, n = this.scope;
-                if (n && n.tabFocusContainerEl) {
-                    var r = n.tabFocusContainerEl, i = e.targetNode;
-                    i && i !== activeDocument.body && i.instanceOf(Element) && !r.contains(i) && setTimeout((function () {
-                        if (!(t.scope !== n || (a = r.querySelector(["a[href]", "button", "input", "select", "textarea", '[contenteditable]:not([contenteditable="false"])', "[tabindex]"].map((function (e) {
-                            return e + ':not([disabled]):not([tabindex="-1"])'
-                        })).join(","))) && (a.instanceOf(HTMLElement) || a.instanceOf(SVGElement)) && (a.focus(i), a))) {
-                            var e = activeDocument.activeElement;
-                            e && e instanceof HTMLElement && e.blur()
-                        }
-                        var i, a
-                    }), 0)
-                }
-            }, e.prototype.updateModifiers = function (t) {
-                this.modifiers = e.getModifiers(t)
-            }, e.getModifiers = function (t) {
-                var n = [];
-                return t.ctrlKey && n.push("Ctrl"), t.metaKey && n.push("Meta"), t.altKey && n.push("Alt"), t.shiftKey && n.push("Shift"), e.compileModifiers(n)
-            }, e.compileModifiers = function (e) {
-                return e.map((function (e) {
-                    return "Mod" === e ? "MacOS" === __os ? "Meta" : "Ctrl" : e
-                })).sort().join(",")
-            }, e.decompileModifiers = function (e) {
-                return e.split(",").map((function (e) {
-                    return "MacOS" === __os && "Meta" === e || "MacOS" !== __os && "Ctrl" === e ? "Mod" : e
-                })).filter((function (e) {
-                    return e
-                }))
-            }, e.isModifierKey = function (e) {
-                return "Control" === e || "Alt" === e || "Shift" === e || "OS" === e || "Meta" === e
-            }, e.prototype.matchModifiers = function (e) {
-                return this.modifiers === e
-            }, e.prototype.hasModifier = function (t) {
-                return e.decompileModifiers(this.modifiers).contains(t)
-            }, e.isModifier = function (e, t) {
-                return "Ctrl" === t ? e.ctrlKey : "Meta" === t ? e.metaKey : "Alt" === t ? e.altKey : "Shift" === t ? e.shiftKey : "Mod" === t && ("MacOS" === __os ? e.metaKey : e.ctrlKey)
-            }, e.isMatch = function (e, t) {
-                var n = e.modifiers, r = e.key;
-                return (null === n || n === t.modifiers) && (!r || (r === t.vkey || !(!t.key || r.toLowerCase() !== t.key.toLowerCase())))
-            }, e.isModEvent = function (t) {
-                return !!t && (function (e) {
-                    return (e.instanceOf(MouseEvent) || e.instanceOf(PointerEvent)) && 1 === e.button
-                }(t) ? "tab" : !!e.isModifier(t, "Mod") && (e.isModifier(t, "Alt") ? e.isModifier(t, "Shift") ? "window" : "split" : "tab"))
-            }, e
-        }())
+        }, e.prototype.updateModifiers = function (t) {
+            this.modifiers = e.getModifiers(t)
+        }, e.getModifiers = function (t) {
+            var n = [];
+            return t.ctrlKey && n.push("Ctrl"), t.metaKey && n.push("Meta"), t.altKey && n.push("Alt"), t.shiftKey && n.push("Shift"), e.compileModifiers(n)
+        }, e.compileModifiers = function (e) {
+            return e.map((function (e) {
+                return "Mod" === e ? "MacOS" === __os ? "Meta" : "Ctrl" : e
+            })).sort().join(",")
+        }, e.decompileModifiers = function (e) {
+            return e.split(",").map((function (e) {
+                return "MacOS" === __os && "Meta" === e || "MacOS" !== __os && "Ctrl" === e ? "Mod" : e
+            })).filter((function (e) {
+                return e
+            }))
+        }, e.isModifierKey = function (e) {
+            return "Control" === e || "Alt" === e || "Shift" === e || "OS" === e || "Meta" === e
+        }, e.prototype.matchModifiers = function (e) {
+            return this.modifiers === e
+        }, e.prototype.hasModifier = function (t) {
+            return e.decompileModifiers(this.modifiers).contains(t)
+        }, e.isModifier = function (e, t) {
+            return "Ctrl" === t ? e.ctrlKey : "Meta" === t ? e.metaKey : "Alt" === t ? e.altKey : "Shift" === t ? e.shiftKey : "Mod" === t && ("MacOS" === __os ? e.metaKey : e.ctrlKey)
+        }, e.isMatch = function (e, t) {
+            var n = e.modifiers, r = e.key;
+            return (null === n || n === t.modifiers) && (!r || (r === t.vkey || !(!t.key || r.toLowerCase() !== t.key.toLowerCase())))
+        }, e.isModEvent = function (t) {
+            return !!t && (function (e) {
+                return (e.instanceOf(MouseEvent) || e.instanceOf(PointerEvent)) && 1 === e.button
+            }(t) ? "tab" : !!e.isModifier(t, "Mod") && (e.isModifier(t, "Alt") ? e.isModifier(t, "Shift") ? "window" : "split" : "tab"))
+        }, e
+    }())
 
     const Modal = function () {
             function e(e) {
@@ -14650,10 +14650,10 @@ require.r = e => {
             Js || (window.addEventListener("click", el), window.addEventListener("contextmenu", el), window.addEventListener("mousemove", nl), Js = window.setInterval(rl, 500))
         }
 
-    let HoverPopover = function (e) {
+    let HoverPopover = function (Component) {
         function t(t, n, r) {
             void 0 === r && (r = 300);
-            var i = e.call(this) || this;
+            var i = Component.call(this) || this;
             i.onTarget = !0, i.onHover = !1, i.shownPos = null, i.parent = t, i.targetEl = n, i.waitTime = r, i.state = Us.Showing;
             var a = i.hoverEl = createDiv("popover hover-popover"), o = i.onMouseIn = i.onMouseIn.bind(i),
                 s = i.onMouseOut = i.onMouseOut.bind(i);
@@ -14664,44 +14664,56 @@ require.r = e => {
             })), i.timer = window.setTimeout(i.show.bind(i), r), Ys.push(i), il(), i
         }
 
-        return extend(t, e), t.prototype.onMouseIn = function (e) {
+        extend(t, Component)
+        t.prototype.onMouseIn = function (e) {
             this.targetEl && !Sr(e, this.targetEl) || (this.onTarget = !0, this.transition())
-        }, t.prototype.onMouseOut = function (e) {
+        }
+        t.prototype.onMouseOut = function (e) {
             this.targetEl && !Sr(e, this.targetEl) || (this.onTarget = !1, this.transition())
-        }, t.prototype.detect = function (e) {
+        }
+        t.prototype.detect = function (e) {
             var t = this.targetEl, n = this.hoverEl;
             t && (this.onTarget = e === t || t.contains(e)), this.onHover = e === n || n.contains(e)
-        }, t.prototype.shouldShow = function () {
+        }
+        t.prototype.shouldShow = function () {
             return this.shouldShowSelf() || this.shouldShowChild()
-        }, t.prototype.shouldShowSelf = function () {
+        }
+        t.prototype.shouldShowSelf = function () {
             return this.onTarget || this.onHover
-        }, t.prototype.shouldShowChild = function () {
+        }
+        t.prototype.shouldShowChild = function () {
             var e = this;
             return Xs.some((function (t) {
                 return t !== e && t.targetEl && e.hoverEl.contains(t.targetEl) && t.shouldShow()
             }))
-        }, t.prototype.transition = function () {
+        }
+        t.prototype.transition = function () {
             var e = this, t = this.shouldShow(), n = this.state;
             t ? n === Us.Hiding && (this.state = Us.Shown, clearTimeout(this.timer)) : n === Us.Showing ? this.hide() : n === Us.Shown && (this.state = Us.Hiding, this.timer = window.setTimeout((function () {
                 e.shouldShow() ? e.transition() : e.hide()
             }), this.waitTime))
-        }, t.prototype.show = function () {
+        }
+        t.prototype.show = function () {
             var e = this.targetEl;
             !e || e.doc.body.contains(e) ? (this.state = Us.Shown, this.timer = 0, this.shownPos = Qs, this.position(Qs), this.onShow(), Ys.remove(this), Xs.push(this), il(), this.load()) : this.hide()
-        }, t.prototype.hide = function () {
+        }
+        t.prototype.hide = function () {
             var e = this, t = this, n = t.hoverEl, r = t.targetEl, i = t.timer;
             this.state = Us.Hidden, Ys.remove(this), Xs.remove(this), clearTimeout(i), n.detach(), r && (r.removeEventListener("mouseover", this.onMouseIn), r.removeEventListener("mouseout", this.onMouseOut)), this.onTarget = !1, this.onHover = !1, Xs.filter((function (t) {
                 return t.targetEl && e.hoverEl.contains(t.targetEl)
             })).forEach((function (e) {
                 return e.hide()
             })), this.onHide(), this.unload()
-        }, t.prototype.onShow = function () {
+        }
+        t.prototype.onShow = function () {
             var e = this.parent;
             e.hoverPopover && e.hoverPopover.hide(), e.hoverPopover = this
-        }, t.prototype.onHide = function () {
+        }
+        t.prototype.onHide = function () {
             var e = this.parent;
             e.hoverPopover === this && (e.hoverPopover = null)
-        }, t.prototype.position = function (e) {
+        }
+        t.prototype.position = function (e) {
             void 0 === e && (e = this.shownPos);
             var t, n = this.hoverEl, r = this.targetEl;
             if (e) t = {top: e.y - 10, bottom: e.y + 10, left: e.x, right: e.x}; else if (r) {
@@ -14726,39 +14738,52 @@ require.r = e => {
                 }
             }
             a.body.appendChild(n), Pr(t, n, {gap: 10, preventOverlap: !0})
-        }, t
+        }
+        return t
     }(Component)
 
     let noticeContainerEl = createDiv("notice-container")
     const Notice = function () {
-        function e(e, t) {
-            void 0 === t && (t = 4e3);
-            var n = this;
-            activeDocument.body.appendChild(noticeContainerEl);
-            var r = this.noticeEl = noticeContainerEl.createDiv({cls: "notice", text: e});
-            Platform.isMobile ? transitionElement(r, (new Gn).addProp("marginBottom", -r.offsetHeight + "px", "0", "")) : transitionElement(r, (new Gn).addProp("transform", "translateX(350px)", "", "")), t && setTimeout((function () {
-                return n.hide()
-            }), t), r.addEventListener("click", (function () {
-                return n.hide()
-            }))
+        function e(text, duration) {
+            void 0 === duration && (duration = 4000)
+            let _this = this
+            activeDocument.body.appendChild(noticeContainerEl)
+            let noticeEl = this.noticeEl = noticeContainerEl.createDiv({cls: "notice", text: text})
+            Platform.isMobile
+                ? transitionElement(noticeEl, new Gn().addProp("marginBottom", -noticeEl.offsetHeight + "px", "0", ""))
+                : transitionElement(noticeEl, new Gn().addProp("transform", "translateX(350px)", "", ""))
+            duration && setTimeout(() => {
+                return _this.hide()
+            }, duration)
+            noticeEl.addEventListener("click", function () {
+                return _this.hide()
+            })
         }
 
-        return e.prototype.setMessage = function (e) {
-            return this.noticeEl.setText(e), this
-        }, e.prototype.hide = function () {
-            var e = this;
-            setTimeout((function () {
-                var t = e.noticeEl;
-                if (Platform.isMobile) transitionElement(t, (new Gn).addProp("opacity", null, "0", ""), (function () {
-                    t.detach(), 0 === noticeContainerEl.childElementCount && noticeContainerEl.detach()
-                })); else {
-                    var n = getComputedStyle(t), r = -(t.offsetHeight + parseInt(n.marginBottom)) + "px";
-                    transitionElement(t, (new Gn).addProp("marginTop", "0", r, ""), (function () {
-                        t.detach(), 0 === noticeContainerEl.childElementCount && noticeContainerEl.detach()
-                    }))
+        e.prototype.setMessage = function (text) {
+            this.noticeEl.setText(text)
+            return this
+        }
+        e.prototype.hide = function () {
+            let _this = this
+            setTimeout(function () {
+                let noticeEl = _this.noticeEl
+                if (Platform.isMobile) {
+                    transitionElement(noticeEl, new Gn().addProp("opacity", null, "0", ""), function () {
+                        noticeEl.detach()
+                        0 === noticeContainerEl.childElementCount && noticeContainerEl.detach()
+                    })
+                } else {
+                    let style = getComputedStyle(noticeEl),
+                        r = -(noticeEl.offsetHeight + parseInt(style.marginBottom)) + "px";
+                    transitionElement(noticeEl, (new Gn).addProp("marginTop", "0", r, ""), function () {
+                        noticeEl.detach()
+                        0 === noticeContainerEl.childElementCount && noticeContainerEl.detach()
+                    })
                 }
-            }))
-        }, e
+            })
+        }
+        return e
     }()
     window.Notice = Notice
 
@@ -15419,16 +15444,20 @@ require.r = e => {
 
             let centerColumnEl = siteBodyEl.createDiv("site-body-center-column")
             let siteHeaderEl = _this.siteHeaderEl = centerColumnEl.createDiv("site-header")
-            siteHeaderEl.createDiv("clickable-icon", function (e) {
-                setIcon(e, "lucide-menu"), e.addEventListener("click", (function () {
-                    containerEl.classList.toggle("is-left-column-open"), _this.site.getConfig(K_showNavigation) && _this.nav.init(!0)
-                }))
+            siteHeaderEl.createDiv("clickable-icon", function (el) {
+                setIcon(el, "lucide-menu")
+                el.addEventListener("click", function () {
+                    containerEl.classList.toggle("is-left-column-open")
+                    if (_this.site.getConfig(K_showNavigation)) {
+                        _this.nav.init(true)
+                    }
+                })
             })
 
-            containerEl.createDiv("nav-backdrop", function (e) {
-                e.addEventListener("click", (function () {
+            containerEl.createDiv("nav-backdrop", function (el) {
+                el.addEventListener("click", function () {
                     containerEl.removeClass("is-left-column-open")
-                }))
+                })
             })
             let siteLogoLinkEl = _this.siteLogoLinkEl = siteHeaderEl.createEl("a", "site-header-logo")
             siteLogoLinkEl.setAttr("aria-hidden", true)
@@ -15441,17 +15470,19 @@ require.r = e => {
             _this.renderContainerInnerEl = renderContainerEl.createDiv("render-container-inner")
             let render = _this.render = new Renderer(_this)
             let footerEl = _this.footerEl = centerColumnEl.createDiv("site-footer")
-            _this.notFoundEl = renderContainerEl.createDiv("not-found-container", function (e) {
-                e.createDiv("not-found-image"), e.createDiv({
+            _this.notFoundEl = renderContainerEl.createDiv("not-found-container", function (el) {
+                el.createDiv("not-found-image")
+                el.createDiv({
                     cls: "not-found-title",
                     text: "Not found"
-                }), e.createDiv({cls: "not-found-description", text: "This page does not exist"})
+                })
+                el.createDiv({cls: "not-found-description", text: "This page does not exist"})
             })
             let rightColumnEl = _this.rightColumnEl = renderContainerEl.createDiv("site-body-right-column")
             let rightColumnInnerEl = _this.rightColumnInnerEl = rightColumnEl.createDiv("site-body-right-column-inner")
 
-            _this.graph = new Graph(_this, rightColumnInnerEl)
-            _this.outline = new Outline(_this, rightColumnInnerEl)
+            _this.graph = new GraphView(_this, rightColumnInnerEl)
+            _this.outline = new OutlineView(_this, rightColumnInnerEl)
             footerEl.createEl("a", {
                 attr: {
                     href: "https://publish.obsidian.md",
@@ -16089,64 +16120,104 @@ require.r = e => {
 
         e.prototype.loadCache = function () {
             return a(this, void 0, void 0, (function () {
-                var e, t, n, r, i, a;
+                let preloadCache, t, n, r, i, a;
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            if (!(e = window.preloadCache)) return [3, 7];
+                            preloadCache = window.preloadCache
+                            if (!preloadCache) {
+                                return [3, 7];
+                            }
                             o.label = 1;
                         case 1:
-                            return o.trys.push([1, 6, , 7]), delete window.preloadCache, [4, e];
+                            o.trys.push([1, 6, , 7])
+                            delete window.preloadCache
+                            return [4, preloadCache];
                         case 2:
-                            return (t = o.sent()).ok && Tl(t) ? (r = (n = this.cache).load, [4, t.json()]) : [3, 5];
+                            t = o.sent()
+                            if (t.ok && Tl(t)) {
+                                n = this.cache
+                                r = n.load
+                                return [4, t.json()]
+                            } else {
+                                return [3, 5]
+                            }
                         case 3:
                             return [4, r.apply(n, [o.sent()])];
                         case 4:
-                            return o.sent(), [2];
+                            o.sent()
+                            return [2];
                         case 5:
                             return [3, 7];
                         case 6:
-                            return o.sent(), [3, 7];
+                            o.sent()
+                            return [3, 7];
                         case 7:
-                            return i = {
-                                withCredentials: !0,
+                            i = {
+                                withCredentials: true,
                                 url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
-                            }, [4, ajaxPromise(i)];
+                            }
+                            return [4, ajaxPromise(i)];
                         case 8:
-                            return a = o.sent(), Hl(i.req) ? [4, this.cache.load(JSON.parse(a))] : [2];
+                            a = o.sent()
+                            return Hl(i.req) ? [4, this.cache.load(JSON.parse(a))] : [2];
                         case 9:
-                            return o.sent(), [2]
+                            o.sent()
+                            return [2]
                     }
                 }))
             }))
         }
         e.prototype.loadOptions = function () {
             return a(this, void 0, void 0, (function () {
-                var e, t, n, r, i, a;
+                let preloadOptions, t, _this, r, i, a;
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            if (!(e = window.preloadOptions)) return [3, 6];
+                            preloadOptions = window.preloadOptions
+                            if (!preloadOptions) {
+                                return [3, 6];
+                            }
                             o.label = 1;
                         case 1:
-                            return o.trys.push([1, 5, , 6]), delete window.preloadOptions, [4, e];
+                            o.trys.push([1, 5, , 6])
+                            delete window.preloadOptions
+                            return [4, preloadOptions];
                         case 2:
-                            return (t = o.sent()).ok && Tl(t) ? (n = this, [4, t.json()]) : [3, 4];
+                            t = o.sent()
+                            if (t.ok && Tl(t)) {
+                                _this = this
+                                return [4, t.json()]
+                            } else {
+                                return [3, 4];
+                            }
                         case 3:
-                            return n.options = o.sent(), [2];
+                            _this.options = o.sent()
+                            return [2];
                         case 4:
                             return [3, 6];
                         case 5:
-                            return o.sent(), [3, 6];
+                            o.sent()
+                            return [3, 6];
                         case 6:
-                            return o.trys.push([6, 8, , 9]), r = {
-                                withCredentials: !0,
+                            o.trys.push([6, 8, , 9])
+                            r = {
+                                withCredentials: true,
                                 url: this.host + "/options/" + encodeURIComponent(this.id)
-                            }, [4, ajaxPromise(r)];
+                            }
+                            return [4, ajaxPromise(r)];
                         case 7:
-                            return i = o.sent(), Hl(r.req) ? (this.options = JSON.parse(i), [3, 9]) : [2];
+                            i = o.sent()
+                            if (Hl(r.req)) {
+                                this.options = JSON.parse(i)
+                                return [3, 9]
+                            } else {
+                                return [2];
+                            }
                         case 8:
-                            return a = o.sent(), console.error("Failed to load options", a), [3, 9];
+                            a = o.sent()
+                            console.error("Failed to load options", a)
+                            return [3, 9];
                         case 9:
                             return [2]
                     }
@@ -16154,17 +16225,26 @@ require.r = e => {
             }))
         }
         e.prototype.getPathSuffix = function () {
-            var e = this, t = e.hpw, n = e.pwts, r = e.pwsig;
-            if (!t) return "";
-            var i = Date.now(), a = 36e5;
-            return n + a < i && (n = this.pwts = Math.floor(i / a + 6) * a, r = this.pwsig = Ka().stringify(Xa()(String(n), t))), "?ts=".concat(String(n), "&sig=").concat(r)
+            let _this = this, hpw = _this.hpw, pwts = _this.pwts, pwsig = _this.pwsig;
+            if (!hpw) {
+                return "";
+            }
+            let now = Date.now(), a = 36e5;
+            if (pwts + a < now) {
+                pwts = this.pwts = Math.floor(now / a + 6) * a
+                pwsig = this.pwsig = Ka().stringify(Xa()(String(pwts), hpw))
+            }
+            return "?ts=".concat(String(pwts), "&sig=").concat(pwsig)
         }
         e.prototype.isCustomDomain = function () {
             return !!this.customurl
         }
-        e.prototype.getConfig = function (e) {
-            var t = this.options[e];
-            return void 0 === t && (t = Fo[e]), t
+        e.prototype.getConfig = function (name) {
+            let value = this.options[name];
+            if (void 0 === value) {
+                value = defaultConfig[name]
+            }
+            return value
         }
         e.prototype.getSiteName = function () {
             return this.getConfig(K_siteName) || this.slug || ""
@@ -16172,39 +16252,64 @@ require.r = e => {
         e.prototype.getSiteLogoUrl = function () {
             return this.getConfig(K_logo) || ""
         }
-        e.prototype.encodeFilepath = function (e, t) {
-            return e.split("/").map(t ? Ls : encodeURIComponent).join("/")
+        e.prototype.encodeFilepath = function (path, t) {
+            return path.split("/").map(t ? Ls : encodeURIComponent).join("/")
         }
-        e.prototype.getInternalUrl = function (e) {
-            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(e, !1) + this.getPathSuffix()
+        e.prototype.getInternalUrl = function (path) {
+            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(path, false) + this.getPathSuffix()
         }
         e.prototype.getPublicHref = function (e) {
-            var t, n = this.cache.getCache(e);
+            let t, n = this.cache.getCache(e);
             "md" === bo(vo(e)) && (e = e.substr(0, e.length - 3));
             var r = this.encodeFilepath(e, !0),
                 i = null === (t = null == n ? void 0 : n.frontmatter) || void 0 === t ? void 0 : t.permalink;
             return i && "string" == typeof i && (i.startsWith("/") && (i = i.substring(1)), r = i), this.slug ? this.publish.origin + "/" + encodeURIComponent(this.slug) + "/" + r : this.customurl ? "https://" + this.customurl + "/" + r : ""
         }
-        e.prototype.loadMarkdownFile = function (e) {
+        e.prototype.loadMarkdownFile = function (path) {
             return a(this, void 0, Promise, (function () {
-                var t, n, r, i;
+                let url, preloadPage, r, i;
                 return o(this, (function (a) {
                     switch (a.label) {
                         case 0:
-                            if (t = this.getInternalUrl(e), !(n = window.preloadPage)) return [3, 4];
-                            delete window.preloadPage, a.label = 1;
+                            url = this.getInternalUrl(path)
+                            preloadPage = window.preloadPage
+                            if (!preloadPage) {
+                                return [3, 4];
+                            }
+                            delete window.preloadPage
+                            a.label = 1;
                         case 1:
-                            return a.trys.push([1, 3, , 4]), [4, n];
+                            a.trys.push([1, 3, , 4])
+                            return [4, preloadPage];
                         case 2:
-                            return (r = a.sent()).ok && r.url === t ? [2, r.text()] : [3, 4];
+                            r = a.sent()
+                            if (r.ok && r.url === url) {
+                                return [2, r.text()]
+                            } else {
+                                return [3, 4]
+                            }
                         case 3:
-                            return a.sent(), [3, 4];
+                            a.sent()
+                            return [3, 4];
                         case 4:
-                            return a.trys.push([4, 6, , 7]), [4, ajaxPromise({withCredentials: !0, url: t})];
+                            a.trys.push([4, 6, , 7])
+                            return [4, ajaxPromise({withCredentials: true, url: url})];
                         case 5:
                             return [2, a.sent()];
                         case 6:
-                            return (i = a.sent()) instanceof XMLHttpRequest ? 404 === i.status ? new Notice('"'.concat(e, '" does not exist')) : (new Notice('An error occurred while loading "'.concat(e, '"')), console.error(i.response)) : (new Notice('An error occurred while loading "'.concat(e, '"')), console.error(i)), [3, 7];
+                            i = a.sent()
+                            if (i instanceof XMLHttpRequest) {
+                                if (404 === i.status) {
+                                    new Notice('"'.concat(path, '" does not exist'))
+                                } else {
+                                    new Notice('An error occurred while loading "'.concat(path, '"'))
+                                    console.error(i.response)
+                                }
+                            } else {
+                                new Notice('An error occurred while loading "'.concat(path, '"'))
+                                console.error(i)
+                            }
+                            return [3, 7];
                         case 7:
                             return [2]
                     }
@@ -16214,12 +16319,14 @@ require.r = e => {
         return e
     }()
 
+
     window.addEventListener("load", function () {
+        debugger
         window.app = new Publish()
 
         let body = document.body
-        body.on("mouseover", "[aria-label]", ps)
-        body.on("mouseout", "[aria-label]", ds)
-        body.addEventListener("mouseup", ys)
+        body.on("mouseover", "[aria-label]", onMouseOver)
+        body.on("mouseout", "[aria-label]", onMouseOut)
+        body.addEventListener("mouseup", onMouseUp)
     }, false)
 })()
