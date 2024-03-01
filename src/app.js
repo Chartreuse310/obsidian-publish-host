@@ -5925,22 +5925,22 @@ require.r = module => {
         value: true
     })
 }
-(() => {
-    let e = {};
 
+(() => {
+    // enhance.js 模块
     function globalEnhance() {
-        function e(e, t, n) {
-            Object.defineProperty(e, t, {
-                value: n,
+        function defineProperty(obj, key, value) {
+            Object.defineProperty(obj, key, {
+                value: value,
                 enumerable: !1,
                 configurable: !0,
                 writable: !0
             })
         }
 
-        function t(e, t, n) {
-            Object.defineProperty(e, t, {
-                get: n,
+        function defineGetter(obj, key, getter) {
+            Object.defineProperty(obj, key, {
+                get: getter,
                 enumerable: !1,
                 configurable: !0
             })
@@ -5970,6 +5970,7 @@ require.r = module => {
         } catch (e) {
             console.error(e)
         }
+
         window.ResizeObserver || (window.ResizeObserver = function () {
             function e() {
             }
@@ -5981,134 +5982,116 @@ require.r = module => {
                 e.prototype.disconnect = function () {
                 },
                 e
-        }()),
-        Object.isEmpty || e(Object, "isEmpty", (function (e) {
-                for (var t in e)
-                    if (e.hasOwnProperty(t))
-                        return !1;
-                return !0
-            }
-        )),
+        }())
+        Object.isEmpty || defineProperty(Object, "isEmpty", function (e) {
+            for (var t in e)
+                if (e.hasOwnProperty(t))
+                    return !1;
+            return !0
+        })
         Object.each || (Object.each = function (e, t, n) {
-                for (var r in e)
-                    if (e.hasOwnProperty(r) && !1 === t.call(n, e[r], r))
-                        return !1;
-                return !0
-            }
-        ),
+            for (var r in e)
+                if (e.hasOwnProperty(r) && !1 === t.call(n, e[r], r))
+                    return !1;
+            return !0
+        })
         Array.combine || (Array.combine = function (e) {
-                for (var t = 0, n = 0, r = e; n < r.length; n++) {
-                    t += r[n].length
+            for (var t = 0, n = 0, r = e; n < r.length; n++) {
+                t += r[n].length
+            }
+            for (var i = new Array(t), a = 0, o = 0, s = e; o < s.length; o++)
+                for (var l = 0, c = s[o]; l < c.length; l++) {
+                    var h = c[l];
+                    i[a] = h,
+                        a++
                 }
-                for (var i = new Array(t), a = 0, o = 0, s = e; o < s.length; o++)
-                    for (var l = 0, c = s[o]; l < c.length; l++) {
-                        var h = c[l];
-                        i[a] = h,
-                            a++
-                    }
-                return i
-            }
-        ),
-        Array.prototype.first || e(Array.prototype, "first", (function () {
-                if (0 !== this.length)
-                    return this[0]
-            }
-        )),
-        Array.prototype.last || e(Array.prototype, "last", (function () {
-                if (0 !== this.length)
-                    return this[this.length - 1]
-            }
-        )),
-        Array.prototype.contains || e(Array.prototype, "contains", (function (e) {
-                return -1 !== this.indexOf(e)
-            }
-        )),
-        Array.prototype.remove || e(Array.prototype, "remove", (function (e) {
-                for (var t = this.length - 1; t >= 0; t--)
-                    this[t] === e && this.splice(t, 1)
-            }
-        )),
-        Array.prototype.shuffle || e(Array.prototype, "shuffle", (function () {
-                for (var e, t, n = this.length; 0 !== n;)
-                    t = Math.floor(Math.random() * n),
-                        e = this[n -= 1],
-                        this[n] = this[t],
-                        this[t] = e;
-                return this
-            }
-        )),
-        Array.prototype.findLastIndex || e(Array.prototype, "findLastIndex", (function (e) {
-                for (var t = this.length - 1; t <= 0; t--)
-                    if (e(this[t], t))
-                        return t;
-                return -1
-            }
-        )),
-        Array.prototype.unique || e(Array.prototype, "unique", (function () {
-                return Array.from(new Set(this).values())
-            }
-        )),
+            return i
+        })
+        Array.prototype.first || defineProperty(Array.prototype, "first", function () {
+            if (0 !== this.length)
+                return this[0]
+        })
+        Array.prototype.last || defineProperty(Array.prototype, "last", function () {
+            if (0 !== this.length)
+                return this[this.length - 1]
+        })
+        Array.prototype.contains || defineProperty(Array.prototype, "contains", function (e) {
+            return -1 !== this.indexOf(e)
+        })
+        Array.prototype.remove || defineProperty(Array.prototype, "remove", function (e) {
+            for (var t = this.length - 1; t >= 0; t--)
+                this[t] === e && this.splice(t, 1)
+        })
+        Array.prototype.shuffle || defineProperty(Array.prototype, "shuffle", function () {
+            for (var e, t, n = this.length; 0 !== n;)
+                t = Math.floor(Math.random() * n),
+                    e = this[n -= 1],
+                    this[n] = this[t],
+                    this[t] = e;
+            return this
+        })
+        Array.prototype.findLastIndex || defineProperty(Array.prototype, "findLastIndex", function (e) {
+            for (var t = this.length - 1; t <= 0; t--)
+                if (e(this[t], t))
+                    return t;
+            return -1
+        })
+        Array.prototype.unique || defineProperty(Array.prototype, "unique", function () {
+            return Array.from(new Set(this).values())
+        })
         Math.clamp || (Math.clamp = function (e, t, n) {
-                return Math.min(Math.max(e, t), n)
-            }
-        ),
+            return Math.min(Math.max(e, t), n)
+        })
         Math.square || (Math.square = function (e) {
-                return e * e
-            }
-        ),
+            return e * e
+        })
         String.isString || (String.isString = function (e) {
-                return "string" == typeof e || e instanceof String
-            }
-        ),
+            return "string" == typeof e || e instanceof String
+        })
         String.prototype.contains || (String.prototype.contains = function (e) {
-                return -1 !== this.indexOf(e)
-            }
-        ),
+            return -1 !== this.indexOf(e)
+        })
         String.prototype.startsWith || (String.prototype.startsWith = function (e, t) {
-                return this.substr(!t || t < 0 ? 0 : +t, e.length) === e
-            }
-        ),
+            return this.substr(!t || t < 0 ? 0 : +t, e.length) === e
+        })
         String.prototype.endsWith || (String.prototype.endsWith = function (e, t) {
-                var n = void 0 === t || t > this.length ? this.length : t;
-                return this.substring(n - e.length, n) === e
-            }
-        ),
+            var n = void 0 === t || t > this.length ? this.length : t;
+            return this.substring(n - e.length, n) === e
+        })
         String.prototype.format || (String.prototype.format = function () {
-                for (var e = [], t = 0; t < arguments.length; t++)
-                    e[t] = arguments[t];
-                return this.replace(/{(\d+)}/g, (function (t, n) {
-                        return void 0 !== e[n] ? e[n] : t
-                    }
-                ))
-            }
-        ),
-        Number.isNumber || e(Number, "isNumber", (function (e) {
-                return "number" == typeof e
-            }
-        )),
-            e(window, "isBoolean", (function (e) {
-                    return "boolean" == typeof e
+            for (var e = [], t = 0; t < arguments.length; t++)
+                e[t] = arguments[t];
+            return this.replace(/{(\d+)}/g, (function (t, n) {
+                    return void 0 !== e[n] ? e[n] : t
                 }
-            ));
-        var s = function (e) {
-            var t = e.nodeType;
+            ))
+        })
+        Number.isNumber || defineProperty(Number, "isNumber", function (e) {
+            return "number" == typeof e
+        })
+        defineProperty(window, "isBoolean", function (e) {
+            return "boolean" == typeof e
+        })
+
+        var s = function (node) {
+            var t = node.nodeType;
             if (1 === t || 9 === t || 11 === t) {
-                if ("string" == typeof e.textContent)
-                    return e.textContent;
-                for (var n = [], r = e.firstChild; r; r = r.nextSibling)
+                if ("string" == typeof node.textContent)
+                    return node.textContent;
+                for (var n = [], r = node.firstChild; r; r = r.nextSibling)
                     n.push(s(r));
                 return n.join("")
             }
-            return (3 === t || 4 === t) && e.nodeValue || ""
+            return (3 === t || 4 === t) && node.nodeValue || ""
         };
 
-        function l(e) {
+        function setCssStyles(e) {
             var t = this.style;
             for (var n in e)
                 e.hasOwnProperty(n) && (t[n] = e[n])
         }
 
-        function c(e) {
+        function setCssProps(e) {
             var t = this.style;
             for (var n in e)
                 e.hasOwnProperty(n) && t.setProperty(n, e[n])
@@ -6116,372 +6099,358 @@ require.r = module => {
 
         Element.prototype.getText = function () {
             return s(this)
-        },
-            Element.prototype.setText = function (e) {
-                !function (e, t) {
-                    if (t instanceof DocumentFragment || t instanceof Node)
-                        return e.empty(),
-                            void e.appendChild(t);
-                    String.isString(t) || (t = String(t));
-                    var n = e.nodeType;
-                    1 !== n && 9 !== n && 11 !== n || (e.textContent = t)
-                }(this, e)
-            },
-            Element.prototype.addClass = function () {
-                for (var e = [], t = 0; t < arguments.length; t++)
-                    e[t] = arguments[t];
-                this.addClasses(e)
-            },
-            Element.prototype.addClasses = function (e) {
-                if (e)
-                    for (var t = 0; t < e.length; t++)
-                        this.classList.add(e[t])
-            },
-            Element.prototype.removeClass = function () {
-                for (var e = [], t = 0; t < arguments.length; t++)
-                    e[t] = arguments[t];
-                this.removeClasses(e)
-            },
-            Element.prototype.removeClasses = function (e) {
+        }
+        Element.prototype.setText = function (e) {
+            !function (e, t) {
+                if (t instanceof DocumentFragment || t instanceof Node)
+                    return e.empty(),
+                        void e.appendChild(t);
+                String.isString(t) || (t = String(t));
+                var n = e.nodeType;
+                1 !== n && 9 !== n && 11 !== n || (e.textContent = t)
+            }(this, e)
+        }
+        Element.prototype.addClass = function () {
+            for (var e = [], t = 0; t < arguments.length; t++)
+                e[t] = arguments[t];
+            this.addClasses(e)
+        }
+        Element.prototype.addClasses = function (e) {
+            if (e)
                 for (var t = 0; t < e.length; t++)
-                    this.classList.remove(e[t])
-            },
-            Element.prototype.toggleClass = function (e, t) {
-                e instanceof Array || (e = [e]),
-                    t ? this.addClasses(e) : this.removeClasses(e)
-            },
-            Element.prototype.hasClass = function (e) {
-                return this.classList.contains(e)
-            },
-            [Element.prototype, Document.prototype, DocumentFragment.prototype].forEach((function (t) {
-                    e(t, "prepend", (function () {
-                            for (var e = [], t = 0; t < arguments.length; t++)
-                                e[t] = arguments[t];
-                            for (var n = document.createDocumentFragment(), r = 0, i = e; r < i.length; r++) {
-                                var a = i[r];
-                                n.appendChild(a instanceof Node ? a : document.createTextNode(String(a)))
-                            }
-                            this.insertBefore(n, this.firstChild)
-                        }
-                    ))
-                }
-            )),
-            Node.prototype.detach = function () {
-                this.parentNode && this.parentNode.removeChild(this)
-            },
-            Node.prototype.empty = function () {
-                for (; this.lastChild;)
-                    this.removeChild(this.lastChild)
-            },
-            Node.prototype.insertAfter = function (e, t) {
-                return t ? this.insertBefore(e, t.nextSibling) : this.insertBefore(e, this.firstChild),
-                    e
-            },
-            Node.prototype.indexOf = function (e) {
-                return Array.prototype.indexOf.call(this.childNodes, e)
-            },
-            Node.prototype.setChildrenInPlace = function (e) {
-                for (var t = this.firstChild, n = new Set(e), r = 0, i = e; r < i.length; r++) {
-                    for (var a = i[r]; t && !n.has(t);) {
-                        var o = t;
-                        t = t.nextSibling,
-                            this.removeChild(o)
+                    this.classList.add(e[t])
+        }
+        Element.prototype.removeClass = function () {
+            for (var e = [], t = 0; t < arguments.length; t++)
+                e[t] = arguments[t];
+            this.removeClasses(e)
+        }
+        Element.prototype.removeClasses = function (e) {
+            for (var t = 0; t < e.length; t++)
+                this.classList.remove(e[t])
+        }
+        Element.prototype.toggleClass = function (e, t) {
+            e instanceof Array || (e = [e]),
+                t ? this.addClasses(e) : this.removeClasses(e)
+        }
+        Element.prototype.hasClass = function (e) {
+            return this.classList.contains(e)
+        }
+        ;[Element.prototype, Document.prototype, DocumentFragment.prototype].forEach(function (t) {
+            defineProperty(t, "prepend", (function () {
+                    for (var e = [], t = 0; t < arguments.length; t++)
+                        e[t] = arguments[t];
+                    for (var n = document.createDocumentFragment(), r = 0, i = e; r < i.length; r++) {
+                        var a = i[r];
+                        n.appendChild(a instanceof Node ? a : document.createTextNode(String(a)))
                     }
-                    a !== t ? this.insertBefore(a, t) : t = t.nextSibling
+                    this.insertBefore(n, this.firstChild)
                 }
-                for (; t;) {
-                    o = t;
+            ))
+        })
+        Node.prototype.detach = function () {
+            this.parentNode && this.parentNode.removeChild(this)
+        }
+        Node.prototype.empty = function () {
+            for (; this.lastChild;)
+                this.removeChild(this.lastChild)
+        }
+        Node.prototype.insertAfter = function (e, t) {
+            return t ? this.insertBefore(e, t.nextSibling) : this.insertBefore(e, this.firstChild),
+                e
+        }
+        Node.prototype.indexOf = function (e) {
+            return Array.prototype.indexOf.call(this.childNodes, e)
+        }
+        Node.prototype.setChildrenInPlace = function (e) {
+            for (var t = this.firstChild, n = new Set(e), r = 0, i = e; r < i.length; r++) {
+                for (var a = i[r]; t && !n.has(t);) {
+                    var o = t;
                     t = t.nextSibling,
                         this.removeChild(o)
                 }
-            },
-            Node.prototype.appendText = function (e) {
-                this.appendChild(document.createTextNode(e))
-            },
-            Node.prototype.instanceOf = function (e) {
-                if (this instanceof e)
-                    return !0;
-                var t = this.win[e.name];
-                return !!(t && this instanceof t) || !!((t = this.constructorWin[e.name]) && this instanceof t)
-            },
-            t(Node.prototype, "doc", (function () {
-                    return this.ownerDocument || document
+                a !== t ? this.insertBefore(a, t) : t = t.nextSibling
+            }
+            for (; t;) {
+                o = t;
+                t = t.nextSibling,
+                    this.removeChild(o)
+            }
+        }
+        Node.prototype.appendText = function (e) {
+            this.appendChild(document.createTextNode(e))
+        }
+        Node.prototype.instanceOf = function (e) {
+            if (this instanceof e)
+                return !0;
+            var t = this.win[e.name];
+            return !!(t && this instanceof t) || !!((t = this.constructorWin[e.name]) && this instanceof t)
+        }
+        defineGetter(Node.prototype, "doc", function () {
+            return this.ownerDocument || document
+        })
+        defineGetter(Node.prototype, "win", function () {
+            return this.doc.defaultView || window
+        })
+        Node.prototype.constructorWin = window
+        Element.prototype.setAttr = function (key, attr) {
+            null === attr ? this.removeAttribute(key) : this.setAttribute(key, String(attr))
+        }
+        Element.prototype.setAttrs = function (attrs) {
+            for (var t in attrs)
+                if (attrs.hasOwnProperty(t)) {
+                    var n = attrs[t];
+                    this.setAttr(t, n)
                 }
-            )),
-            t(Node.prototype, "win", (function () {
-                    return this.doc.defaultView || window
-                }
-            )),
-            Node.prototype.constructorWin = window,
-            Element.prototype.setAttr = function (e, t) {
-                null === t ? this.removeAttribute(e) : this.setAttribute(e, String(t))
-            },
-            Element.prototype.setAttrs = function (e) {
-                for (var t in e)
-                    if (e.hasOwnProperty(t)) {
-                        var n = e[t];
-                        this.setAttr(t, n)
-                    }
-            },
-            Element.prototype.getAttr = Element.prototype.getAttribute,
-            e(Element.prototype, "matchParent", (function (e, t) {
-                    if (this.matches(e))
-                        return this;
-                    if (this === t)
-                        return null;
-                    var n = this.parentElement;
-                    return n ? n.matchParent(e, t) : null
-                }
-            )),
-            Element.prototype.getCssPropertyValue = function (e, t) {
-                return getComputedStyle(this, t).getPropertyValue(e).trim()
-            },
-            e(Element.prototype, "isActiveElement", (function () {
-                    for (var e = this; e;) {
-                        if (e.doc.activeElement !== e)
-                            return !1;
-                        var t = e.win.frameElement;
-                        if (!t)
-                            return e.win === activeWindow;
-                        e = t
-                    }
-                    return !1
-                }
-            )),
+        }
+        Element.prototype.getAttr = Element.prototype.getAttribute
+        defineProperty(Element.prototype, "matchParent", function (e, t) {
+            if (this.matches(e))
+                return this;
+            if (this === t)
+                return null;
+            var n = this.parentElement;
+            return n ? n.matchParent(e, t) : null
+        })
+        Element.prototype.getCssPropertyValue = function (e, t) {
+            return getComputedStyle(this, t).getPropertyValue(e).trim()
+        }
+        defineProperty(Element.prototype, "isActiveElement", function () {
+            for (var e = this; e;) {
+                if (e.doc.activeElement !== e)
+                    return !1;
+                var t = e.win.frameElement;
+                if (!t)
+                    return e.win === activeWindow;
+                e = t
+            }
+            return !1
+        })
         HTMLElement.prototype.show || (HTMLElement.prototype.show = function () {
-                "none" === this.style.display && (this.style.display = this.getAttribute("data-display") || "",
-                    this.removeAttribute("data-display"))
-            }
-        ),
+            "none" === this.style.display && (this.style.display = this.getAttribute("data-display") || "",
+                this.removeAttribute("data-display"))
+        })
         HTMLElement.prototype.hide || (HTMLElement.prototype.hide = function () {
-                var e = this.style.display;
-                "none" !== e && (this.style.display = "none",
-                    e ? this.setAttribute("data-display", e) : this.removeAttribute("data-display"))
-            }
-        ),
+            var e = this.style.display;
+            "none" !== e && (this.style.display = "none",
+                e ? this.setAttribute("data-display", e) : this.removeAttribute("data-display"))
+        })
         HTMLElement.prototype.toggle || (HTMLElement.prototype.toggle = function (e) {
-                e ? this.show() : this.hide()
-            }
-        ),
+            e ? this.show() : this.hide()
+        })
         HTMLElement.prototype.toggleVisibility || (HTMLElement.prototype.toggleVisibility = function (e) {
-                this.style.visibility = e ? "" : "hidden"
-            }
-        ),
-            e(HTMLElement.prototype, "isShown", (function () {
-                    return !!this.offsetParent
+            this.style.visibility = e ? "" : "hidden"
+        })
+        defineProperty(HTMLElement.prototype, "isShown", function () {
+            return !!this.offsetParent
+        })
+        defineGetter(HTMLElement.prototype, "innerWidth", function () {
+            var e = getComputedStyle(this)
+                , t = parseFloat(e.paddingLeft)
+                , n = parseFloat(e.paddingRight);
+            return isNaN(t) && (t = 0),
+            isNaN(n) && (n = 0),
+            this.scrollWidth - t - n
+        })
+        defineGetter(HTMLElement.prototype, "innerHeight", function () {
+            var e = getComputedStyle(this)
+                , t = parseFloat(e.paddingTop)
+                , n = parseFloat(e.paddingBottom);
+            return isNaN(t) && (t = 0),
+            isNaN(n) && (n = 0),
+            this.scrollHeight - t - n
+        })
+        defineProperty(HTMLElement.prototype, "setCssStyles", setCssStyles)
+        defineProperty(SVGElement.prototype, "setCssStyles", setCssStyles)
+        defineProperty(HTMLElement.prototype, "setCssProps", setCssProps)
+        defineProperty(SVGElement.prototype, "setCssProps", setCssProps)
+        defineProperty(HTMLElement.prototype, "addEventListeners", function (config) {
+            for (var t in config)
+                if (config.hasOwnProperty(t)) {
+                    var n = t
+                        , r = config[n];
+                    "function" == typeof r && this.addEventListener(n, r)
                 }
-            )),
-            t(HTMLElement.prototype, "innerWidth", (function () {
-                    var e = getComputedStyle(this)
-                        , t = parseFloat(e.paddingLeft)
-                        , n = parseFloat(e.paddingRight);
-                    return isNaN(t) && (t = 0),
-                    isNaN(n) && (n = 0),
-                    this.scrollWidth - t - n
+        })
+        window.fish = function (selectors) {
+            return document.querySelector(selectors)
+        }
+        window.fishAll = function (selectors) {
+            return Array.prototype.slice.call(document.querySelectorAll(selectors))
+        }
+        Element.prototype.find = function (selectors) {
+            return this.querySelector(selectors)
+        }
+        Element.prototype.findAll = function (selectors) {
+            return Array.prototype.slice.call(this.querySelectorAll(selectors))
+        }
+        Element.prototype.findAllSelf = function (selectors) {
+            var t = Array.prototype.slice.call(this.querySelectorAll(selectors));
+            return this.matches(selectors) && t.unshift(this),
+                t
+        }
+        DocumentFragment.prototype.find = function (selectors) {
+            return this.querySelector(selectors)
+        }
+        DocumentFragment.prototype.findAll = function (selectors) {
+            return Array.prototype.slice.call(this.querySelectorAll(selectors))
+        }
+
+        Node.prototype.createEl = function (tagName, options, cb) {
+            return "string" == typeof options && (options = {
+                cls: options
+            }),
+                (options = options || {}).parent = this,
+                createEl(tagName, options, cb)
+        }
+        Node.prototype.createDiv = function (options, cb) {
+            return this.createEl("div", options, cb)
+        }
+        Node.prototype.createSpan = function (options, cb) {
+            return this.createEl("span", options, cb)
+        }
+        Node.prototype.createSvg = function (qualifiedName, options, cb) {
+            return "string" == typeof options && (options = {
+                cls: options
+            }),
+                (options = options || {}).parent = this,
+                createSvg(qualifiedName, options, cb)
+        }
+
+        window.createEl = function (tagName, options, cb) {
+            var r = document.createElement(tagName);
+            "string" == typeof options && (options = {
+                cls: options
+            });
+            var i = options || {}
+                , a = i.cls
+                , o = i.text
+                , s = i.attr
+                , l = i.title
+                , c = i.value
+                , h = i.placeholder
+                , u = i.type
+                , f = i.parent
+                , p = i.prepend
+                , d = i.href;
+            for (var m in a && (Array.isArray(a) ? r.className = a.join(" ") : r.className = a),
+            o && r.setText(o),
+            s && r.setAttrs(s),
+            void 0 !== l && (r.title = l),
+            void 0 !== c && (r instanceof HTMLInputElement || r instanceof HTMLSelectElement || r instanceof HTMLOptionElement) && (r.value = c),
+            u && r instanceof HTMLInputElement && (r.type = u),
+            u && r instanceof HTMLStyleElement && r.setAttribute("type", u),
+            h && r instanceof HTMLInputElement && (r.placeholder = h),
+            d && (r instanceof HTMLAnchorElement || r instanceof HTMLLinkElement || r instanceof HTMLBaseElement) && (r.href = d),
+            cb && cb(r),
+            f && (p ? f.insertBefore(r, f.firstChild) : f.appendChild(r)),
+                options)
+                if (options.hasOwnProperty(m) && m.startsWith("on")) {
+                    var v = m
+                        , g = options[v];
+                    "function" == typeof g && r.addEventListener(v.substring(2), g)
                 }
-            )),
-            t(HTMLElement.prototype, "innerHeight", (function () {
-                    var e = getComputedStyle(this)
-                        , t = parseFloat(e.paddingTop)
-                        , n = parseFloat(e.paddingBottom);
-                    return isNaN(t) && (t = 0),
-                    isNaN(n) && (n = 0),
-                    this.scrollHeight - t - n
-                }
-            )),
-            e(HTMLElement.prototype, "setCssStyles", l),
-            e(SVGElement.prototype, "setCssStyles", l),
-            e(HTMLElement.prototype, "setCssProps", c),
-            e(SVGElement.prototype, "setCssProps", c),
-            e(HTMLElement.prototype, "addEventListeners", (function (e) {
-                    for (var t in e)
-                        if (e.hasOwnProperty(t)) {
-                            var n = t
-                                , r = e[n];
-                            "function" == typeof r && this.addEventListener(n, r)
-                        }
-                }
-            )),
-            window.fish = function (e) {
-                return document.querySelector(e)
-            },
-            window.fishAll = function (e) {
-                return Array.prototype.slice.call(document.querySelectorAll(e))
-            },
-            Element.prototype.find = function (e) {
-                return this.querySelector(e)
-            },
-            Element.prototype.findAll = function (e) {
-                return Array.prototype.slice.call(this.querySelectorAll(e))
-            },
-            Element.prototype.findAllSelf = function (e) {
-                var t = Array.prototype.slice.call(this.querySelectorAll(e));
-                return this.matches(e) && t.unshift(this),
-                    t
-            },
-            DocumentFragment.prototype.find = function (e) {
-                return this.querySelector(e)
-            },
-            DocumentFragment.prototype.findAll = function (e) {
-                return Array.prototype.slice.call(this.querySelectorAll(e))
-            },
-            Node.prototype.createEl = function (e, t, n) {
-                return "string" == typeof t && (t = {
-                    cls: t
-                }),
-                    (t = t || {}).parent = this,
-                    createEl(e, t, n)
-            },
-            Node.prototype.createDiv = function (e, t) {
-                return this.createEl("div", e, t)
-            },
-            Node.prototype.createSpan = function (e, t) {
-                return this.createEl("span", e, t)
-            },
-            Node.prototype.createSvg = function (e, t, n) {
-                return "string" == typeof t && (t = {
-                    cls: t
-                }),
-                    (t = t || {}).parent = this,
-                    createSvg(e, t, n)
-            },
-            window.createEl = function (e, t, n) {
-                var r = document.createElement(e);
-                "string" == typeof t && (t = {
-                    cls: t
-                });
-                var i = t || {}
-                    , a = i.cls
-                    , o = i.text
-                    , s = i.attr
-                    , l = i.title
-                    , c = i.value
-                    , h = i.placeholder
-                    , u = i.type
-                    , f = i.parent
-                    , p = i.prepend
-                    , d = i.href;
-                for (var m in a && (Array.isArray(a) ? r.className = a.join(" ") : r.className = a),
-                o && r.setText(o),
-                s && r.setAttrs(s),
-                void 0 !== l && (r.title = l),
-                void 0 !== c && (r instanceof HTMLInputElement || r instanceof HTMLSelectElement || r instanceof HTMLOptionElement) && (r.value = c),
-                u && r instanceof HTMLInputElement && (r.type = u),
-                u && r instanceof HTMLStyleElement && r.setAttribute("type", u),
-                h && r instanceof HTMLInputElement && (r.placeholder = h),
-                d && (r instanceof HTMLAnchorElement || r instanceof HTMLLinkElement || r instanceof HTMLBaseElement) && (r.href = d),
-                n && n(r),
-                f && (p ? f.insertBefore(r, f.firstChild) : f.appendChild(r)),
-                    t)
-                    if (t.hasOwnProperty(m) && m.startsWith("on")) {
-                        var v = m
-                            , g = t[v];
-                        "function" == typeof g && r.addEventListener(v.substring(2), g)
-                    }
-                return r
-            },
-            window.createDiv = function (e, t) {
-                return createEl("div", e, t)
-            },
-            window.createSpan = function (e, t) {
-                return createEl("span", e, t)
-            },
-            window.createSvg = function (e, t, n) {
-                var r, i = document.createElementNS("http://www.w3.org/2000/svg", e);
-                "string" == typeof t && (t = {
-                    cls: t
-                });
-                var a = t || {}
-                    , o = a.cls
-                    , s = a.attr
-                    , l = a.parent
-                    , c = a.prepend;
-                return o && (Array.isArray(o) ? (r = i.classList).add.apply(r, o) : i.classList.add(o)),
-                s && i.setAttrs(s),
-                n && n(i),
-                l && (c ? l.insertBefore(i, l.firstChild) : l.appendChild(i)),
-                    i
-            },
-            window.createFragment = function (e) {
-                var t = document.createDocumentFragment();
-                return e && e(t),
-                    t
-            }
-        ;
-        var h = function (e, t, n, r) {
+            return r
+        }
+        window.createDiv = function (options, cb) {
+            return createEl("div", options, cb)
+        }
+        window.createSpan = function (options, cb) {
+            return createEl("span", options, cb)
+        }
+        window.createSvg = function (qualifiedName, options, cb) {
+            var r, i = document.createElementNS("http://www.w3.org/2000/svg", qualifiedName);
+            "string" == typeof options && (options = {
+                cls: options
+            });
+            var a = options || {}
+                , o = a.cls
+                , s = a.attr
+                , l = a.parent
+                , c = a.prepend;
+            return o && (Array.isArray(o) ? (r = i.classList).add.apply(r, o) : i.classList.add(o)),
+            s && i.setAttrs(s),
+            cb && cb(i),
+            l && (c ? l.insertBefore(i, l.firstChild) : l.appendChild(i)),
+                i
+        }
+        window.createFragment = function (cb) {
+            var t = document.createDocumentFragment();
+            return cb && cb(t),
+                t
+        }
+
+        const on = function (type, selector, n, options) {
             var i = this._EVENTS;
             i || (i = {},
                 this._EVENTS = i);
-            var a = i[e];
+            var a = i[type];
             a || (a = [],
-                i[e] = a);
+                i[type] = a);
             var o = function (e) {
                 var r = e.target;
                 if (r.matchParent) {
-                    var i = r.matchParent(t, e.currentTarget);
+                    var i = r.matchParent(selector, e.currentTarget);
                     i && n.call(this, e, i)
                 }
             };
             a.push({
-                selector: t,
+                selector: selector,
                 listener: n,
-                options: r,
+                options: options,
                 callback: o
             }),
-                this.addEventListener(e, o, r)
+                this.addEventListener(type, o, options)
         }
-            , u = function (e, t, n, r) {
+        const off = function (type, selector, n, options) {
             var i = this
                 , a = this._EVENTS;
             if (a) {
-                var o = a[e];
-                o && (a[e] = o.filter((function (a) {
-                        if (a.selector === t && a.listener === n && a.options === r) {
+                var o = a[type];
+                o && (a[type] = o.filter((function (a) {
+                        if (a.selector === selector && a.listener === n && a.options === options) {
                             var o = a.callback;
-                            return i.removeEventListener(e, o, r),
+                            return i.removeEventListener(type, o, options),
                                 !1
                         }
                         return !0
                     }
                 )))
             }
-        };
-        HTMLElement.prototype.on = h,
-            HTMLElement.prototype.off = u,
-            Document.prototype.on = h,
-            Document.prototype.off = u,
-            HTMLElement.prototype.onClickEvent = function (e, t) {
-                this.addEventListener("click", e, t),
-                    this.addEventListener("auxclick", e, t)
-            },
-            HTMLElement.prototype.trigger = function (e) {
-                var t = document.createEvent("HTMLEvents");
-                t.initEvent(e, !0, !1),
-                    this.dispatchEvent(t)
-            },
-            t(UIEvent.prototype, "targetNode", (function () {
-                    return this.target
-                }
-            )),
-            t(UIEvent.prototype, "win", (function () {
-                    return this.view || window
-                }
-            )),
-            t(UIEvent.prototype, "doc", (function () {
-                    return this.win.document
-                }
-            )),
-            UIEvent.prototype.instanceOf = function (e) {
-                if (this instanceof e)
-                    return !0;
-                var t = this.view;
-                if (!t)
-                    return !1;
-                var n = t[e.name];
-                return !(!n || n === e) && this instanceof n
-            }
-        ;
-        var f = new WeakMap;
+        }
+        HTMLElement.prototype.on = on
+        HTMLElement.prototype.off = off
+        Document.prototype.on = on
+        Document.prototype.off = off
+        HTMLElement.prototype.onClickEvent = function (listener, options) {
+            this.addEventListener("click", listener, options),
+                this.addEventListener("auxclick", listener, options)
+        }
+        HTMLElement.prototype.trigger = function (type) {
+            var t = document.createEvent("HTMLEvents");
+            t.initEvent(type, !0, !1),
+                this.dispatchEvent(t)
+        }
+        defineGetter(UIEvent.prototype, "targetNode", function () {
+            return this.target
+        })
+        defineGetter(UIEvent.prototype, "win", function () {
+            return this.view || window
+        })
+        defineGetter(UIEvent.prototype, "doc", function () {
+            return this.win.document
+        })
+        UIEvent.prototype.instanceOf = function (e) {
+            if (this instanceof e)
+                return !0;
+            var t = this.view;
+            if (!t)
+                return !1;
+            var n = t[e.name];
+            return !(!n || n === e) && this instanceof n
+        }
+
+        const f = new WeakMap()
         HTMLElement.prototype.onNodeInserted = function (e, t) {
             var n = this
                 , r = function (r) {
@@ -6498,89 +6467,95 @@ require.r = module => {
                 this.addClass("node-insert-event"),
                 this.addEventListener("animationstart", r),
                 i
-        },
-            HTMLElement.prototype.onWindowMigrated = function (e) {
-                var t = this
-                    , n = this.win;
-                return this.onNodeInserted((function () {
-                        var r = t.win;
-                        r !== n && e(n = r)
-                    }
-                ))
-            },
-            window.ajax = function (e) {
-                var t = e.method
-                    , n = e.url
-                    , r = e.success
-                    , i = e.error
-                    , a = e.data
-                    , o = e.headers
-                    , s = e.withCredentials;
-                t = t || "GET";
-                var l = new XMLHttpRequest;
-                if (e.req = l,
-                    l.open(t, n, !0),
-                    l.onload = function () {
-                        var e = l.status
-                            , t = l.response;
-                        e >= 200 && e < 400 ? r && r(t, l) : i && i(t, l)
-                    },
-                    l.onerror = function (e) {
-                        i && i(e, l)
-                    },
-                    o)
-                    for (var c in o)
-                        o.hasOwnProperty(c) && l.setRequestHeader(c, o[c]);
-                l.withCredentials = s || !1,
-                    a ? (void 0 === s && (l.withCredentials = !0),
-                        String.isString(a) ? l.send(a) : a instanceof ArrayBuffer ? (l.setRequestHeader("Content-Type", "application/octet-stream"),
-                            l.send(a)) : (l.setRequestHeader("Content-Type", "application/json; charset=utf-8"),
-                            l.send(JSON.stringify(a)))) : l.send()
-            },
-            window.ajaxPromise = function (e) {
-                return new Promise((function (t, n) {
-                        e.success = t,
-                            e.error = function (e, t) {
-                                return n(t)
-                            },
-                            ajax(e)
-                    }
-                ))
-            },
-            window.ready = function (e) {
-                "loading" !== document.readyState ? e() : document.addEventListener("DOMContentLoaded", e)
-            },
-            window.sleep = function (e) {
-                return new Promise((function (t) {
-                        return window.setTimeout(t, e)
-                    }
-                ))
-            },
-            window.nextFrame = function () {
-                return new Promise((function (e) {
-                        return window.requestAnimationFrame((function () {
-                                return e()
-                            }
-                        ))
-                    }
-                ))
-            },
-            window.activeWindow = window,
-            window.activeDocument = document
+        }
+        HTMLElement.prototype.onWindowMigrated = function (e) {
+            var t = this
+                , n = this.win;
+            return this.onNodeInserted((function () {
+                    var r = t.win;
+                    r !== n && e(n = r)
+                }
+            ))
+        }
+
+
+        window.ajax = function (options) {
+            var t = options.method
+                , n = options.url
+                , r = options.success
+                , i = options.error
+                , a = options.data
+                , o = options.headers
+                , s = options.withCredentials;
+            t = t || "GET";
+            var l = new XMLHttpRequest;
+            if (options.req = l,
+                l.open(t, n, !0),
+                l.onload = function () {
+                    var e = l.status
+                        , t = l.response;
+                    e >= 200 && e < 400 ? r && r(t, l) : i && i(t, l)
+                },
+                l.onerror = function (e) {
+                    i && i(e, l)
+                },
+                o)
+                for (var c in o)
+                    o.hasOwnProperty(c) && l.setRequestHeader(c, o[c]);
+            l.withCredentials = s || !1,
+                a ? (void 0 === s && (l.withCredentials = !0),
+                    String.isString(a) ? l.send(a) : a instanceof ArrayBuffer ? (l.setRequestHeader("Content-Type", "application/octet-stream"),
+                        l.send(a)) : (l.setRequestHeader("Content-Type", "application/json; charset=utf-8"),
+                        l.send(JSON.stringify(a)))) : l.send()
+        }
+        window.ajaxPromise = function (options) {
+            return new Promise((function (t, n) {
+                    options.success = t,
+                        options.error = function (e, t) {
+                            return n(t)
+                        },
+                        ajax(options)
+                }
+            ))
+        }
+        window.ready = function (cb) {
+            "loading" !== document.readyState ? cb() : document.addEventListener("DOMContentLoaded", cb)
+        }
+        window.sleep = function (duration) {
+            return new Promise((function (t) {
+                    return window.setTimeout(t, duration)
+                }
+            ))
+        }
+        window.nextFrame = function () {
+            return new Promise((function (e) {
+                    return window.requestAnimationFrame((function () {
+                            return e()
+                        }
+                    ))
+                }
+            ))
+        }
+        window.activeWindow = window
+        window.activeDocument = document
     }
 
-    require.r(e)
-    require.d(e, {
-        Component: () => _n,
-        Events: () => Events,
-        MarkdownPreviewRenderer: () => Pa,
-        MarkdownRenderChild: () => Sa,
-        Publish: () => App
-    })
     globalEnhance()
     window.globalEnhance = globalEnhance
-    let r = function (e, t) {
-        return (r = Object.setPrototypeOf || {
+
+
+    let obsidian_api = {}
+    require.r(obsidian_api)
+    require.d(obsidian_api, {
+        Component: () => Component,
+        Events: () => Events,
+        MarkdownPreviewRenderer: () => MarkdownPreviewRenderer,
+        MarkdownRenderChild: () => MarkdownRenderChild,
+        Publish: () => Publish,
+    })
+
+    let setPrototypeOf = function (obj, proto) {
+        return (setPrototypeOf = Object.setPrototypeOf || {
                     __proto__: []
                 } instanceof Array && function (e, t) {
                     e.__proto__ = t
@@ -6589,56 +6564,63 @@ require.r = module => {
                     for (var n in t)
                         Object.prototype.hasOwnProperty.call(t, n) && (e[n] = t[n])
                 }
-        )(e, t)
-    };
-
-    function extend(e, t) {
-        if ("function" != typeof t && null !== t)
-            throw new TypeError("Class extends value " + String(t) + " is not a constructor or null");
-
-        function n() {
-            this.constructor = e
-        }
-
-        r(e, t),
-            e.prototype = null === t ? Object.create(t) : (n.prototype = t.prototype,
-                new n)
+        )(obj, proto)
     }
 
-    function a(e, t, n, r) {
-        return new (n || (n = Promise))((function (i, a) {
-                function o(e) {
-                    try {
-                        l(r.next(e))
-                    } catch (e) {
-                        a(e)
-                    }
-                }
+    function extend(cls, base) {
+        if ("function" != typeof base && null !== base) {
+            throw new TypeError("Class extends value " + String(base) + " is not a constructor or null")
+        }
 
-                function s(e) {
-                    try {
-                        l(r.throw(e))
-                    } catch (e) {
-                        a(e)
-                    }
-                }
+        function Intermedia() {
+            this.constructor = cls
+        }
 
-                function l(e) {
-                    var t;
-                    e.done ? i(e.value) : (t = e.value,
-                        t instanceof n ? t : new n((function (e) {
-                                e(t)
-                            }
-                        ))).then(o, s)
-                }
+        setPrototypeOf(cls, base)
+        if (base === null) {
+            cls.prototype = Object.create(base)
+        } else {
+            Intermedia.prototype = base.prototype
+            cls.prototype = new Intermedia()
+        }
+    }
 
-                l((r = r.apply(e, t || [])).next())
+    function a(thisArg, args, PromiseImpl, fn) {
+        PromiseImpl || (PromiseImpl = Promise)
+        return new PromiseImpl((resolve, reject) => {
+            function onfulfilled(val) {
+                try {
+                    l(fn.next(val))
+                } catch (e) {
+                    reject(e)
+                }
             }
-        ))
+
+            function onrejected(err) {
+                try {
+                    l(fn.throw(err))
+                } catch (e) {
+                    reject(e)
+                }
+            }
+
+            function l(result) {
+                var t;
+                result.done ? resolve(result.value) : (t = result.value,
+                    t instanceof PromiseImpl ? t : new PromiseImpl((function (e) {
+                            e(t)
+                        }
+                    ))).then(onfulfilled, onrejected)
+            }
+
+            fn = fn.apply(thisArg, args || [])
+            l(fn.next())
+        })
     }
 
     function o(e, t) {
-        var n, r, i, a, o = {
+        let n, r, i, a
+        let o = {
             label: 0,
             sent: function () {
                 if (1 & i[0])
@@ -6647,17 +6629,7 @@ require.r = module => {
             },
             trys: [],
             ops: []
-        };
-        return a = {
-            next: s(0),
-            throw: s(1),
-            return: s(2)
-        },
-        "function" == typeof Symbol && (a[Symbol.iterator] = function () {
-                return this
-            }
-        ),
-            a;
+        }
 
         function s(s) {
             return function (l) {
@@ -6734,6 +6706,18 @@ require.r = module => {
                 }([s, l])
             }
         }
+
+        a = {
+            next: s(0),
+            throw: s(1),
+            return: s(2)
+        }
+        if ("function" == typeof Symbol) {
+            a[Symbol.iterator] = function () {
+                return this
+            }
+        }
+        return a
     }
 
     function s(e, t, n) {
@@ -6796,25 +6780,25 @@ require.r = module => {
         }
     }
 
-    var h = require(773)
-        , u = require.n(h)
-        , f = require(6630)
-        , p = require.n(f)
-        , d = require(939)
-        , m = require.n(d);
-    const v = Symbol.for("yaml.alias")
-        , g = Symbol.for("yaml.document")
-        , M = Symbol.for("yaml.map")
-        , y = Symbol.for("yaml.pair")
-        , b = Symbol.for("yaml.scalar")
-        , w = Symbol.for("yaml.seq")
-        , k = Symbol.for("yaml.node.type")
-        , x = e => !!e && "object" == typeof e && e[k] === v
-        , C = e => !!e && "object" == typeof e && e[k] === g
-        , A = e => !!e && "object" == typeof e && e[k] === M
-        , L = e => !!e && "object" == typeof e && e[k] === y
-        , E = e => !!e && "object" == typeof e && e[k] === b
-        , S = e => !!e && "object" == typeof e && e[k] === w;
+    let h = require(773),
+        u = require.n(h),
+        f = require(6630),
+        p = require.n(f),
+        d = require(939),
+        m = require.n(d);
+    const v = Symbol.for("yaml.alias"),
+        g = Symbol.for("yaml.document"),
+        M = Symbol.for("yaml.map"),
+        y = Symbol.for("yaml.pair"),
+        b = Symbol.for("yaml.scalar"),
+        w = Symbol.for("yaml.seq"),
+        k = Symbol.for("yaml.node.type"),
+        x = e => !!e && "object" == typeof e && e[k] === v,
+        C = e => !!e && "object" == typeof e && e[k] === g,
+        A = e => !!e && "object" == typeof e && e[k] === M,
+        L = e => !!e && "object" == typeof e && e[k] === y,
+        E = e => !!e && "object" == typeof e && e[k] === b,
+        S = e => !!e && "object" == typeof e && e[k] === w;
 
     function H(e) {
         if (e && "object" == typeof e)
@@ -7038,7 +7022,7 @@ require.r = module => {
     }
 
     z.defaultYaml = {
-        explicit: !1,
+        explicit: false,
         version: "1.2"
     }
     z.defaultTags = {
@@ -10172,9 +10156,9 @@ require.r = module => {
         }
     }
 
-    const zt = [",", "[", "]", "{", "}"]
-        , Rt = [" ", ",", "[", "]", "{", "}", "\n", "\r", "\t"]
-        , Zt = e => !e || Rt.includes(e);
+    const zt = [",", "[", "]", "{", "}"],
+        Rt = [" ", ",", "[", "]", "{", "}", "\n", "\r", "\t"],
+        Zt = e => !e || Rt.includes(e);
 
     class Bt {
         constructor(e) {
@@ -11436,27 +11420,27 @@ require.r = module => {
         }, n))
     }
 
-    var Yt = require(914)
-        , Xt = require.n(Yt)
-        , Jt = require(2854)
-        , Qt = require.n(Jt)
-        , en = require(5572)
-        , tn = Xt()
-        , nn = en.Parser
-        , rn = function () {
-        function e() {
-            this.transformers = []
-        }
+    var Yt = require(914),
+        Xt = require.n(Yt),
+        Jt = require(2854),
+        Qt = require.n(Jt),
+        en = require(5572),
+        tn = Xt(),
+        nn = en.Parser,
+        rn = function () {
+            function e() {
+                this.transformers = []
+            }
 
-        return e.prototype.addTransformer = function (e) {
-            this.transformers.push(e)
-        },
-            e.prototype.removeTransformer = function (e) {
-                for (var t = this.transformers, n = 0; n < t.length;)
-                    t[n] === e ? t.splice(n, 1) : n++
+            return e.prototype.addTransformer = function (e) {
+                this.transformers.push(e)
             },
-            e
-    }();
+                e.prototype.removeTransformer = function (e) {
+                    for (var t = this.transformers, n = 0; n < t.length;)
+                        t[n] === e ? t.splice(n, 1) : n++
+                },
+                e
+        }();
 
     function an(e, t, n, r, i) {
         r.locator = i;
@@ -11554,8 +11538,8 @@ require.r = module => {
             r
     }
 
-    var kn = 32
-        , xn = 91;
+    var kn = 32,
+        xn = 91;
 
     function Cn(e, t, n, r) {
         for (var i = e.length, a = -1; ++a < i;)
@@ -11617,22 +11601,23 @@ require.r = module => {
     var Vn = /^#[^\u2000-\u206F\u2E00-\u2E7F'!"#$%&()*+,.:;<=>?@^`{|}~\[\]\\\s]+/;
     var On = nn;
     On.globalOptions = {
-        breaks: !0,
-        commonmark: !0
+        breaks: true,
+        commonmark: true,
     };
-    var Nn = new rn
-        , Pn = new rn
+    var Nn = new rn()
+        , Pn = new rn()
         , In = {};
 
-    function Dn(e) {
-        var t = m()(e)
-            , n = new On(String(t), t);
+    // 解析 markdown 的 ast
+    function Dn(markdown) {
+        let t = m()(markdown)
+        let n = new On(String(t), t)
         n.setOptions(On.globalOptions);
-        for (var r = n.parse(), i = 0, a = Nn.transformers; i < a.length; i++) {
-            (0,
-                a[i])(r, e)
+        let ast = n.parse()
+        for (let i = 0, transformers = Nn.transformers; i < transformers.length; i++) {
+            transformers[i](ast, markdown)
         }
-        return r
+        return ast
     }
 
     !function (e) {
@@ -12861,14 +12846,14 @@ require.r = module => {
         n && n.toggleClass("is-collapsed", t)
     }
 
-    var _n = function () {
+    const Component = function () {
         function e() {
-            this._loaded = !1,
-                this._events = [],
-                this._children = []
+            this._loaded = false
+            this._events = []
+            this._children = []
         }
 
-        return e.prototype.load = function () {
+        e.prototype.load = function () {
             if (!this._loaded) {
                 this._loaded = !0,
                     this.onload();
@@ -12876,101 +12861,106 @@ require.r = module => {
                     t[e].load()
                 }
             }
-        },
-            e.prototype.onload = function () {
-            },
-            e.prototype.unload = function () {
-                if (this._loaded) {
-                    this._loaded = !1;
-                    for (var e = this._children, t = this._events; e.length > 0;) {
-                        e.pop().unload()
-                    }
-                    for (; t.length > 0;) {
-                        t.pop()()
-                    }
-                    this.onunload()
+        }
+        e.prototype.onload = function () {
+        }
+        e.prototype.unload = function () {
+            if (this._loaded) {
+                this._loaded = !1;
+                for (var e = this._children, t = this._events; e.length > 0;) {
+                    e.pop().unload()
                 }
-            },
-            e.prototype.onunload = function () {
-            },
-            e.prototype.addChild = function (e) {
-                return this._children.push(e),
-                this._loaded && e.load(),
-                    e
-            },
-            e.prototype.removeChild = function (e) {
-                var t = this._children
-                    , n = t.indexOf(e);
-                return -1 !== n && (t.splice(n, 1),
-                    e.unload()),
-                    e
-            },
-            e.prototype.register = function (e) {
-                this._events.push(e)
-            },
-            e.prototype.registerEvent = function (e) {
+                for (; t.length > 0;) {
+                    t.pop()()
+                }
+                this.onunload()
+            }
+        }
+        e.prototype.onunload = function () {
+        }
+        e.prototype.addChild = function (e) {
+            return this._children.push(e),
+            this._loaded && e.load(),
+                e
+        }
+        e.prototype.removeChild = function (e) {
+            var t = this._children
+                , n = t.indexOf(e);
+            return -1 !== n && (t.splice(n, 1),
+                e.unload()),
+                e
+        }
+        e.prototype.register = function (e) {
+            this._events.push(e)
+        }
+        e.prototype.registerEvent = function (e) {
+            this.register((function () {
+                    return e.e.offref(e)
+                }
+            ))
+        }
+        e.prototype.registerDomEvent = function (e, t, n, r) {
+            e.addEventListener(t, n, r),
                 this.register((function () {
-                        return e.e.offref(e)
+                        return e.removeEventListener(t, n, r)
                     }
                 ))
-            },
-            e.prototype.registerDomEvent = function (e, t, n, r) {
-                e.addEventListener(t, n, r),
-                    this.register((function () {
-                            return e.removeEventListener(t, n, r)
-                        }
-                    ))
-            },
-            e.prototype.registerScopeEvent = function (e) {
-                this.register((function () {
-                        return e.scope.unregister(e)
-                    }
-                ))
-            },
-            e.prototype.registerInterval = function (e) {
-                return this.register((function () {
-                        return clearInterval(e)
-                    }
-                )),
-                    e
-            },
-            e
+        }
+        e.prototype.registerScopeEvent = function (e) {
+            this.register((function () {
+                    return e.scope.unregister(e)
+                }
+            ))
+        }
+        e.prototype.registerInterval = function (e) {
+            return this.register((function () {
+                    return clearInterval(e)
+                }
+            )),
+                e
+        }
+        return e
     }()
-        , $n = {
+
+    var $n = {
         height: "",
         paddingTop: "",
         paddingBottom: "",
         marginTop: "",
         marginBottom: ""
     }
-        , Wn = new WeakMap
-        , Gn = function () {
-        function e(e) {
-            this.from = {},
-                this.to = {},
-                this.end = {};
-            var t = e || {}
-                , n = t.duration
-                , r = void 0 === n ? 100 : n
-                , i = t.fn
-                , a = void 0 === i ? "ease-in-out" : i;
-            this.duration = r,
-                this.fn = a
+    var Wn = new WeakMap()
+
+    const Gn = function () {
+        function e(options) {
+            this.from = {}
+            this.to = {}
+            this.end = {}
+            let _opts = options || {},
+                _duration = _opts.duration,
+                duration = void 0 === _duration ? 100 : _duration,
+                _fn = _opts.fn,
+                fn = void 0 === _fn ? "ease-in-out" : _fn;
+            this.duration = duration
+            this.fn = fn
         }
 
-        return e.prototype.addProp = function (e, t, n, r) {
+        e.prototype.addProp = function (e, t, n, r) {
             return void 0 === r && (r = null),
             null !== t && (this.from[e] = t),
             null !== n && (this.to[e] = n),
             null !== r && (this.end[e] = r),
                 this
-        },
-            e
+        }
+        return e
     }();
 
-    function Kn(e, t) {
-        for (var n in t)
-            t.hasOwnProperty(n) && (e.style[n] = t[n])
+    function Kn(el, from) {
+        for (let prop in from) {
+            if (from.hasOwnProperty(prop)) {
+                el.style[prop] = from[prop]
+            }
+        }
     }
 
     function Yn(e) {
@@ -12999,40 +12989,39 @@ require.r = module => {
 
     var Jn = null;
 
-    function Qn(e, t, n) {
-        Xn(e),
-            Kn(e, t.from);
-        var r = {
-            props: t,
+    function transitionElement(el, props, complete) {
+        Xn(el)
+        Kn(el, props.from)
+        let config = {
+            props: props,
             fn: function () {
-                return Xn(e)
+                return Xn(el)
             },
             timer: 0,
-            complete: n,
-            win: e.win
+            complete: complete,
+            win: el.win
         };
-        Wn.set(e, r);
-        null === Jn && (Jn = [],
-            setTimeout((function () {
-                    document.body.offsetHeight;
-                    var e = Jn;
-                    Jn = null;
-                    for (var t = 0, n = e; t < n.length; t++) {
-                        (0,
-                            n[t])()
-                    }
+        Wn.set(el, config);
+        if (null === Jn) {
+            Jn = []
+            setTimeout(function () {
+                document.body.offsetHeight;
+                var e = Jn;
+                Jn = null;
+                for (var t = 0, n = e; t < n.length; t++) {
+                    (0,
+                        n[t])()
                 }
-            ), 0)),
-            Jn.push((function () {
-                    e.style.transition = "all " + t.duration + "ms " + t.fn,
-                        Kn(e, t.to),
-                        e.addEventListener("transitionend", (function (t) {
-                                t.target === e && r.fn()
-                            }
-                        )),
-                        r.timer = r.win.setTimeout(r.fn, t.duration + 50)
-                }
-            ))
+            }, 0)
+        }
+        Jn.push(function () {
+            el.style.transition = "all " + props.duration + "ms " + props.fn
+            Kn(el, props.to)
+            el.addEventListener("transitionend", function (t) {
+                t.target === el && config.fn()
+            })
+            config.timer = config.win.setTimeout(config.fn, props.duration + 50)
+        })
     }
 
     function er(e) {
@@ -13047,7 +13036,7 @@ require.r = module => {
                     for (var i in r.addProp("overflowY", "clip", "clip", ""),
                         n)
                         n.hasOwnProperty(i) && r.addProp(i, "0px", n[i] + "px", "");
-                    Qn(e, r, t)
+                    transitionElement(e, r, t)
                 }(e, t)
             }
         ))
@@ -13065,7 +13054,7 @@ require.r = module => {
                     for (var i in r.addProp("overflowY", "clip", "clip", ""),
                         n)
                         n.hasOwnProperty(i) && r.addProp(i, n[i] + "px", "0px", "");
-                    Qn(e, r, t)
+                    transitionElement(e, r, t)
                 }(e, t)
             }
         ))
@@ -13115,8 +13104,8 @@ require.r = module => {
     let isSafari = /^((?!chrome|android).)*safari/i.test(__ua)
 
 
-    function ur(e) {
-        return isMacOS && 0 === e.button && e.ctrlKey
+    function ur(evt) {
+        return isMacOS && 0 === evt.button && evt.ctrlKey
     }
 
     const Platform = {
@@ -13150,11 +13139,11 @@ require.r = module => {
         mobileSoftKeyboardVisible: false
     };
 
-    function pr(e, t) {
-        var n = e[t];
-        Object.defineProperty(e, t, {
+    function pr(obj, key) {
+        let value = obj[key];
+        Object.defineProperty(obj, key, {
             get: function () {
-                return n
+                return value
             },
             set: function () {
             }
@@ -13183,109 +13172,64 @@ require.r = module => {
         return e.replace(Mr, "\\$&")
     }
 
-    var br = function () {
+    const UniqueFileLookup = function () {
         function e() {
             this.data = {}
         }
 
-        return e.prototype.add = function (e, t) {
+        e.prototype.add = function (e, t) {
             var n, r = this.data;
             r.hasOwnProperty(e) ? n = r[e] : r[e] = n = [],
             n.contains(t) || n.push(t)
-        },
-            e.prototype.remove = function (e, t) {
-                var n = this.data;
-                if (n.hasOwnProperty(e)) {
-                    var r = n[e];
-                    r.remove(t),
-                    0 === r.length && delete n[e]
-                }
-            },
-            e.prototype.removeKey = function (e) {
-                delete this.data[e]
-            },
-            e.prototype.get = function (e) {
-                return this.data.hasOwnProperty(e) ? this.data[e] : null
-            },
-            e.prototype.keys = function () {
-                return Object.keys(this.data)
-            },
-            e.prototype.clear = function (e) {
-                delete this.data[e]
-            },
-            e.prototype.clearAll = function () {
-                this.data = {}
-            },
-            e.prototype.contains = function (e, t) {
-                var n = this.data;
-                if (n.hasOwnProperty(e)) {
-                    var r = n[e];
-                    return r && r.contains(t)
-                }
-                return !1
-            },
-            e.prototype.count = function () {
-                var e = this.data
-                    , t = 0;
-                for (var n in e)
-                    e.hasOwnProperty(n) && (t += e[n].length);
-                return t
-            },
-            e
-    }();
+        }
+        e.prototype.remove = function (e, t) {
+            var n = this.data;
+            if (n.hasOwnProperty(e)) {
+                var r = n[e];
+                r.remove(t),
+                0 === r.length && delete n[e]
+            }
+        }
+        e.prototype.removeKey = function (e) {
+            delete this.data[e]
+        }
+        e.prototype.get = function (e) {
+            return this.data.hasOwnProperty(e) ? this.data[e] : null
+        }
+        e.prototype.keys = function () {
+            return Object.keys(this.data)
+        }
+        e.prototype.clear = function (e) {
+            delete this.data[e]
+        }
+        e.prototype.clearAll = function () {
+            this.data = {}
+        }
+        e.prototype.contains = function (e, t) {
+            var n = this.data;
+            if (n.hasOwnProperty(e)) {
+                var r = n[e];
+                return r && r.contains(t)
+            }
+            return !1
+        }
+        e.prototype.count = function () {
+            var e = this.data
+                , t = 0;
+            for (var n in e)
+                e.hasOwnProperty(n) && (t += e[n].length);
+            return t
+        }
+        return e
+    }()
 
-    function wr(e) {
-        for (var t = [], n = 0; n < e; n++)
-            t.push((16 * Math.random() | 0).toString(16));
+    function genRandomHex(len) {
+        const t = []
+        for (let i = 0; i < len; i++) {
+            t.push((16 * Math.random() | 0).toString(16))
+        }
         return t.join("")
     }
-
-    (function () {
-        function e() {
-            this.data = new Map
-        }
-
-        e.prototype.add = function (e, t) {
-            var n = this.data;
-            n.has(e) ? n.get(e).push(t) : n.set(e, [t])
-        },
-            e.prototype.delete = function (e, t) {
-                var n = this.data;
-                if (n.has(e)) {
-                    var r = n.get(e);
-                    r.remove(t),
-                    0 === r.length && n.delete(e)
-                }
-            },
-            e.prototype.get = function (e) {
-                return this.data.get(e)
-            }
-    })();
-    (function () {
-        function e() {
-            this.data = new Map
-        }
-
-        e.prototype.add = function (e, t) {
-            var n = this.data;
-            n.has(e) ? n.get(e).add(t) : n.set(e, new Set([t]))
-        },
-            e.prototype.delete = function (e, t) {
-                var n = this.data;
-                if (n.has(e)) {
-                    var r = n.get(e);
-                    r.delete(t),
-                    0 === r.size && n.delete(e)
-                }
-            },
-            e.prototype.get = function (e) {
-                return this.data.get(e)
-            },
-            e.prototype.getArray = function (e) {
-                var t = this.data;
-                return t.has(e) ? Array.from(t.get(e)) : []
-            }
-    })();
 
     function kr(e, t, n) {
         void 0 === t && (t = 0),
@@ -13489,12 +13433,12 @@ require.r = module => {
         ))
     }
 
-    let Nr = false;
+    let scrollEventOption = false
     try {
         window.addEventListener("test", null, Object.defineProperty({}, "passive", {
             get: function () {
-                Nr = {
-                    passive: !1
+                scrollEventOption = {
+                    passive: false
                 }
             }
         }))
@@ -13561,23 +13505,23 @@ require.r = module => {
         }
     }
 
-    function loadScriptAsync(e, t) {
-        var n = !1
-            , r = null;
+    function loadScriptAsync(src, hooks) {
+        let _loaded = false, r = null;
         return {
             get loaded() {
-                return n
+                return _loaded
             },
             get promise() {
-                if (n)
-                    return Promise.resolve();
+                if (_loaded) {
+                    return Promise.resolve()
+                }
                 if (!r) {
-                    t && t.before && t.before();
-                    var i = function (e) {
+                    hooks && hooks.before && hooks.before();
+                    let _promise = function (src) {
                         return new Promise((function (t, n) {
                                 var r = document.createElement("script");
                                 r.type = "text/javascript",
-                                    r.src = e,
+                                    r.src = src,
                                     r.addEventListener("load", (function () {
                                             return t(r)
                                         }
@@ -13589,23 +13533,21 @@ require.r = module => {
                                     document.body.appendChild(r)
                             }
                         ))
-                    }(e);
-                    i.catch((function (e) {
-                            e.detach(),
-                                r = null
-                        }
-                    )),
-                        r = i.then((function () {
-                                n = !0,
-                                    r = null,
-                                t && t.after && t.after()
-                            }
-                        ))
+                    }(src);
+                    _promise.catch(function (e) {
+                        e.detach(),
+                            r = null
+                    })
+                    r = _promise.then(function () {
+                        _loaded = !0,
+                            r = null,
+                        hooks && hooks.after && hooks.after()
+                    })
                 }
                 return r
             },
             then: function (e) {
-                return n ? Promise.resolve(e()) : this.promise.then(e)
+                return _loaded ? Promise.resolve(e()) : this.promise.then(e)
             }
         }
     }
@@ -13708,17 +13650,6 @@ require.r = module => {
             },
             e
     }();
-    !function () {
-        function e() {
-            this.promise = Promise.resolve()
-        }
-
-        e.prototype.queue = function (e) {
-            var t = this.promise.then(e, e);
-            return this.promise = t,
-                t
-        }
-    }();
 
     function Wr() {
         var e = {
@@ -13734,7 +13665,7 @@ require.r = module => {
             e
     }
 
-    var Gr = function () {
+    const Runnable = function () {
         function e(e) {
             this.running = !1,
                 this.cancelled = !1;
@@ -13747,111 +13678,28 @@ require.r = module => {
                 this.onCancel = i || null
         }
 
-        return e.prototype.start = function () {
+        e.prototype.start = function () {
             this.running || (this.running = !0,
             this.onStart && this.onStart())
-        },
-            e.prototype.stop = function () {
-                this.running && (this.running = !1,
-                this.onStop && this.onStop())
-            },
-            e.prototype.cancel = function () {
-                this.stop(),
-                this.cancelled || (this.cancelled = !0,
-                this.onCancel && this.onCancel())
-            },
-            e.prototype.isRunning = function () {
-                return this.running
-            },
-            e.prototype.isCancelled = function () {
-                return this.cancelled
-            },
-            e
-    }();
-    !function () {
-        function e(e) {
-            this.items = new $r,
-                this.promise = null,
-                this.runnable = new Gr(e)
         }
-
-        e.prototype.addList = function (e) {
-            this.items.enqueueArray(e),
-                this.notify()
-        },
-            e.prototype.add = function (e) {
-                this.items.enqueue(e),
-                    this.notify()
-            },
-            e.prototype.remove = function (e) {
-                this.items.remove(e)
-            },
-            e.prototype.notify = function () {
-                var e = this.promise;
-                e && (this.promise = null,
-                    setTimeout((function () {
-                            e && e.resolve()
-                        }
-                    ), 0))
-            },
-            e.prototype.cancel = function () {
-                this.runnable.cancel()
-            },
-            e.prototype.generator = function () {
-                return c(this, arguments, (function () {
-                        var e, t;
-                        return o(this, (function (n) {
-                                switch (n.label) {
-                                    case 0:
-                                        e = this.runnable,
-                                            n.label = 1;
-                                    case 1:
-                                        return e.isCancelled() ? [4, l(void 0)] : [3, 3];
-                                    case 2:
-                                        return [2, n.sent()];
-                                    case 3:
-                                        return 0 !== (t = this.items).length ? [3, 5] : (e.stop(),
-                                            [4, l((this.promise = Wr()).promise)]);
-                                    case 4:
-                                        return n.sent(),
-                                            [3, 8];
-                                    case 5:
-                                        return e.start(),
-                                            [4, l(t.dequeue())];
-                                    case 6:
-                                        return [4, n.sent()];
-                                    case 7:
-                                        n.sent(),
-                                            n.label = 8;
-                                    case 8:
-                                        return [3, 1];
-                                    case 9:
-                                        return [2]
-                                }
-                            }
-                        ))
-                    }
-                ))
-            }
-    }();
-    !function () {
-        function e() {
-            this.promises = []
+        e.prototype.stop = function () {
+            this.running && (this.running = !1,
+            this.onStop && this.onStop())
         }
+        e.prototype.cancel = function () {
+            this.stop(),
+            this.cancelled || (this.cancelled = !0,
+            this.onCancel && this.onCancel())
+        }
+        e.prototype.isRunning = function () {
+            return this.running
+        }
+        e.prototype.isCancelled = function () {
+            return this.cancelled
+        }
+        return e
+    }()
 
-        e.prototype.add = function (e) {
-            this.promises.push(e())
-        },
-            e.prototype.addPromise = function (e) {
-                this.promises.push(e)
-            },
-            e.prototype.isEmpty = function () {
-                return 0 === this.promises.length
-            },
-            e.prototype.promise = function () {
-                return Promise.all(this.promises)
-            }
-    }();
     loadScriptAsync("/lib/pdfjs/pdf.min.js", {
         after: function () {
             window.pdfjsLib.GlobalWorkerOptions.workerSrc = "/lib/pdfjs/pdf.worker.min.js",
@@ -13865,7 +13713,8 @@ require.r = module => {
         }
     })
     loadScriptAsync("/lib/codemirror/modes.min.js");
-    for (var Kr = {
+
+    var Kr = {
         primaryColor: "var(--background-primary-alt)",
         fontFamily: "var(--font-mermaid)",
         secondaryColor: "var(--background-secondary)",
@@ -13949,7 +13798,8 @@ require.r = module => {
         cScale5: "var(--color-blue)",
         cScale6: "var(--color-purple)",
         cScale7: "var(--color-pink)"
-    }, Yr = 0; Yr < 12; Yr++) {
+    }
+    for (var Yr = 0; Yr < 12; Yr++) {
         Kr["cScaleLabel" + Yr] = "var(--text-normal)";
     }
     var Xr = loadScriptAsync("/lib/mermaid.min.js", {
@@ -14036,9 +13886,9 @@ require.r = module => {
         }
     });
 
-    function ei(e, t) {
-        return MathJax.tex2chtml(e, {
-            display: t
+    function renderMath(source, display) {
+        return MathJax.tex2chtml(source, {
+            display: display
         })
     }
 
@@ -15927,7 +15777,7 @@ require.r = module => {
             }
         };
 
-    const Ma = function e() {
+    const DOMPurify = function e() {
         var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : va()
             , n = function (t) {
             return e(t)
@@ -16369,11 +16219,12 @@ require.r = module => {
             },
             n
     }()
-    window.DOMPurify = Ma
-    Ma.addHook("afterSanitizeAttributes", (function (e) {
+    window.DOMPurify = DOMPurify
+    DOMPurify.addHook("afterSanitizeAttributes", function (e) {
         e.instanceOf(HTMLAnchorElement) && (e.setAttribute("target", "_blank"),
         e.hasAttribute("rel") || e.setAttribute("rel", "noopener"))
-    }));
+    })
+
     var ya = {
         ALLOW_UNKNOWN_PROTOCOLS: !0,
         RETURN_DOM_FRAGMENT: !0,
@@ -16382,80 +16233,80 @@ require.r = module => {
         ADD_ATTR: ["frameborder", "allowfullscreen", "allow", "data-tooltip-position"]
     };
 
-    function ba(e) {
-        return document.importNode(Ma.sanitize(e, ya), !0)
+    function sanitizeHTMLToDom(html) {
+        return document.importNode(DOMPurify.sanitize(html, ya), true)
     }
 
-    var wa = function () {
+    let wa = function () {
         function e() {
-            this.map = new WeakMap
+            this.map = new WeakMap()
         }
 
-        return e.prototype.get = function (e) {
-            return this.map.get(e)
-        },
-            e.prototype.set = function (e, t) {
-                return this.map.set(e, t),
-                    this
-            },
-            e.prototype.has = function (e) {
-                return this.map.has(e)
-            },
-            e.prototype.delete = function (e) {
-                return this.map.delete(e)
-            },
-            e
+        e.prototype.get = function (key) {
+            return this.map.get(key)
+        }
+        e.prototype.set = function (key, value) {
+            this.map.set(key, value)
+            return this
+        }
+        e.prototype.has = function (key) {
+            return this.map.has(key)
+        }
+        e.prototype.delete = function (key) {
+            return this.map.delete(key)
+        }
+        return e
     }()
-        , ka = 0
-        , xa = function () {
+    let ka = 0
+    let xa = function () {
         function e() {
             this._ = "_weakmap_" + ka++
         }
 
-        return e.prototype.get = function (e) {
-            return this.has(e) ? e[this._] : void 0
-        },
-            e.prototype.set = function (e, t) {
-                return Object.defineProperty(e, this._, {
-                    configurable: !0,
-                    value: t
-                }),
-                    this
-            },
-            e.prototype.has = function (e) {
-                return Object.hasOwnProperty.call(e, this._)
-            },
-            e.prototype.delete = function (e) {
-                return this.has(e) && delete e[this._]
-            },
-            e
+        e.prototype.get = function (key) {
+            return this.has(key) ? key[this._] : void 0
+        }
+        e.prototype.set = function (key, value) {
+            Object.defineProperty(key, this._, {
+                configurable: !0,
+                value: value
+            })
+            return this
+        }
+        e.prototype.has = function (key) {
+            return Object.hasOwnProperty.call(key, this._)
+        }
+        e.prototype.delete = function (key) {
+            return this.has(key) && delete key[this._]
+        }
+        return e
     }();
 
     function Ca() {
-        return window.WeakMap ? new wa : new xa
+        return window.WeakMap ? new wa() : new xa()
     }
 
     var Aa = function () {
-        function e(e) {
-            this.promise = null,
-                this.worker = e,
-                this.worker.onmessage = this.onReceiveMessageFromWorker.bind(this)
+        function e(worker) {
+            this.promise = null
+            this.worker = worker
+            this.worker.onmessage = this.onReceiveMessageFromWorker.bind(this)
         }
 
-        return e.prototype.onReceiveMessageFromWorker = function (e) {
+        e.prototype.onReceiveMessageFromWorker = function (e) {
             if (this.promise) {
                 var t = this.promise;
                 this.promise = null,
                     t.resolve(e.data)
             }
-        },
-            e.prototype.submit = function (e, t) {
-                return this.promise ? null : (this.promise = Wr(),
-                    this.worker.postMessage(e, t),
-                    this.promise.promise)
-            },
-            e
-    }();
+        }
+        e.prototype.submit = function (e, t) {
+            return this.promise ? null : (this.promise = Wr(),
+                this.worker.postMessage(e, t),
+                this.promise.promise)
+        }
+        return e
+    }()
 
     function La(e, t) {
         return a(this, void 0, Promise, (function () {
@@ -16493,57 +16344,57 @@ require.r = module => {
         ))
     }
 
-    var Sa = function (e) {
-        function t(t) {
-            var n = e.call(this) || this;
-            return n.containerEl = t,
-                n
-        }
-
-        return extend(t, e),
-            t
-    }(_n)
-        , Ha = function () {
-        function e(e) {
-            this.rendered = !1,
-                this.height = 0,
-                this.computed = !1,
-                this.lines = 0,
-                this.lineStart = 0,
-                this.lineEnd = 0,
-                this.used = !0,
-                this.highlightRanges = null,
-                this.level = 0,
-                this.headingCollapsed = !1,
-                this.shown = !0,
-                this.usesFrontMatter = !1,
-                this.html = e || "",
-                this.el = createDiv(),
-            null === e && (this.rendered = !0)
-        }
-
-        return e.prototype.render = function () {
-            if (!this.rendered) {
-                var e = ba(this.html);
-                this.el.appendChild(e),
-                    this.rendered = !0,
-                    this.computed = !1
+    var MarkdownRenderChild = function (e) {
+            function t(t) {
+                var n = e.call(this) || this;
+                return n.containerEl = t,
+                    n
             }
-        },
-            e.prototype.resetCompute = function () {
-                this.computed = !1;
-                var e = this.highlightRanges;
-                if (e)
-                    for (var t = 0, n = e; t < n.length; t++) {
-                        n[t].rects = null
-                    }
+
+            return extend(t, e),
+                t
+        }(Component),
+        MarkdownPreviewSection = function () {
+            function e(e) {
+                this.rendered = !1,
+                    this.height = 0,
+                    this.computed = !1,
+                    this.lines = 0,
+                    this.lineStart = 0,
+                    this.lineEnd = 0,
+                    this.used = !0,
+                    this.highlightRanges = null,
+                    this.level = 0,
+                    this.headingCollapsed = !1,
+                    this.shown = !0,
+                    this.usesFrontMatter = !1,
+                    this.html = e || "",
+                    this.el = createDiv(),
+                null === e && (this.rendered = !0)
+            }
+
+            return e.prototype.render = function () {
+                if (!this.rendered) {
+                    var e = sanitizeHTMLToDom(this.html);
+                    this.el.appendChild(e),
+                        this.rendered = !0,
+                        this.computed = !1
+                }
             },
-            e.prototype.setCollapsed = function (e) {
-                this.headingCollapsed = e,
-                    Un(this.el, e)
-            },
-            e
-    }();
+                e.prototype.resetCompute = function () {
+                    this.computed = !1;
+                    var e = this.highlightRanges;
+                    if (e)
+                        for (var t = 0, n = e; t < n.length; t++) {
+                            n[t].rects = null
+                        }
+                },
+                e.prototype.setCollapsed = function (e) {
+                    this.headingCollapsed = e,
+                        Un(this.el, e)
+                },
+                e
+        }();
 
     function Ta(e, t) {
         var n = e.firstChild;
@@ -16560,7 +16411,7 @@ require.r = module => {
 
     var Oa = null
         , Na = !1;
-    var Pa = function () {
+    var MarkdownPreviewRenderer = function () {
         function e(t, n, r, i, a) {
             void 0 === a && (a = !0);
             var o = this;
@@ -16600,7 +16451,7 @@ require.r = module => {
                 l.on("click", ".task-list-item-checkbox", this.onCheckboxClick.bind(this)),
                 l.on("click", ".heading-collapse-indicator", this.onHeadingCollapseClick.bind(this)),
                 l.on("click", "li > .list-collapse-indicator", this.onListCollapseClick.bind(this)),
-                s.addEventListener("scroll", this.onScroll.bind(this), Nr),
+                s.addEventListener("scroll", this.onScroll.bind(this), scrollEventOption),
             a && s.onNodeInserted((function () {
                     return o.queueRender()
                 }
@@ -16801,7 +16652,7 @@ require.r = module => {
                 this.parseFinish(e, t)
             },
             e.prototype.parseFinish = function (e, t) {
-                for (var n = t.sectionHtml, r = t.lineNumbers, i = t.levels, a = t.frontmatter, o = this, s = o.recycledSections, l = o.header, c = o.footer, h = this.sections, u = new br, f = 0, p = h; f < p.length; f++) {
+                for (var n = t.sectionHtml, r = t.lineNumbers, i = t.levels, a = t.frontmatter, o = this, s = o.recycledSections, l = o.header, c = o.footer, h = this.sections, u = new UniqueFileLookup, f = 0, p = h; f < p.length; f++) {
                     var d = p[f];
                     d !== l && d !== c && (d.used = !1,
                         u.add(d.html, d))
@@ -16822,7 +16673,7 @@ require.r = module => {
                     var x = r[v]
                         , C = x[0]
                         , A = x[1];
-                    M || (M = new Ha(g));
+                    M || (M = new MarkdownPreviewSection(g));
                     var L = 0 === v ? 0 : C
                         , E = v === n.length - 1 ? A + 1 : r[v + 1][0];
                     M.lines = E - L,
@@ -17510,7 +17361,7 @@ require.r = module => {
                 }
             },
             e.prototype.addHeader = function () {
-                this.header || (this.header = new Ha(null),
+                this.header || (this.header = new MarkdownPreviewSection(null),
                     this.header.el.addClass("mod-header"),
                     this.sections.unshift(this.header),
                     this.queueRender())
@@ -17521,7 +17372,7 @@ require.r = module => {
                     this.queueRender())
             },
             e.prototype.addFooter = function () {
-                this.footer || (this.footer = new Ha(null),
+                this.footer || (this.footer = new MarkdownPreviewSection(null),
                     this.footer.el.addClass("mod-footer"),
                     this.sections.push(this.footer),
                     this.queueRender())
@@ -17543,7 +17394,7 @@ require.r = module => {
             },
             e.prototype.cleanupParentComponents = function () {
                 for (var e = [], t = 0, n = this.owner._children; t < n.length; t++) {
-                    (a = n[t]) instanceof Sa && (this.belongsToMe(a.containerEl) || e.push(a))
+                    (a = n[t]) instanceof MarkdownRenderChild && (this.belongsToMe(a.containerEl) || e.push(a))
                 }
                 for (var r = 0, i = e; r < i.length; r++) {
                     var a = i[r];
@@ -17777,11 +17628,11 @@ require.r = module => {
             e.recyclers = [],
             e
     }();
-    Pa.registerPostProcessor((function (e, t) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e, t) {
         var n = e.find(".frontmatter");
         null == n || n.hide()
     }))
-    Pa.registerPostProcessor((function (e, t) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e, t) {
         for (var n = 0, r = e.findAll("[data-footnote-id]"); n < r.length; n++) {
             var i = r[n]
                 , a = i.getAttr("data-footnote-id");
@@ -17806,7 +17657,7 @@ require.r = module => {
                                     i = t.doc,
                                 0 === (a = r.clientWidth) && (a = e.clientWidth),
                                 0 === a && (a = e.win.innerWidth),
-                                    s = "m" + wr(16),
+                                    s = "m" + genRandomHex(16),
                                     l = i.body.createDiv("mermaid"),
                                     o.label = 1;
                             case 1:
@@ -17873,7 +17724,7 @@ require.r = module => {
             }
         ))
     };
-    Pa.registerPostProcessor((function (e, t) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e, t) {
         var n = e.findAll("code.language-mermaid");
         if (0 !== n.length)
             return function (e, t) {
@@ -17919,7 +17770,7 @@ require.r = module => {
             }
         return null
     };
-    Pa.registerRecycler((function (e, t) {
+    MarkdownPreviewRenderer.registerRecycler((function (e, t) {
         for (var n = 0, r = e.findAll("code.language-mermaid"); n < r.length; n++) {
             var i = r[n]
                 , a = za(i)
@@ -17938,7 +17789,7 @@ require.r = module => {
             t
     }
 
-    Pa.registerPostProcessor((function (e) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e) {
         var t = e.findAll('code[class*="language-"]:not(.is-loaded)');
         if (0 !== t.length)
             return Jr.then((function () {
@@ -17966,7 +17817,7 @@ require.r = module => {
             }
         return null
     };
-    Pa.registerRecycler((function (e, t) {
+    MarkdownPreviewRenderer.registerRecycler((function (e, t) {
         for (var n = 0, r = e.findAll('code[class*="language-"]:not(.is-loaded)'); n < r.length; n++) {
             var i = r[n]
                 , a = za(i)
@@ -17977,7 +17828,7 @@ require.r = module => {
         }
     }));
     var Ba = Ca();
-    Pa.registerPostProcessor((function (e) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e) {
         var t = e.findAll(".math:not(.is-loaded)");
         if (0 !== t.length)
             return Qr.then((function () {
@@ -17986,7 +17837,7 @@ require.r = module => {
                             , i = gr(r.innerHTML);
                         r.empty();
                         try {
-                            var a = ei(i, r.classList.contains("math-block"));
+                            var a = renderMath(i, r.classList.contains("math-block"));
                             r.appendChild(a)
                         } catch (e) {
                             r.appendText(i)
@@ -18020,7 +17871,7 @@ require.r = module => {
         return !0
     }
 
-    Pa.registerRecycler((function (e, t) {
+    MarkdownPreviewRenderer.registerRecycler((function (e, t) {
         for (var n = 0, r = e.findAll(".math:not(.is-loaded)"); n < r.length; n++) {
             var i = r[n]
                 , a = gr(i.innerHTML)
@@ -18038,7 +17889,7 @@ require.r = module => {
             }
         return null
     };
-    Pa.registerRecycler((function (e, t) {
+    MarkdownPreviewRenderer.registerRecycler((function (e, t) {
         for (var n = 0, r = e.findAll(".internal-embed:not(.is-loaded)"); n < r.length; n++) {
             var i = r[n]
                 , a = Ua(t, i);
@@ -18046,7 +17897,7 @@ require.r = module => {
                 i.replaceWith(a))
         }
     }))
-    Pa.registerPostProcessor((function (e) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e) {
         var t = e.findAll("img");
         if (0 !== t.length) {
             for (var n = [], r = function (e) {
@@ -18167,7 +18018,7 @@ require.r = module => {
             } catch (e) {
             }
         if (t.startsWith("<svg")) {
-            var r = ba(t).firstChild;
+            var r = sanitizeHTMLToDom(t).firstChild;
             r && r.instanceOf(SVGSVGElement) && (r.setAttrs({
                 width: 16,
                 height: 16,
@@ -18180,7 +18031,7 @@ require.r = module => {
             wi(e, t)
     }
 
-    Pa.registerRecycler((function (e, t) {
+    MarkdownPreviewRenderer.registerRecycler((function (e, t) {
         for (var n = 0, r = e.findAll("img"); n < r.length; n++) {
             var i = r[n];
             if (i.instanceOf(HTMLImageElement)) {
@@ -18191,7 +18042,7 @@ require.r = module => {
             }
         }
     }))
-    Pa.registerPostProcessor((function (e, t) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e, t) {
         for (var n = function (e) {
             $a(e);
             var t = e.find(".callout-icon");
@@ -18217,7 +18068,7 @@ require.r = module => {
             n(i[r])
         }
     }))
-    Pa.registerPostProcessor((function (e, t) {
+    MarkdownPreviewRenderer.registerPostProcessor((function (e, t) {
         for (var n = 0, r = e.findAll("table"); n < r.length; n++) {
             var i = r[n]
                 , a = i.parentNode;
@@ -18331,53 +18182,54 @@ require.r = module => {
         return Qa(e, to)
     }
 
-    function ro(e) {
-        return (e = En(e).normalize("NFC")).split("#")[0]
+    function getLinkpath(linktext) {
+        return (linktext = En(linktext).normalize("NFC")).split("#")[0]
     }
 
-    function io(e) {
-        var t = (e = En(e).normalize("NFC")).split("#")[0];
+    function parseLinktext(linktext) {
+        var t = (linktext = En(linktext).normalize("NFC")).split("#")[0];
         return {
             path: t,
-            subpath: e.substr(t.length)
+            subpath: linktext.substr(t.length)
         }
     }
 
     function ao(e, t) {
-        return !!e && (!0 === oo(e.links, t) || !0 === oo(e.embeds, t))
+        return !!e && (!0 === iterateRefs(e.links, t) || !0 === iterateRefs(e.embeds, t))
     }
 
-    function oo(e, t) {
-        if (!e)
+    function iterateRefs(refs, cb) {
+        if (!refs)
             return !1;
-        for (var n = 0, r = e; n < r.length; n++) {
-            if (!0 === t(r[n]))
+        for (var n = 0, r = refs; n < r.length; n++) {
+            if (!0 === cb(r[n]))
                 return !0
         }
         return !1
     }
 
-    function so(e) {
-        if (!e)
+    function getAllTags(cache) {
+        if (!cache) {
             return null;
-        var t = []
-            , n = function (e) {
-            if (!e)
-                return null;
-            var t = zn(e, /^tag(s)?$/i, !0);
-            if (t)
-                for (var n = 0; n < t.length; n++) {
-                    var r = t[n];
-                    "#" !== r.charAt(0) && (t[n] = "#" + r)
-                }
-            return t
-        }(e.frontmatter);
+        }
+        let t = [],
+            n = function (e) {
+                if (!e)
+                    return null;
+                var t = zn(e, /^tag(s)?$/i, !0);
+                if (t)
+                    for (var n = 0; n < t.length; n++) {
+                        var r = t[n];
+                        "#" !== r.charAt(0) && (t[n] = "#" + r)
+                    }
+                return t
+            }(cache.frontmatter);
         if (n)
             for (var r = 0, i = n; r < i.length; r++) {
                 var a = i[r];
                 t.push(a)
             }
-        var o = e.tags;
+        var o = cache.tags;
         if (o)
             for (var s = 0, l = o; s < l.length; s++) {
                 a = l[s];
@@ -18389,18 +18241,18 @@ require.r = module => {
     var lo = /[!"#$%&()*+,.:;<=>?@^`{|}~\/\[\]\\\r\n]/g
         , co = /([:#|^\\\r\n]|%%|\[\[|]])/g;
 
-    function ho(e) {
-        return e.replace(lo, " ").replace(/\s+/g, " ").trim()
+    function stripHeading(heading) {
+        return heading.replace(lo, " ").replace(/\s+/g, " ").trim()
     }
 
-    function uo(e) {
-        return e.replace(co, " ").replace(/\s+/g, " ").trim()
+    function stripHeadingForLink(heading) {
+        return heading.replace(co, " ").replace(/\s+/g, " ").trim()
     }
 
-    function fo(e, t) {
-        if (!e || !t)
+    function resolveSubpath(cache, subpath) {
+        if (!cache || !subpath)
             return null;
-        var n = t.split("#").filter((function (e) {
+        var n = subpath.split("#").filter((function (e) {
                 return !!e
             }
         ));
@@ -18410,14 +18262,14 @@ require.r = module => {
             var r = n[0];
             if (r.startsWith("^")) {
                 var i = r.substr(1).toLowerCase()
-                    , a = e.blocks;
+                    , a = cache.blocks;
                 if (a && a.hasOwnProperty(i))
                     for (var o in a)
                         if (o.toLowerCase() === i && a.hasOwnProperty(o)) {
                             var s = a[o]
                                 , l = null;
-                            if (e.listItems)
-                                for (var c = 0, h = e.listItems; c < h.length; c++) {
+                            if (cache.listItems)
+                                for (var c = 0, h = cache.listItems; c < h.length; c++) {
                                     var u = h[c];
                                     if (u.id && u.id.toLowerCase() === i) {
                                         l = u;
@@ -18434,7 +18286,7 @@ require.r = module => {
                         }
             }
         }
-        var f = e.headings;
+        var f = cache.headings;
         if (!f || 0 === f.length)
             return null;
         for (var p = 0, d = 0, m = null, v = null, g = 0, M = f; g < M.length; g++) {
@@ -18443,7 +18295,7 @@ require.r = module => {
                 v = y;
                 break
             }
-            !m && y.level > d && ho(y.heading).toLowerCase() === ho(n[p]).toLowerCase() && (p++,
+            !m && y.level > d && stripHeading(y.heading).toLowerCase() === stripHeading(n[p]).toLowerCase() && (p++,
                 d = y.level,
             p === n.length && (m = y))
         }
@@ -18535,54 +18387,54 @@ require.r = module => {
             this._ = {}
         }
 
-        e.prototype.on = function (e, t, n) {
+        e.prototype.on = function (name, callback, ctx) {
             var r = this._
-                , i = r[e];
-            i || (r[e] = i = []);
+                , i = r[name];
+            i || (r[name] = i = []);
             var a = {
                 e: this,
-                name: e,
-                fn: t,
-                ctx: n
+                name: name,
+                fn: callback,
+                ctx: ctx
             };
             return i.push(a),
                 a
         }
-        e.prototype.off = function (e, t) {
+        e.prototype.off = function (name, callback) {
             var n = this._
-                , r = n[e]
+                , r = n[name]
                 , i = [];
-            if (r && t)
+            if (r && callback)
                 for (var a = 0; a < r.length; a++)
-                    r[a].fn !== t && i.push(r[a]);
-            i.length > 0 ? n[e] = i : delete n[e]
+                    r[a].fn !== callback && i.push(r[a]);
+            i.length > 0 ? n[name] = i : delete n[name]
         }
-        e.prototype.offref = function (e) {
-            if (e) {
-                var t = e.name
+        e.prototype.offref = function (eventRef) {
+            if (eventRef) {
+                var t = eventRef.name
                     , n = this._
                     , r = n[t]
                     , i = [];
-                if (r && e)
+                if (r && eventRef)
                     for (var a = 0; a < r.length; a++)
-                        r[a] !== e && i.push(r[a]);
+                        r[a] !== eventRef && i.push(r[a]);
                 i.length ? n[t] = i : delete n[t]
             }
         }
-        e.prototype.trigger = function (e) {
+        e.prototype.trigger = function (name) {
             for (var t = [], n = 1; n < arguments.length; n++)
                 t[n - 1] = arguments[n];
             var r = this._
-                , i = r[e];
+                , i = r[name];
             if (i) {
                 i = i.slice();
                 for (var a = 0; a < i.length; a++)
                     this.tryTrigger(i[a], t)
             }
         }
-        e.prototype.tryTrigger = function (e, t) {
+        e.prototype.tryTrigger = function (eventRef, args) {
             try {
-                e.fn.apply(e.ctx, t)
+                eventRef.fn.apply(eventRef.ctx, args)
             } catch (e) {
                 setTimeout((function () {
                         throw e
@@ -18624,110 +18476,110 @@ require.r = module => {
         return "md" === bo(t) ? Mo(t) : t
     }
 
-    var ko,
-        SiteCache = function () {
-            function e() {
-                this.cache = {},
-                    this.uniqueFiles = new br,
-                    this.aliases = {},
-                    this.permalinks = {}
-            }
+    var ko
+    const SiteCache = function () {
+        function e() {
+            this.cache = {},
+                this.uniqueFiles = new UniqueFileLookup,
+                this.aliases = {},
+                this.permalinks = {}
+        }
 
-            return e.prototype.load = function (e) {
-                return a(this, void 0, void 0, (function () {
-                        var t, n, r, i, a, s, l, c, h;
-                        return o(this, (function (o) {
-                                for (n in this.cache = e,
-                                    t = this.uniqueFiles = new br,
-                                    e)
-                                    if (e.hasOwnProperty(n) && (t.add(vo(n).toLowerCase(), n),
-                                    (r = e[n]) && (no(r),
-                                        i = r.frontmatter))) {
-                                        if (a = Rn(i))
-                                            for (s = 0,
-                                                     l = a; s < l.length; s++)
-                                                c = l[s],
-                                                    this.aliases[c.toLowerCase()] = n;
-                                        (h = i.permalink) && "string" == typeof h && (h.startsWith("/") && (h = h.substring(1)),
-                                            this.permalinks[h] = n)
-                                    }
-                                return [2]
-                            }
-                        ))
-                    }
-                ))
-            },
-                e.prototype.getCache = function (e) {
-                    var t = this.cache;
-                    return t.hasOwnProperty(e) ? t[e] : null
-                },
-                e.prototype.has = function (e) {
-                    return this.cache.hasOwnProperty(e)
-                },
-                e.prototype.getLinktextDest = function (e, t) {
-                    var n = ro(e);
-                    return this.getLinkpathDest(n, t)
-                },
-                e.prototype.getLinkpathDest = function (e, t) {
-                    if ("" === e && t && this.cache.hasOwnProperty(t))
-                        return t;
-                    var n = this._getLinkpathDest(e, t);
-                    if (n.length > 0)
-                        return n[0];
-                    if ((n = this._getLinkpathDest(e + ".md", t)).length > 0)
-                        return n[0];
-                    var r = this.aliases
-                        , i = e.toLowerCase();
-                    if (r.hasOwnProperty(i))
-                        return r[i];
-                    var a = vo(e);
-                    return r.hasOwnProperty(a) ? r[a] : null
-                },
-                e.prototype._getLinkpathDest = function (e, t) {
-                    var n = e.toLowerCase()
-                        , r = vo(n)
-                        , i = this.uniqueFiles.get(r);
-                    if (!i)
-                        return [];
-                    var a = go(t).toLowerCase();
-                    if (n.startsWith("./") || n.startsWith("../")) {
-                        if (n.startsWith("./../") && (n = n.substr(2)),
-                            n.startsWith("./"))
-                            "" !== a && (a += "/"),
-                                n = a + n.substring(2);
-                        else {
-                            for (; n.startsWith("../");)
-                                n = n.substr(3),
-                                    a = go(a);
-                            "" !== a && (a += "/"),
-                                n = a + n
+        e.prototype.load = function (e) {
+            return a(this, void 0, void 0, (function () {
+                    var t, n, r, i, a, s, l, c, h;
+                    return o(this, (function (o) {
+                            for (n in this.cache = e,
+                                t = this.uniqueFiles = new UniqueFileLookup,
+                                e)
+                                if (e.hasOwnProperty(n) && (t.add(vo(n).toLowerCase(), n),
+                                (r = e[n]) && (no(r),
+                                    i = r.frontmatter))) {
+                                    if (a = Rn(i))
+                                        for (s = 0,
+                                                 l = a; s < l.length; s++)
+                                            c = l[s],
+                                                this.aliases[c.toLowerCase()] = n;
+                                    (h = i.permalink) && "string" == typeof h && (h.startsWith("/") && (h = h.substring(1)),
+                                        this.permalinks[h] = n)
+                                }
+                            return [2]
                         }
-                        for (var o = 0, s = i; o < s.length; o++) {
-                            if ((m = (d = s[o]).toLowerCase()) === n)
-                                return [d]
-                        }
+                    ))
+                }
+            ))
+        }
+        e.prototype.getCache = function (e) {
+            var t = this.cache;
+            return t.hasOwnProperty(e) ? t[e] : null
+        }
+        e.prototype.has = function (e) {
+            return this.cache.hasOwnProperty(e)
+        }
+        e.prototype.getLinktextDest = function (e, t) {
+            var n = getLinkpath(e);
+            return this.getLinkpathDest(n, t)
+        }
+        e.prototype.getLinkpathDest = function (e, t) {
+            if ("" === e && t && this.cache.hasOwnProperty(t))
+                return t;
+            var n = this._getLinkpathDest(e, t);
+            if (n.length > 0)
+                return n[0];
+            if ((n = this._getLinkpathDest(e + ".md", t)).length > 0)
+                return n[0];
+            var r = this.aliases
+                , i = e.toLowerCase();
+            if (r.hasOwnProperty(i))
+                return r[i];
+            var a = vo(e);
+            return r.hasOwnProperty(a) ? r[a] : null
+        }
+        e.prototype._getLinkpathDest = function (e, t) {
+            var n = e.toLowerCase()
+                , r = vo(n)
+                , i = this.uniqueFiles.get(r);
+            if (!i)
+                return [];
+            var a = go(t).toLowerCase();
+            if (n.startsWith("./") || n.startsWith("../")) {
+                if (n.startsWith("./../") && (n = n.substr(2)),
+                    n.startsWith("./"))
+                    "" !== a && (a += "/"),
+                        n = a + n.substring(2);
+                else {
+                    for (; n.startsWith("../");)
+                        n = n.substr(3),
+                            a = go(a);
+                    "" !== a && (a += "/"),
+                        n = a + n
+                }
+                for (var o = 0, s = i; o < s.length; o++) {
+                    if ((m = (d = s[o]).toLowerCase()) === n)
+                        return [d]
+                }
+            }
+            for (var l = 0, c = i; l < c.length; l++) {
+                if ((m = (d = c[l]).toLowerCase()) === n)
+                    return [d]
+            }
+            for (var h = [], u = [], f = 0, p = i; f < p.length; f++) {
+                var d, m;
+                (m = (d = p[f]).toLowerCase()).endsWith(n) && (m.startsWith(a) ? h.push(d) : u.push(d))
+            }
+            return h.sort((function (e, t) {
+                    return e.length - t.length
+                }
+            )),
+                u.sort((function (e, t) {
+                        return e.length - t.length
                     }
-                    for (var l = 0, c = i; l < c.length; l++) {
-                        if ((m = (d = c[l]).toLowerCase()) === n)
-                            return [d]
-                    }
-                    for (var h = [], u = [], f = 0, p = i; f < p.length; f++) {
-                        var d, m;
-                        (m = (d = p[f]).toLowerCase()).endsWith(n) && (m.startsWith(a) ? h.push(d) : u.push(d))
-                    }
-                    return h.sort((function (e, t) {
-                            return e.length - t.length
-                        }
-                    )),
-                        u.sort((function (e, t) {
-                                return e.length - t.length
-                            }
-                        )),
-                        h.concat(u)
-                },
-                e
-        }(),
-        Co = "indexFile",
+                )),
+                h.concat(u)
+        }
+        return e
+    }()
+    var Co = "indexFile",
         Ao = "siteName",
         Lo = "logo",
         Eo = "noindex",
@@ -18800,29 +18652,29 @@ require.r = module => {
             bottom: t + n
         }
     }
-        , Jo = function (e) {
-        e.style.margin = "0",
-            e.style.padding = "0",
-            e.style.border = "0",
-            e.style.width = "100%",
-            e.style.height = "100%",
-            e.style.overflow = "hidden"
+        , Jo = function (el) {
+        el.style.margin = "0"
+        el.style.padding = "0"
+        el.style.border = "0"
+        el.style.width = "100%"
+        el.style.height = "100%"
+        el.style.overflow = "hidden"
     };
 
-    function Qo(e) {
-        return void 0 === e && (e = ""),
-            {
-                type: e,
-                links: {}
-            }
+    function Qo(type) {
+        void 0 === type && (type = "")
+        return {
+            type: type,
+            links: {}
+        }
     }
 
     function es(e) {
         if (!e)
             return Qo();
         var t = Qo(e.type);
-        return e.color && (t.color = e.color),
-            t
+        e.color && (t.color = e.color)
+        return t
     }
 
     var ts = {
@@ -18845,31 +18697,31 @@ require.r = module => {
         , is = function () {
         function e(e, t, n) {
             var r = this;
-            this.x = null,
-                this.y = null,
-                this.fx = null,
-                this.fy = null,
-                this.forward = {},
-                this.reverse = {},
-                this.weight = 0,
-                this.color = null,
-                this.rendered = !1,
-                this.fadeAlpha = 0,
-                this.moveText = 0,
-                this.fontDirty = !1,
-                this.onClick = function (e) {
-                    var t = e.nativeEvent;
-                    if (2 === e.button || t.instanceOf(MouseEvent) && ur(t)) {
-                        var n = r.renderer;
-                        n.onNodeRightClick && n.onNodeRightClick(e.nativeEvent, r.id, r.type)
-                    }
-                },
-                this.renderer = e,
-                this.id = t,
-                this.type = n
+            this.x = null
+            this.y = null
+            this.fx = null
+            this.fy = null
+            this.forward = {}
+            this.reverse = {}
+            this.weight = 0
+            this.color = null
+            this.rendered = !1
+            this.fadeAlpha = 0
+            this.moveText = 0
+            this.fontDirty = !1
+            this.onClick = function (e) {
+                var t = e.nativeEvent;
+                if (2 === e.button || t.instanceOf(MouseEvent) && ur(t)) {
+                    var n = r.renderer;
+                    n.onNodeRightClick && n.onNodeRightClick(e.nativeEvent, r.id, r.type)
+                }
+            }
+            this.renderer = e
+            this.id = t
+            this.type = n
         }
 
-        return e.prototype.initGraphics = function () {
+        e.prototype.initGraphics = function () {
             var e = this;
             if (this.rendered)
                 return !1;
@@ -18909,142 +18761,142 @@ require.r = module => {
                 n.hanger.addChild(a),
                 this.fadeAlpha = 0,
                 !0
-        },
-            e.prototype.clearGraphics = function () {
-                if (this.rendered) {
-                    this.rendered = !1;
-                    var e = this
-                        , t = e.circle
-                        , n = e.highlight
-                        , r = e.text;
-                    t && (this.circle = null,
-                    t.parent && t.parent.removeChild(t),
-                        t.destroy()),
-                    n && (this.highlight = null,
-                    n.parent && n.parent.removeChild(n),
-                        n.destroy()),
-                    r && (this.text = null,
-                    r.parent && r.parent.removeChild(r),
-                        r.destroy())
-                }
-            },
-            e.prototype.getTextStyle = function () {
-                var e = this.renderer
-                    , t = this.getSize();
-                return new PIXI.TextStyle({
-                    fontSize: 14 + t / 4,
-                    fill: e.colors.text.rgb,
-                    fontFamily: 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Microsoft YaHei Light", sans-serif',
-                    wordWrap: !0,
-                    wordWrapWidth: 300,
-                    align: "center"
-                })
-            },
-            e.prototype.render = function () {
-                if (this.rendered) {
-                    var e = this
-                        , t = e.renderer
-                        , n = e.x
-                        , r = e.y
-                        , i = e.circle
-                        , a = e.highlight
-                        , o = e.text
-                        , s = e.fadeAlpha
-                        , l = e.moveText
-                        , c = this.getSize()
-                        , h = this.getFillColor()
-                        , u = t.colors.text
-                        , f = t.getHighlightNode()
-                        , p = f === this
-                        , d = t.nodeScale
-                        , m = o.visible
-                        , v = Wo;
-                    (!f || p || this.forward.hasOwnProperty(f.id) || this.reverse.hasOwnProperty(f.id)) && (v = 1);
-                    var g = (s = this.fadeAlpha = Go(s, v)) * h.a
-                        , M = t.textAlpha;
-                    M *= s,
-                    p && (M = 1),
-                        M *= u.a;
-                    var y = p ? 15 : 0;
-                    l = this.moveText = m ? Go(l, y) : y;
-                    var b = M > .001
-                        , w = t.viewport
-                        , k = p || !Yo(w, Xo(n, r, c * d + 1));
-                    if (b && (b = p || !Yo(w, {
-                        left: n - 300,
-                        right: n + 300,
-                        top: r,
-                        bottom: r + 200
-                    })),
-                        i.tint = Ko(i.tint, h.rgb),
-                        i.visible = k,
-                    k && (i.x = n,
-                        i.y = r,
-                        i.scale.x = i.scale.y = c / 100 * d,
-                        i.alpha = g),
-                        o.visible = b,
-                    b && (o.x = n,
-                        o.y = r + (c + 5) * d + l / t.scale,
-                        o.scale.x = o.scale.y = d,
-                    p && t.scale < 1 && (o.scale.x = o.scale.y = 1 / t.scale),
-                        o.alpha = M),
-                        p) {
-                        a || ((a = this.highlight = new PIXI.Graphics).eventMode = "none",
-                            a.zIndex = 1,
-                            t.hanger.addChild(a)),
-                            a.x = n,
-                            a.y = r,
-                            a.scale.x = a.scale.y = d,
-                            a.clear();
-                        var x = Math.max(1, 1 / t.scale / d)
-                            , C = t.colors.circle;
-                        a.alpha = C.a,
-                            a.lineStyle(x, C.rgb, 1),
-                            a.drawCircle(0, 0, c + x / 2)
-                    } else
-                        a && (a.parent.removeChild(a),
-                            a.destroy(),
-                            this.highlight = null);
-                    this.fontDirty && (this.fontDirty = !1,
-                        o.style = this.getTextStyle())
-                }
-            },
-            e.prototype.getFillColor = function () {
+        }
+        e.prototype.clearGraphics = function () {
+            if (this.rendered) {
+                this.rendered = !1;
+                var e = this
+                    , t = e.circle
+                    , n = e.highlight
+                    , r = e.text;
+                t && (this.circle = null,
+                t.parent && t.parent.removeChild(t),
+                    t.destroy()),
+                n && (this.highlight = null,
+                n.parent && n.parent.removeChild(n),
+                    n.destroy()),
+                r && (this.text = null,
+                r.parent && r.parent.removeChild(r),
+                    r.destroy())
+            }
+        }
+        e.prototype.getTextStyle = function () {
+            var e = this.renderer
+                , t = this.getSize();
+            return new PIXI.TextStyle({
+                fontSize: 14 + t / 4,
+                fill: e.colors.text.rgb,
+                fontFamily: 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Microsoft YaHei Light", sans-serif',
+                wordWrap: !0,
+                wordWrapWidth: 300,
+                align: "center"
+            })
+        }
+        e.prototype.render = function () {
+            if (this.rendered) {
                 var e = this
                     , t = e.renderer
-                    , n = e.type
-                    , r = e.color;
-                if (t.getHighlightNode() === this)
-                    return t.colors.fillHighlight;
-                if ("focused" === n) {
-                    var i = t.colors.fillFocused;
-                    if (i.a > 0)
-                        return i
-                } else {
-                    if (r)
-                        return r;
-                    if ("tag" === n)
-                        return t.colors.fillTag;
-                    if ("unresolved" === n)
-                        return t.colors.fillUnresolved;
-                    if ("attachment" === n)
-                        return t.colors.fillAttachment
-                }
-                return t.colors.fill
-            },
-            e.prototype.getSize = function () {
-                return this.renderer.fNodeSizeMult * Math.max(8, Math.min(3 * Math.sqrt(this.weight + 1), 30))
-            },
-            e.prototype.getDisplayText = function () {
-                var e, t = this.id;
-                return e = "md",
-                bo(t) === e && (t = Mo(t)),
-                    t
-            },
-            e.prototype.getRelated = function () {
-                return Object.keys(this.forward).concat(Object.keys(this.reverse))
-            },
-            e
+                    , n = e.x
+                    , r = e.y
+                    , i = e.circle
+                    , a = e.highlight
+                    , o = e.text
+                    , s = e.fadeAlpha
+                    , l = e.moveText
+                    , c = this.getSize()
+                    , h = this.getFillColor()
+                    , u = t.colors.text
+                    , f = t.getHighlightNode()
+                    , p = f === this
+                    , d = t.nodeScale
+                    , m = o.visible
+                    , v = Wo;
+                (!f || p || this.forward.hasOwnProperty(f.id) || this.reverse.hasOwnProperty(f.id)) && (v = 1);
+                var g = (s = this.fadeAlpha = Go(s, v)) * h.a
+                    , M = t.textAlpha;
+                M *= s,
+                p && (M = 1),
+                    M *= u.a;
+                var y = p ? 15 : 0;
+                l = this.moveText = m ? Go(l, y) : y;
+                var b = M > .001
+                    , w = t.viewport
+                    , k = p || !Yo(w, Xo(n, r, c * d + 1));
+                if (b && (b = p || !Yo(w, {
+                    left: n - 300,
+                    right: n + 300,
+                    top: r,
+                    bottom: r + 200
+                })),
+                    i.tint = Ko(i.tint, h.rgb),
+                    i.visible = k,
+                k && (i.x = n,
+                    i.y = r,
+                    i.scale.x = i.scale.y = c / 100 * d,
+                    i.alpha = g),
+                    o.visible = b,
+                b && (o.x = n,
+                    o.y = r + (c + 5) * d + l / t.scale,
+                    o.scale.x = o.scale.y = d,
+                p && t.scale < 1 && (o.scale.x = o.scale.y = 1 / t.scale),
+                    o.alpha = M),
+                    p) {
+                    a || ((a = this.highlight = new PIXI.Graphics).eventMode = "none",
+                        a.zIndex = 1,
+                        t.hanger.addChild(a)),
+                        a.x = n,
+                        a.y = r,
+                        a.scale.x = a.scale.y = d,
+                        a.clear();
+                    var x = Math.max(1, 1 / t.scale / d)
+                        , C = t.colors.circle;
+                    a.alpha = C.a,
+                        a.lineStyle(x, C.rgb, 1),
+                        a.drawCircle(0, 0, c + x / 2)
+                } else
+                    a && (a.parent.removeChild(a),
+                        a.destroy(),
+                        this.highlight = null);
+                this.fontDirty && (this.fontDirty = !1,
+                    o.style = this.getTextStyle())
+            }
+        }
+        e.prototype.getFillColor = function () {
+            var e = this
+                , t = e.renderer
+                , n = e.type
+                , r = e.color;
+            if (t.getHighlightNode() === this)
+                return t.colors.fillHighlight;
+            if ("focused" === n) {
+                var i = t.colors.fillFocused;
+                if (i.a > 0)
+                    return i
+            } else {
+                if (r)
+                    return r;
+                if ("tag" === n)
+                    return t.colors.fillTag;
+                if ("unresolved" === n)
+                    return t.colors.fillUnresolved;
+                if ("attachment" === n)
+                    return t.colors.fillAttachment
+            }
+            return t.colors.fill
+        }
+        e.prototype.getSize = function () {
+            return this.renderer.fNodeSizeMult * Math.max(8, Math.min(3 * Math.sqrt(this.weight + 1), 30))
+        }
+        e.prototype.getDisplayText = function () {
+            var e, t = this.id;
+            return e = "md",
+            bo(t) === e && (t = Mo(t)),
+                t
+        }
+        e.prototype.getRelated = function () {
+            return Object.keys(this.forward).concat(Object.keys(this.reverse))
+        }
+        return e
     }()
         , as = function () {
         function e(e, t, n) {
@@ -20039,27 +19891,27 @@ require.r = module => {
 
     var gs = 0;
 
-    function Ms(e, t, n) {
-        if (t) {
-            var r = (n = n || {}).placement
+    function Ms(el, tooltip, options) {
+        if (tooltip) {
+            var r = (options = options || {}).placement
                 , i = void 0 === r ? "bottom" : r
-                , a = n.classes
+                , a = options.classes
                 , o = void 0 === a ? [] : a
-                , s = n.gap
+                , s = options.gap
                 , l = void 0 === s ? 8 : s
-                , c = n.horizontalParent
-                , h = n.delay
+                , c = options.horizontalParent
+                , h = options.delay
                 , u = void 0 === h ? 0 : h;
             if (u > 0 && (ls || Date.now() > gs + 100))
                 return us(),
-                    n.delay = 0,
+                    options.delay = 0,
                     void (hs = window.setTimeout((function () {
-                            return Ms(e, t, n)
+                            return Ms(el, tooltip, options)
                         }
                     ), u));
-            if (e.isShown()) {
-                var f = e.doc
-                    , p = e.getBoundingClientRect()
+            if (el.isShown()) {
+                var f = el.doc
+                    , p = el.getBoundingClientRect()
                     , d = p.top
                     , m = p.left
                     , v = p.width
@@ -20069,10 +19921,10 @@ require.r = module => {
                     m = M.left,
                         v = M.width
                 }
-                ls && cs === e ? ls.setText(t) : (ys(),
+                ls && cs === el ? ls.setText(tooltip) : (ys(),
                     ls = createDiv({
                         cls: "tooltip",
-                        text: t
+                        text: tooltip
                     }));
                 var y = ls.createDiv("tooltip-arrow")
                     , b = 0
@@ -20116,7 +19968,7 @@ require.r = module => {
                     ls.style.left = w + "px",
                     ls.style.width = k.width + "px",
                     ls.style.height = k.height + "px",
-                    cs = e
+                    cs = el
             }
         }
     }
@@ -20129,20 +19981,20 @@ require.r = module => {
             cs = null)
     }
 
-    function bs(e, t) {
-        var n = t || {}
+    function bs(el, options) {
+        var n = options || {}
             , r = n.placement
             , i = n.classes
             , a = n.delay;
-        r && "bottom" !== r && e.setAttribute("data-tooltip-position", r),
-        i && e.setAttribute("data-tooltip-classes", i.join(" ")),
-        a && e.setAttribute("data-tooltip-delay", String(a))
+        r && "bottom" !== r && el.setAttribute("data-tooltip-position", r),
+        i && el.setAttribute("data-tooltip-classes", i.join(" ")),
+        a && el.setAttribute("data-tooltip-delay", String(a))
     }
 
-    function ws(e, t, n) {
-        e.setAttribute("aria-label", t),
-            bs(e, n),
-        cs === e && Ms(e, t, n)
+    function setTooltip(el, tooltip, options) {
+        el.setAttribute("aria-label", tooltip)
+        bs(el, options)
+        cs === el && Ms(el, tooltip, options)
     }
 
     var ks = loadScriptAsync("/lib/pixi.min.js?7.2.4")
@@ -20169,14 +20021,14 @@ require.r = module => {
             var a = i.createDiv("graph-icon graph-expand");
             a.setAttr("role", "button"),
                 wi(a, "lucide-arrow-up-right"),
-                ws(a, "Expand", {
+                setTooltip(a, "Expand", {
                     placement: "top"
                 }),
                 a.addEventListener("click", this.onExpand.bind(this));
             var o = i.createDiv("graph-icon graph-global");
             o.setAttr("role", "button"),
                 wi(o, "lucide-git-fork"),
-                ws(o, "Global Graph", {
+                setTooltip(o, "Global Graph", {
                     placement: "top"
                 }),
                 o.addEventListener("click", this.onGlobalGraph.bind(this));
@@ -20191,7 +20043,7 @@ require.r = module => {
                 e.on("navigated", this.onNavigated.bind(this))
         }
 
-        return e.prototype.updateOptions = function () {
+        e.prototype.updateOptions = function () {
             var e, t, n = this, r = this.publish.site.getConfig(Vo);
             Hr && (r = !1),
                 this.publish.containerEl.toggleClass("has-graph", r),
@@ -20232,171 +20084,171 @@ require.r = module => {
                     ))
                 },
                 e.isShown() ? t() : e.onNodeInserted(t, !0))
-        },
-            e.prototype.onNodeClick = function (e, t, n) {
-                this.onExitExpand(),
-                    this.publish.navigate(t, "", e instanceof MouseEvent || e instanceof PointerEvent ? e : null)
-            },
-            e.prototype.onResize = function () {
-                this.renderer && this.renderer.onResize()
-            },
-            e.prototype.onExpand = function () {
-                if (!this.expanded) {
-                    this.expanded = !0;
-                    var e = this
-                        , t = e.containerEl
-                        , n = e.renderer
-                        , r = e.modalEl
-                        , i = e.modalContainerEl;
-                    document.body.appendChild(r),
-                        i.appendChild(t),
-                    n && (n.onResize(),
-                        n.zoomTo(2 * n.scale))
-                }
-            },
-            e.prototype.onExitExpand = function () {
-                if (this.expanded) {
-                    this.expanded = !1;
-                    var e = this
-                        , t = e.outerEl
-                        , n = e.modalEl
-                        , r = e.containerEl
-                        , i = e.renderer
-                        , a = e.global;
-                    n.detach(),
-                        t.insertBefore(r, t.firstChild),
-                    i && (i.onResize(),
-                    a || i.zoomTo(i.scale / 2)),
-                        this.global = !1,
-                    a && this.onNavigated()
-                }
-            },
-            e.prototype.onGlobalGraph = function () {
-                this.onExpand(),
-                    this.global = !0;
-                var e = this.renderer;
-                e && e.zoomTo(e.scale),
-                    this.onNavigated()
-            },
-            e.prototype.onNavigated = function () {
+        }
+        e.prototype.onNodeClick = function (e, t, n) {
+            this.onExitExpand(),
+                this.publish.navigate(t, "", e instanceof MouseEvent || e instanceof PointerEvent ? e : null)
+        }
+        e.prototype.onResize = function () {
+            this.renderer && this.renderer.onResize()
+        }
+        e.prototype.onExpand = function () {
+            if (!this.expanded) {
+                this.expanded = !0;
                 var e = this
-                    , t = e.publish
+                    , t = e.containerEl
                     , n = e.renderer
-                    , r = e.currentFilepath;
-                if (n) {
-                    var i = t.site;
-                    if (i.getConfig(Vo)) {
-                        var a = t.render.currentFilepath;
-                        if (r !== a && (n.resetPan(),
-                            r = this.currentFilepath = a),
-                            n.highlightNode = null,
-                            r) {
-                            var o = {
-                                showAttachments: !1,
-                                hideUnresolved: !0,
-                                showTags: !1,
-                                showOrphans: !0,
-                                localFile: r,
-                                localJumps: 1,
-                                localInterlinks: !0,
-                                localForelinks: !0,
-                                localBacklinks: !0
-                            }
-                                , s = function (e, t) {
-                                var n = t.showAttachments
-                                    , r = t.hideUnresolved
-                                    , i = t.showTags
-                                    , a = {}
-                                    , o = function (t) {
-                                    if (e.cache.hasOwnProperty(t)) {
-                                        if (!n && "md" !== bo(t))
-                                            return "continue";
-                                        var o = (a[t] = Qo()).links
-                                            , s = e.cache[t];
-                                        if (ao(s, (function (i) {
-                                                var s = ro(i.link)
-                                                    , l = e.getLinktextDest(s, t);
-                                                if (l) {
-                                                    if (!n && "md" !== bo(l))
-                                                        return;
-                                                    o[l] = !0
-                                                } else
-                                                    r && (o[s] = !0,
-                                                    a.hasOwnProperty(s) || (a[s] = Qo("unresolved")))
+                    , r = e.modalEl
+                    , i = e.modalContainerEl;
+                document.body.appendChild(r),
+                    i.appendChild(t),
+                n && (n.onResize(),
+                    n.zoomTo(2 * n.scale))
+            }
+        }
+        e.prototype.onExitExpand = function () {
+            if (this.expanded) {
+                this.expanded = !1;
+                var e = this
+                    , t = e.outerEl
+                    , n = e.modalEl
+                    , r = e.containerEl
+                    , i = e.renderer
+                    , a = e.global;
+                n.detach(),
+                    t.insertBefore(r, t.firstChild),
+                i && (i.onResize(),
+                a || i.zoomTo(i.scale / 2)),
+                    this.global = !1,
+                a && this.onNavigated()
+            }
+        }
+        e.prototype.onGlobalGraph = function () {
+            this.onExpand(),
+                this.global = !0;
+            var e = this.renderer;
+            e && e.zoomTo(e.scale),
+                this.onNavigated()
+        }
+        e.prototype.onNavigated = function () {
+            var e = this
+                , t = e.publish
+                , n = e.renderer
+                , r = e.currentFilepath;
+            if (n) {
+                var i = t.site;
+                if (i.getConfig(Vo)) {
+                    var a = t.render.currentFilepath;
+                    if (r !== a && (n.resetPan(),
+                        r = this.currentFilepath = a),
+                        n.highlightNode = null,
+                        r) {
+                        var o = {
+                            showAttachments: !1,
+                            hideUnresolved: !0,
+                            showTags: !1,
+                            showOrphans: !0,
+                            localFile: r,
+                            localJumps: 1,
+                            localInterlinks: !0,
+                            localForelinks: !0,
+                            localBacklinks: !0
+                        }
+                            , s = function (e, t) {
+                            var n = t.showAttachments
+                                , r = t.hideUnresolved
+                                , i = t.showTags
+                                , a = {}
+                                , o = function (t) {
+                                if (e.cache.hasOwnProperty(t)) {
+                                    if (!n && "md" !== bo(t))
+                                        return "continue";
+                                    var o = (a[t] = Qo()).links
+                                        , s = e.cache[t];
+                                    if (ao(s, (function (i) {
+                                            var s = getLinkpath(i.link)
+                                                , l = e.getLinktextDest(s, t);
+                                            if (l) {
+                                                if (!n && "md" !== bo(l))
+                                                    return;
+                                                o[l] = !0
+                                            } else
+                                                r && (o[s] = !0,
+                                                a.hasOwnProperty(s) || (a[s] = Qo("unresolved")))
+                                        }
+                                    )),
+                                        i) {
+                                        var l = getAllTags(s);
+                                        if (l && l.length > 0)
+                                            for (var c = 0, h = l; c < h.length; c++) {
+                                                var u = h[c];
+                                                o[u] = !0,
+                                                a.hasOwnProperty(u) || (a[u] = Qo("tag"))
                                             }
-                                        )),
-                                            i) {
-                                            var l = so(s);
-                                            if (l && l.length > 0)
-                                                for (var c = 0, h = l; c < h.length; c++) {
-                                                    var u = h[c];
-                                                    o[u] = !0,
-                                                    a.hasOwnProperty(u) || (a[u] = Qo("tag"))
+                                    }
+                                }
+                            };
+                            for (var s in e.cache)
+                                o(s);
+                            return {
+                                nodes: a
+                            }
+                        }(i.cache, o);
+                        this.global || (s = function (e, t) {
+                            var n = e.nodes
+                                , r = {}
+                                , i = {}
+                                , a = t.localFile
+                                , o = t.localJumps
+                                , s = t.localInterlinks
+                                , l = t.localForelinks
+                                , c = t.localBacklinks;
+                            if (i[a] = 30,
+                                !n.hasOwnProperty(a))
+                                return r[a] = Qo(),
+                                    {
+                                        nodes: r,
+                                        weights: i
+                                    };
+                            r[a] = Qo(n[a].type);
+                            for (var h = function (e) {
+                                var t = {};
+                                for (var a in n)
+                                    if (n.hasOwnProperty(a)) {
+                                        var o = n[a];
+                                        if ("tag" !== o.type) {
+                                            var s = o.links;
+                                            for (var h in s)
+                                                if (s.hasOwnProperty(h)) {
+                                                    var u = r[a];
+                                                    l && r.hasOwnProperty(a) && !r.hasOwnProperty(h) && !ts.hasOwnProperty(u.type) ? (t[h] = t[h] || es(n[h]),
+                                                        u.links[h] = !0) : c && r.hasOwnProperty(h) && !r.hasOwnProperty(a) && !ts.hasOwnProperty(r[h].type) && (t[a] = t[a] || es(n[a]),
+                                                        t[a].links[h] = !0)
                                                 }
                                         }
                                     }
-                                };
-                                for (var s in e.cache)
-                                    o(s);
-                                return {
-                                    nodes: a
-                                }
-                            }(i.cache, o);
-                            this.global || (s = function (e, t) {
-                                var n = e.nodes
-                                    , r = {}
-                                    , i = {}
-                                    , a = t.localFile
-                                    , o = t.localJumps
-                                    , s = t.localInterlinks
-                                    , l = t.localForelinks
-                                    , c = t.localBacklinks;
-                                if (i[a] = 30,
-                                    !n.hasOwnProperty(a))
-                                    return r[a] = Qo(),
-                                        {
-                                            nodes: r,
-                                            weights: i
-                                        };
-                                r[a] = Qo(n[a].type);
-                                for (var h = function (e) {
-                                    var t = {};
-                                    for (var a in n)
-                                        if (n.hasOwnProperty(a)) {
-                                            var o = n[a];
-                                            if ("tag" !== o.type) {
-                                                var s = o.links;
-                                                for (var h in s)
-                                                    if (s.hasOwnProperty(h)) {
-                                                        var u = r[a];
-                                                        l && r.hasOwnProperty(a) && !r.hasOwnProperty(h) && !ts.hasOwnProperty(u.type) ? (t[h] = t[h] || es(n[h]),
-                                                            u.links[h] = !0) : c && r.hasOwnProperty(h) && !r.hasOwnProperty(a) && !ts.hasOwnProperty(r[h].type) && (t[a] = t[a] || es(n[a]),
-                                                            t[a].links[h] = !0)
-                                                    }
-                                            }
-                                        }
-                                    for (var f in t)
-                                        t.hasOwnProperty(f) && (r[f] = t[f],
-                                            i[f] = e)
-                                }, u = 30 / o, f = 0; f < o; f++)
-                                    h(30 - u * (f + 1));
-                                if (s)
-                                    for (var p in r)
-                                        r.hasOwnProperty(p) && n.hasOwnProperty(p) && (r[p] = n[p]);
-                                return {
-                                    nodes: r,
-                                    weights: i
-                                }
-                            }(s, o)),
-                                n.setData(s)
-                        } else
-                            n.setData({
-                                nodes: {}
-                            })
-                    }
+                                for (var f in t)
+                                    t.hasOwnProperty(f) && (r[f] = t[f],
+                                        i[f] = e)
+                            }, u = 30 / o, f = 0; f < o; f++)
+                                h(30 - u * (f + 1));
+                            if (s)
+                                for (var p in r)
+                                    r.hasOwnProperty(p) && n.hasOwnProperty(p) && (r[p] = n[p]);
+                            return {
+                                nodes: r,
+                                weights: i
+                            }
+                        }(s, o)),
+                            n.setData(s)
+                    } else
+                        n.setData({
+                            nodes: {}
+                        })
                 }
-            },
-            e
+            }
+        }
+        return e
     }();
     var Cs = new Intl.Collator(void 0, {
         usage: "sort",
@@ -20444,109 +20296,107 @@ require.r = module => {
     var Ss = function (e) {
         function t() {
             var t = null !== e && e.apply(this, arguments) || this;
-            return t.children = null,
-                t
+            t.children = null
+            return t
         }
 
-        return extend(t, e),
-            t.prototype.render = function () {
-                var e = this.childrenEl
-                    , t = this.children;
-                if (null !== t) {
-                    e.setChildrenInPlace(t.map((function (e) {
-                            return e.el
-                        }
-                    )));
-                    for (var n = 0, r = t; n < r.length; n++) {
-                        r[n].render()
+        extend(t, e)
+        t.prototype.render = function () {
+            var e = this.childrenEl
+                , t = this.children;
+            if (null !== t) {
+                e.setChildrenInPlace(t.map((function (e) {
+                        return e.el
                     }
-                } else
-                    e.empty()
-            },
-            t
+                )));
+                for (var n = 0, r = t; n < r.length; n++) {
+                    r[n].render()
+                }
+            } else
+                e.empty()
+        }
+        return t
     }(function () {
-        function e(e) {
-            void 0 === e && (e = "div");
+        function e(tagName) {
+            void 0 === tagName && (tagName = "div");
             var t = this;
-            this.collapsible = !0,
-                this.collapsed = !1;
-            var n = this.el = createDiv("tree-item")
-                , r = this.selfEl = this.el.createEl(e);
-            r.addClass("tree-item-self"),
-                r.addEventListener("click", (function (e) {
-                        0 !== e.button || e.defaultPrevented || t.onSelfClick(e)
-                    }
-                )),
-                r.addEventListener("auxclick", (function (e) {
-                        1 !== e.button || e.defaultPrevented || t.onSelfClick(e)
-                    }
-                )),
-                this.coverEl = this.selfEl;
-            var i = this.collapseEl = r.createDiv({
+            this.collapsible = true
+            this.collapsed = false
+            let el = this.el = createDiv("tree-item")
+            let selfEl = this.selfEl = this.el.createEl(tagName);
+            selfEl.addClass("tree-item-self")
+            selfEl.addEventListener("click", (function (e) {
+                0 !== e.button || e.defaultPrevented || t.onSelfClick(e)
+            }))
+            selfEl.addEventListener("auxclick", (function (e) {
+                1 !== e.button || e.defaultPrevented || t.onSelfClick(e)
+            }))
+            this.coverEl = this.selfEl;
+            var i = this.collapseEl = selfEl.createDiv({
                 cls: "tree-item-icon collapse-icon"
             });
-            wi(i, "right-triangle"),
-                i.addEventListener("click", this.onCollapseClick.bind(this)),
-                this.innerEl = r.createDiv("tree-item-inner"),
-                this.childrenEl = n.createDiv("tree-item-children")
+            wi(i, "right-triangle")
+            i.addEventListener("click", this.onCollapseClick.bind(this))
+            this.innerEl = selfEl.createDiv("tree-item-inner")
+            this.childrenEl = el.createDiv("tree-item-children")
         }
 
-        return e.prototype.onSelfClick = function (e) {
-        },
-            e.prototype.onCollapseClick = function (e) {
-                0 === e.button && (e.preventDefault(),
-                    this.toggleCollapsed(!0))
-            },
-            e.prototype.toggleCollapsed = function (e) {
-                if (this.collapsible)
-                    return this.setCollapsed(!this.collapsed, e)
-            },
-            e.prototype.setCollapsed = function (e, t) {
-                if (this.collapsed !== e)
-                    return this.collapsed = e,
-                        this.updateCollapsed(t)
-            },
-            e.prototype.setCollapsible = function (e) {
-                if (this.collapsible !== e) {
-                    var t = this.selfEl
-                        , n = this.collapseEl;
-                    this.collapsible = e,
-                        e ? t.prepend(n) : n.detach(),
-                        t.toggleClass("mod-collapsible", e)
-                }
-            },
-            e.prototype.setClickable = function (e) {
-                this.selfEl.toggleClass("is-clickable", e)
-            },
-            e.prototype.updateCollapsed = function (e) {
-                return a(this, void 0, Promise, (function () {
-                        var t, n, r, i;
-                        return o(this, (function (a) {
-                                switch (a.label) {
-                                    case 0:
-                                        return n = (t = this).el,
-                                            r = t.childrenEl,
-                                            i = t.collapsed,
-                                            Un(n, i),
-                                            [4, nr(r, n, i, e)];
-                                    case 1:
-                                        return a.sent(),
-                                            [2]
-                                }
+        e.prototype.onSelfClick = function (e) {
+        }
+        e.prototype.onCollapseClick = function (e) {
+            0 === e.button && (e.preventDefault(),
+                this.toggleCollapsed(!0))
+        }
+        e.prototype.toggleCollapsed = function (e) {
+            if (this.collapsible)
+                return this.setCollapsed(!this.collapsed, e)
+        }
+        e.prototype.setCollapsed = function (e, t) {
+            if (this.collapsed !== e)
+                return this.collapsed = e,
+                    this.updateCollapsed(t)
+        }
+        e.prototype.setCollapsible = function (e) {
+            if (this.collapsible !== e) {
+                var t = this.selfEl
+                    , n = this.collapseEl;
+                this.collapsible = e,
+                    e ? t.prepend(n) : n.detach(),
+                    t.toggleClass("mod-collapsible", e)
+            }
+        }
+        e.prototype.setClickable = function (e) {
+            this.selfEl.toggleClass("is-clickable", e)
+        }
+        e.prototype.updateCollapsed = function (e) {
+            return a(this, void 0, Promise, (function () {
+                    var t, n, r, i;
+                    return o(this, (function (a) {
+                            switch (a.label) {
+                                case 0:
+                                    return n = (t = this).el,
+                                        r = t.childrenEl,
+                                        i = t.collapsed,
+                                        Un(n, i),
+                                        [4, nr(r, n, i, e)];
+                                case 1:
+                                    return a.sent(),
+                                        [2]
                             }
-                        ))
-                    }
-                ))
-            },
-            e
+                        }
+                    ))
+                }
+            ))
+        }
+        return e
     }())
-        , Hs = function () {
-        function e(e) {
-            this.children = [],
-                this.childrenEl = e
+    const Hs = function () {
+        function e(childrenEl) {
+            this.children = []
+            this.childrenEl = childrenEl
         }
 
-        return e.prototype.render = function () {
+        e.prototype.render = function () {
             var e = this.childrenEl
                 , t = this.children;
             e.setChildrenInPlace(t.map((function (e) {
@@ -20556,16 +20406,16 @@ require.r = module => {
             for (var n = 0, r = t; n < r.length; n++) {
                 r[n].render()
             }
-        },
-            e.prototype.addRoot = function (e) {
-                this.children.push(e)
-            },
-            e.prototype.clear = function () {
-                this.children = [],
-                    this.render()
-            },
-            e
-    }();
+        }
+        e.prototype.addRoot = function (e) {
+            this.children.push(e)
+        }
+        e.prototype.clear = function () {
+            this.children = [],
+                this.render()
+        }
+        return e
+    }()
 
     function Ts(e, t, n) {
         var r = {
@@ -20615,387 +20465,396 @@ require.r = module => {
             r
     }
 
-    for (var Vs = function () {
-        function e(e, t) {
-            this.initialized = !1,
+    var Vs = function () {
+            function e(e, t) {
+                this.initialized = !1,
+                    this.publish = e;
+                var n = this.outerEl = t.createDiv("nav-view-outer");
+                this.containerEl = n.createDiv("nav-view"),
+                    this.treeView = new Is(this.containerEl, this.publish, this.onItemClick.bind(this)),
+                    e.on("options-updated", this.updateOptions.bind(this)),
+                    e.on("navigated", this.onNavigated.bind(this))
+            }
+
+            return e.prototype.getOuterEl = function () {
+                return this.outerEl
+            },
+                e.prototype.updateOptions = function () {
+                    var e = this
+                        , t = this.publish.site.getConfig(To);
+                    if (Hr && (t = !1),
+                        this.containerEl.toggle(t),
+                        this.publish.containerEl.toggleClass("has-navigation", t),
+                        t) {
+                        this.init();
+                        try {
+                            window.matchMedia("(max-width: 750px)").addEventListener("change", (function () {
+                                    return e.init()
+                                }
+                            ))
+                        } catch (e) {
+                            console.error(e)
+                        }
+                    }
+                },
+                e.prototype.init = function (e) {
+                    if (void 0 === e && (e = !1),
+                        !this.initialized) {
+                        var t = this.publish.site;
+                        if (t.getConfig(To) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
+                            this.initialized = !0;
+                            for (var n = t.getConfig(Bo), r = new Set(t.getConfig(jo)), i = {}, a = 0; a < n.length; a++) {
+                                i[n[a]] = a
+                            }
+                            var o = Ts(Object.keys(t.cache.cache), i, r);
+                            this.treeView.renderTree(o),
+                                this.treeView.setActiveItem(this.publish.render.currentFilepath)
+                        }
+                    }
+                },
+                e.prototype.onNavigated = function () {
+                    this.treeView.setActiveItem(this.publish.render.currentFilepath)
+                },
+                e.prototype.onItemClick = function (e, t) {
+                    var n = this.publish;
+                    t.preventDefault(),
+                        n.containerEl.removeClass("is-left-column-open"),
+                        n.navigate(e.getItemPath(), "", t)
+                },
+                e
+        }(),
+        Os = function (e) {
+            function t(t, n, r) {
+                void 0 === r && (r = "div");
+                var i = e.call(this, r) || this;
+                i.owner = t,
+                    i.file = n;
+                var a = i
+                    , o = a.selfEl
+                    , s = a.innerEl
+                    , l = n.name;
+                return "file" === n.type && (l = Mo(l)),
+                    s.setText(l),
+                    o.setAttr("data-path", n.path),
+                    i
+            }
+
+            return extend(t, e),
+                t.prototype.setActive = function (e) {
+                    this.selfEl.toggleClass("mod-active", e)
+                },
+                t.prototype.getItemPath = function () {
+                    return this.file.path
+                },
+                t
+        }(Ss),
+        Ns = function (e) {
+            function t(t, n) {
+                var r = e.call(this, t, n, "a") || this;
+                return r.setCollapsible(!1),
+                    r
+            }
+
+            return extend(t, e),
+                t.prototype.onSelfClick = function (e) {
+                    e.defaultPrevented || this.owner.onItemClick(this, e)
+                },
+                t.prototype.render = function () {
+                    e.prototype.render.call(this);
+                    var t = this.owner.publish.site.getPublicHref(this.getItemPath());
+                    this.selfEl.setAttr("href", t),
+                        this.selfEl.addClass("is-clickable")
+                },
+                t
+        }(Os),
+        Ps = function (e) {
+            function t(t, n) {
+                var r = e.call(this, t, n) || this;
+                return r.children = [],
+                    r.setCollapsible("" !== n.name),
+                    r.setCollapsed(!0, !1),
+                    r
+            }
+
+            return extend(t, e),
+                t.prototype.onSelfClick = function (e) {
+                    e.defaultPrevented || this.toggleCollapsed(!0)
+                },
+                t.prototype.render = function () {
+                    e.prototype.render.call(this),
+                        this.selfEl.addClass("is-clickable")
+                },
+                t
+        }(Os),
+        Is = function (e) {
+            function t(t, n, r) {
+                var i = e.call(this, t) || this;
+                return i.activeItem = null,
+                    i.rootFolder = null,
+                    i.publish = n,
+                    i.onItemClick = r,
+                    i
+            }
+
+            return extend(t, e),
+                t.prototype.setActiveItem = function (e) {
+                    var t = this.activeItem;
+                    if (null == t || t.setActive(!1),
+                        e) {
+                        for (var n = [], r = e.split("/"), i = this.rootFolder, a = 0, o = r; a < o.length; a++) {
+                            var s = o[a];
+                            if (!(i instanceof Ps))
+                                return;
+                            for (var l = null, c = 0, h = i.children; c < h.length; c++) {
+                                var u = h[c];
+                                if (u.file.name === s) {
+                                    l = u;
+                                    break
+                                }
+                            }
+                            if (!l)
+                                return;
+                            n.push(l),
+                                i = l
+                        }
+                        for (var f = null, p = 0, d = n; p < d.length; p++) {
+                            var m = d[p];
+                            m instanceof Ps && m.collapsed && (f ? m.setCollapsed(!1, !1) : f = m),
+                                t = m
+                        }
+                        f && f.setCollapsed(!1, !0),
+                            this.activeItem = t,
+                        t && t.setActive(!0)
+                    }
+                },
+                t.prototype.renderTree = function (e) {
+                    var t = this.rootFolder = this.renderFolder(null, e);
+                    for (null === t && (t = new Ps(this, e)); 1 === t.children.length;) {
+                        var n = t.children[0];
+                        if (!(n instanceof Ps))
+                            break;
+                        t = n
+                    }
+                    t.setCollapsed(!1, !1),
+                        t.setCollapsible(!1),
+                        t.selfEl.addClass("mod-root"),
+                        this.addRoot(t),
+                        this.render()
+                },
+                t.prototype.renderFolder = function (e, t) {
+                    for (var n = new Ps(this, t), r = 0, i = t.children; r < i.length; r++) {
+                        var a = i[r];
+                        "file" === a.type ? this.renderFile(n, a) : "folder" === a.type && this.renderFolder(n, a)
+                    }
+                    return 0 === n.children.length ? null : (e && e.children.push(n),
+                        n)
+                },
+                t.prototype.renderFile = function (e, t) {
+                    if ("md" !== bo(t.path))
+                        return null;
+                    var n = new Ns(this, t);
+                    e.children.push(n)
+                },
+                t
+        }(Hs),
+        Ds = function (e) {
+            function t(t, n) {
+                var r = e.call(this) || this;
+                return r.owner = t,
+                    r.heading = n,
+                    r.innerEl.setText(function (e) {
+                        var t = jn(Dn(e.heading));
+                        return t || (t = e.heading),
+                            t
+                    }(n)),
+                    r
+            }
+
+            return extend(t, e),
+                t.prototype.onSelfClick = function (e) {
+                    if (!e.defaultPrevented) {
+                        var t = this.owner;
+                        t.onItemClick && t.onItemClick(this.heading)
+                    }
+                },
+                t.prototype.render = function () {
+                    e.prototype.render.call(this);
+                    var t = this.owner
+                        , n = this.children;
+                    this.setCollapsible(t.collapsible && n && n.length > 0),
+                        this.setClickable(!!t.onItemClick)
+                },
+                t.prototype.setActive = function (e) {
+                    this.selfEl.toggleClass("mod-active", e)
+                },
+                t
+        }(Ss),
+        qs = function (e) {
+            function t(t, n) {
+                var r = e.call(this, t) || this;
+                return r.collapsible = !0,
+                    r.highlighted = null,
+                    r.allItems = [],
+                    r.onItemClick = n,
+                    r
+            }
+
+            return extend(t, e),
+                t.prototype.renderOutline = function (e) {
+                    for (var t = [], n = this.allItems = [], r = 0, i = e; r < i.length; r++) {
+                        for (var a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;)
+                            t.pop(),
+                                l = t.last();
+                        t.push(s),
+                            l ? (l.children = l.children || [],
+                                l.children.push(s)) : this.addRoot(s),
+                            n.push(s)
+                    }
+                    this.highlighted = null,
+                        this.render()
+                },
+                t.prototype.highlightLine = function (e) {
+                    for (var t = this.highlighted, n = null, r = 0, i = this.allItems; r < i.length; r++) {
+                        var a = i[r];
+                        if (!(a.heading.position.start.line <= e))
+                            break;
+                        n = a
+                    }
+                    n !== t && (t && t.setActive(!1),
+                        this.highlighted = n,
+                    n && n.setActive(!0))
+                },
+                t
+        }(Hs),
+        zs = function () {
+            function e(e, t) {
                 this.publish = e;
-            var n = this.outerEl = t.createDiv("nav-view-outer");
-            this.containerEl = n.createDiv("nav-view"),
-                this.treeView = new Is(this.containerEl, this.publish, this.onItemClick.bind(this)),
-                e.on("options-updated", this.updateOptions.bind(this)),
-                e.on("navigated", this.onNavigated.bind(this))
-        }
-
-        return e.prototype.getOuterEl = function () {
-            return this.outerEl
-        },
-            e.prototype.updateOptions = function () {
-                var e = this
-                    , t = this.publish.site.getConfig(To);
-                if (Hr && (t = !1),
-                    this.containerEl.toggle(t),
-                    this.publish.containerEl.toggleClass("has-navigation", t),
-                    t) {
-                    this.init();
-                    try {
-                        window.matchMedia("(max-width: 750px)").addEventListener("change", (function () {
-                                return e.init()
+                var n = this.containerEl = t.createDiv("outline-view-outer");
+                n.createDiv("list-item published-section-header", (function (e) {
+                        e.createSpan("published-section-header-icon", (function (e) {
+                                wi(e, "lucide-list")
                             }
-                        ))
-                    } catch (e) {
-                        console.error(e)
+                        )),
+                            e.createSpan({
+                                text: "On this page"
+                            })
                     }
-                }
+                ));
+                var r = n.createDiv("outline-view");
+                (this.treeView = new qs(r, this.onItemClick.bind(this))).collapsible = !1,
+                    e.on("options-updated", this.updateOptions.bind(this)),
+                    e.on("navigated", this.onNavigated.bind(this))
+            }
+
+            return e.prototype.updateOptions = function () {
+                var e = this.publish.site.getConfig(Oo);
+                Hr && (e = !1),
+                    this.publish.containerEl.toggleClass("has-outline", e),
+                    this.containerEl.toggle(e),
+                e && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
             },
-            e.prototype.init = function (e) {
-                if (void 0 === e && (e = !1),
-                    !this.initialized) {
-                    var t = this.publish.site;
-                    if (t.getConfig(To) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
-                        this.initialized = !0;
-                        for (var n = t.getConfig(Bo), r = new Set(t.getConfig(jo)), i = {}, a = 0; a < n.length; a++) {
-                            i[n[a]] = a
-                        }
-                        var o = Ts(Object.keys(t.cache.cache), i, r);
-                        this.treeView.renderTree(o),
-                            this.treeView.setActiveItem(this.publish.render.currentFilepath)
+                e.prototype.onItemClick = function (e) {
+                    var t = this.publish;
+                    t.render.scrollToLoc(e.position.start);
+                    var n = t.site.getPublicHref(t.render.currentFilepath) + "#" + stripHeadingForLink(e.heading);
+                    history.replaceState(null, null, n)
+                },
+                e.prototype.onNavigated = function () {
+                    var e = this
+                        , t = e.publish
+                        , n = e.treeView
+                        , r = e.containerEl
+                        , i = t.site;
+                    if (i.getConfig(Oo) && (n.clear(),
+                        r.isShown())) {
+                        var a = t.render.currentFilepath
+                            , o = i.cache.getCache(a);
+                        o && o.headings && 0 !== o.headings.length ? (r.toggleVisibility(!0),
+                            n.renderOutline(o.headings),
+                            this.highlightLine(0)) : r.toggleVisibility(!1)
                     }
-                }
-            },
-            e.prototype.onNavigated = function () {
-                this.treeView.setActiveItem(this.publish.render.currentFilepath)
-            },
-            e.prototype.onItemClick = function (e, t) {
-                var n = this.publish;
-                t.preventDefault(),
-                    n.containerEl.removeClass("is-left-column-open"),
-                    n.navigate(e.getItemPath(), "", t)
-            },
-            e
-    }(), Os = function (e) {
-        function t(t, n, r) {
-            void 0 === r && (r = "div");
-            var i = e.call(this, r) || this;
-            i.owner = t,
-                i.file = n;
-            var a = i
-                , o = a.selfEl
-                , s = a.innerEl
-                , l = n.name;
-            return "file" === n.type && (l = Mo(l)),
-                s.setText(l),
-                o.setAttr("data-path", n.path),
-                i
+                },
+                e.prototype.highlightLine = function (e) {
+                    this.treeView.highlightLine(e)
+                },
+                e
+        }(),
+        Rs = {
+            3: "Cancel",
+            6: "Help",
+            8: "Backspace",
+            9: "Tab",
+            12: "Clear",
+            13: "Enter",
+            16: "Shift",
+            17: "Control",
+            18: "Alt",
+            19: "Pause",
+            20: "CapsLock",
+            27: "Escape",
+            28: "Convert",
+            29: "NonConvert",
+            30: "Accept",
+            31: "ModeChange",
+            32: " ",
+            33: "PageUp",
+            34: "PageDown",
+            35: "End",
+            36: "Home",
+            37: "ArrowLeft",
+            38: "ArrowUp",
+            39: "ArrowRight",
+            40: "ArrowDown",
+            41: "Select",
+            42: "Print",
+            43: "Execute",
+            44: "PrintScreen",
+            45: "Insert",
+            46: "Delete",
+            48: "0",
+            49: "1",
+            50: "2",
+            51: "3",
+            52: "4",
+            53: "5",
+            54: "6",
+            55: "7",
+            56: "8",
+            57: "9",
+            91: "OS",
+            93: "ContextMenu",
+            95: "Sleep",
+            106: "*",
+            107: "+",
+            109: "-",
+            110: ".",
+            111: "/",
+            144: "NumLock",
+            145: "ScrollLock",
+            181: "VolumeMute",
+            182: "VolumeDown",
+            183: "VolumeUp",
+            186: ";",
+            187: "=",
+            188: ",",
+            189: "-",
+            190: ".",
+            191: "/",
+            192: "`",
+            219: "[",
+            220: "\\",
+            221: "]",
+            222: "'",
+            224: "Meta",
+            225: "AltGraph",
+            246: "Attn",
+            247: "CrSel",
+            248: "ExSel",
+            249: "EraseEof",
+            250: "Play",
+            251: "ZoomOut"
         }
-
-        return extend(t, e),
-            t.prototype.setActive = function (e) {
-                this.selfEl.toggleClass("mod-active", e)
-            },
-            t.prototype.getItemPath = function () {
-                return this.file.path
-            },
-            t
-    }(Ss), Ns = function (e) {
-        function t(t, n) {
-            var r = e.call(this, t, n, "a") || this;
-            return r.setCollapsible(!1),
-                r
-        }
-
-        return extend(t, e),
-            t.prototype.onSelfClick = function (e) {
-                e.defaultPrevented || this.owner.onItemClick(this, e)
-            },
-            t.prototype.render = function () {
-                e.prototype.render.call(this);
-                var t = this.owner.publish.site.getPublicHref(this.getItemPath());
-                this.selfEl.setAttr("href", t),
-                    this.selfEl.addClass("is-clickable")
-            },
-            t
-    }(Os), Ps = function (e) {
-        function t(t, n) {
-            var r = e.call(this, t, n) || this;
-            return r.children = [],
-                r.setCollapsible("" !== n.name),
-                r.setCollapsed(!0, !1),
-                r
-        }
-
-        return extend(t, e),
-            t.prototype.onSelfClick = function (e) {
-                e.defaultPrevented || this.toggleCollapsed(!0)
-            },
-            t.prototype.render = function () {
-                e.prototype.render.call(this),
-                    this.selfEl.addClass("is-clickable")
-            },
-            t
-    }(Os), Is = function (e) {
-        function t(t, n, r) {
-            var i = e.call(this, t) || this;
-            return i.activeItem = null,
-                i.rootFolder = null,
-                i.publish = n,
-                i.onItemClick = r,
-                i
-        }
-
-        return extend(t, e),
-            t.prototype.setActiveItem = function (e) {
-                var t = this.activeItem;
-                if (null == t || t.setActive(!1),
-                    e) {
-                    for (var n = [], r = e.split("/"), i = this.rootFolder, a = 0, o = r; a < o.length; a++) {
-                        var s = o[a];
-                        if (!(i instanceof Ps))
-                            return;
-                        for (var l = null, c = 0, h = i.children; c < h.length; c++) {
-                            var u = h[c];
-                            if (u.file.name === s) {
-                                l = u;
-                                break
-                            }
-                        }
-                        if (!l)
-                            return;
-                        n.push(l),
-                            i = l
-                    }
-                    for (var f = null, p = 0, d = n; p < d.length; p++) {
-                        var m = d[p];
-                        m instanceof Ps && m.collapsed && (f ? m.setCollapsed(!1, !1) : f = m),
-                            t = m
-                    }
-                    f && f.setCollapsed(!1, !0),
-                        this.activeItem = t,
-                    t && t.setActive(!0)
-                }
-            },
-            t.prototype.renderTree = function (e) {
-                var t = this.rootFolder = this.renderFolder(null, e);
-                for (null === t && (t = new Ps(this, e)); 1 === t.children.length;) {
-                    var n = t.children[0];
-                    if (!(n instanceof Ps))
-                        break;
-                    t = n
-                }
-                t.setCollapsed(!1, !1),
-                    t.setCollapsible(!1),
-                    t.selfEl.addClass("mod-root"),
-                    this.addRoot(t),
-                    this.render()
-            },
-            t.prototype.renderFolder = function (e, t) {
-                for (var n = new Ps(this, t), r = 0, i = t.children; r < i.length; r++) {
-                    var a = i[r];
-                    "file" === a.type ? this.renderFile(n, a) : "folder" === a.type && this.renderFolder(n, a)
-                }
-                return 0 === n.children.length ? null : (e && e.children.push(n),
-                    n)
-            },
-            t.prototype.renderFile = function (e, t) {
-                if ("md" !== bo(t.path))
-                    return null;
-                var n = new Ns(this, t);
-                e.children.push(n)
-            },
-            t
-    }(Hs), Ds = function (e) {
-        function t(t, n) {
-            var r = e.call(this) || this;
-            return r.owner = t,
-                r.heading = n,
-                r.innerEl.setText(function (e) {
-                    var t = jn(Dn(e.heading));
-                    return t || (t = e.heading),
-                        t
-                }(n)),
-                r
-        }
-
-        return extend(t, e),
-            t.prototype.onSelfClick = function (e) {
-                if (!e.defaultPrevented) {
-                    var t = this.owner;
-                    t.onItemClick && t.onItemClick(this.heading)
-                }
-            },
-            t.prototype.render = function () {
-                e.prototype.render.call(this);
-                var t = this.owner
-                    , n = this.children;
-                this.setCollapsible(t.collapsible && n && n.length > 0),
-                    this.setClickable(!!t.onItemClick)
-            },
-            t.prototype.setActive = function (e) {
-                this.selfEl.toggleClass("mod-active", e)
-            },
-            t
-    }(Ss), qs = function (e) {
-        function t(t, n) {
-            var r = e.call(this, t) || this;
-            return r.collapsible = !0,
-                r.highlighted = null,
-                r.allItems = [],
-                r.onItemClick = n,
-                r
-        }
-
-        return extend(t, e),
-            t.prototype.renderOutline = function (e) {
-                for (var t = [], n = this.allItems = [], r = 0, i = e; r < i.length; r++) {
-                    for (var a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;)
-                        t.pop(),
-                            l = t.last();
-                    t.push(s),
-                        l ? (l.children = l.children || [],
-                            l.children.push(s)) : this.addRoot(s),
-                        n.push(s)
-                }
-                this.highlighted = null,
-                    this.render()
-            },
-            t.prototype.highlightLine = function (e) {
-                for (var t = this.highlighted, n = null, r = 0, i = this.allItems; r < i.length; r++) {
-                    var a = i[r];
-                    if (!(a.heading.position.start.line <= e))
-                        break;
-                    n = a
-                }
-                n !== t && (t && t.setActive(!1),
-                    this.highlighted = n,
-                n && n.setActive(!0))
-            },
-            t
-    }(Hs), zs = function () {
-        function e(e, t) {
-            this.publish = e;
-            var n = this.containerEl = t.createDiv("outline-view-outer");
-            n.createDiv("list-item published-section-header", (function (e) {
-                    e.createSpan("published-section-header-icon", (function (e) {
-                            wi(e, "lucide-list")
-                        }
-                    )),
-                        e.createSpan({
-                            text: "On this page"
-                        })
-                }
-            ));
-            var r = n.createDiv("outline-view");
-            (this.treeView = new qs(r, this.onItemClick.bind(this))).collapsible = !1,
-                e.on("options-updated", this.updateOptions.bind(this)),
-                e.on("navigated", this.onNavigated.bind(this))
-        }
-
-        return e.prototype.updateOptions = function () {
-            var e = this.publish.site.getConfig(Oo);
-            Hr && (e = !1),
-                this.publish.containerEl.toggleClass("has-outline", e),
-                this.containerEl.toggle(e),
-            e && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
-        },
-            e.prototype.onItemClick = function (e) {
-                var t = this.publish;
-                t.render.scrollToLoc(e.position.start);
-                var n = t.site.getPublicHref(t.render.currentFilepath) + "#" + uo(e.heading);
-                history.replaceState(null, null, n)
-            },
-            e.prototype.onNavigated = function () {
-                var e = this
-                    , t = e.publish
-                    , n = e.treeView
-                    , r = e.containerEl
-                    , i = t.site;
-                if (i.getConfig(Oo) && (n.clear(),
-                    r.isShown())) {
-                    var a = t.render.currentFilepath
-                        , o = i.cache.getCache(a);
-                    o && o.headings && 0 !== o.headings.length ? (r.toggleVisibility(!0),
-                        n.renderOutline(o.headings),
-                        this.highlightLine(0)) : r.toggleVisibility(!1)
-                }
-            },
-            e.prototype.highlightLine = function (e) {
-                this.treeView.highlightLine(e)
-            },
-            e
-    }(), Rs = {
-        3: "Cancel",
-        6: "Help",
-        8: "Backspace",
-        9: "Tab",
-        12: "Clear",
-        13: "Enter",
-        16: "Shift",
-        17: "Control",
-        18: "Alt",
-        19: "Pause",
-        20: "CapsLock",
-        27: "Escape",
-        28: "Convert",
-        29: "NonConvert",
-        30: "Accept",
-        31: "ModeChange",
-        32: " ",
-        33: "PageUp",
-        34: "PageDown",
-        35: "End",
-        36: "Home",
-        37: "ArrowLeft",
-        38: "ArrowUp",
-        39: "ArrowRight",
-        40: "ArrowDown",
-        41: "Select",
-        42: "Print",
-        43: "Execute",
-        44: "PrintScreen",
-        45: "Insert",
-        46: "Delete",
-        48: "0",
-        49: "1",
-        50: "2",
-        51: "3",
-        52: "4",
-        53: "5",
-        54: "6",
-        55: "7",
-        56: "8",
-        57: "9",
-        91: "OS",
-        93: "ContextMenu",
-        95: "Sleep",
-        106: "*",
-        107: "+",
-        109: "-",
-        110: ".",
-        111: "/",
-        144: "NumLock",
-        145: "ScrollLock",
-        181: "VolumeMute",
-        182: "VolumeDown",
-        183: "VolumeUp",
-        186: ";",
-        187: "=",
-        188: ",",
-        189: "-",
-        190: ".",
-        191: "/",
-        192: "`",
-        219: "[",
-        220: "\\",
-        221: "]",
-        222: "'",
-        224: "Meta",
-        225: "AltGraph",
-        246: "Attn",
-        247: "CrSel",
-        248: "ExSel",
-        249: "EraseEof",
-        250: "Play",
-        251: "ZoomOut"
-    }, Zs = 1; Zs < 25; Zs++)
+    for (var Zs = 1; Zs < 25; Zs++)
         Rs[111 + Zs] = "F" + Zs;
     for (Zs = 65; Zs < 91; Zs++) {
         var Bs = String.fromCharCode(Zs);
@@ -21018,14 +20877,15 @@ require.r = module => {
         return Rs[t] || "Key" + t
     }
 
-    var Us, _s = function () {
-        function e(e) {
-            this.tabFocusContainerEl = null,
-                this.keys = [],
-                this.parent = e
+    var Us
+    let Scope = function () {
+        function e(parent) {
+            this.tabFocusContainerEl = null
+            this.keys = []
+            this.parent = parent
         }
 
-        return e.prototype.register = function (e, t, n) {
+        e.prototype.register = function (e, t, n) {
             var r = {
                 scope: this,
                 modifiers: e ? Keymap.compileModifiers(e) : null,
@@ -21034,201 +20894,191 @@ require.r = module => {
             };
             return this.keys.push(r),
                 r
-        },
-            e.prototype.unregister = function (e) {
-                this.keys.remove(e)
-            },
-            e.prototype.setTabFocusContainerEl = function (e) {
-                this.tabFocusContainerEl = e
-            },
-            e.prototype.handleKey = function (e, t) {
-                for (var n = 0, r = this.keys; n < r.length; n++) {
-                    var i = r[n];
-                    if (Keymap.isMatch(i, t)) {
-                        var a = i.func(e, t);
-                        if (void 0 !== a)
-                            return a;
-                        if (null !== i.key || null !== i.modifiers)
-                            return a
-                    }
+        }
+        e.prototype.unregister = function (e) {
+            this.keys.remove(e)
+        }
+        e.prototype.setTabFocusContainerEl = function (e) {
+            this.tabFocusContainerEl = e
+        }
+        e.prototype.handleKey = function (e, t) {
+            for (var n = 0, r = this.keys; n < r.length; n++) {
+                var i = r[n];
+                if (Keymap.isMatch(i, t)) {
+                    var a = i.func(e, t);
+                    if (void 0 !== a)
+                        return a;
+                    if (null !== i.key || null !== i.modifiers)
+                        return a
                 }
-                if (this.parent)
-                    return this.parent.handleKey(e, t)
-            },
-            e
-    }(), Keymap = (function (e) {
-        function t(t, n) {
-            var r = e.call(this, t) || this;
-            return r.cb = n,
-                r
+            }
+            if (this.parent)
+                return this.parent.handleKey(e, t)
+        }
+        return e
+    }()
+    let Keymap = function () {
+        function e() {
+            this.modifiers = "",
+                this.rootScope = new Scope,
+                this.scope = this.rootScope,
+                this.prevScopes = [],
+                window.addEventListener("keydown", this.onKeyEvent.bind(this), !0),
+                window.addEventListener("focusin", this.onFocusIn.bind(this))
         }
 
-        extend(t, e),
-            t.prototype.handleKey = function (t, n) {
-                var r = this.cb();
-                return r ? r.handleKey(t, n) : e.prototype.handleKey.call(this, t, n)
+        e.init = function () {
+            return e.global || (e.global = new e),
+                e.global
+        }
+        e.prototype.getRootScope = function () {
+            return this.rootScope
+        }
+        e.prototype.pushScope = function (e) {
+            this.scope !== e && (this.prevScopes.push(this.scope),
+                this.scope = e)
+        }
+        e.prototype.popScope = function (e) {
+            e !== this.rootScope && (this.scope === e ? this.scope = this.prevScopes.pop() || this.rootScope : this.prevScopes.remove(e))
+        }
+        e.prototype.onKeyEvent = function (t) {
+            this.updateModifiers(t);
+            var n = this.scope;
+            if (n) {
+                var r = js(t);
+                if (!e.isModifierKey(r)) {
+                    var i = Fs(t);
+                    54 === t.which && "^" == t.key && "KeyI" === t.code && (i = "KeyI");
+                    var a = {
+                        modifiers: this.modifiers,
+                        key: r,
+                        vkey: i
+                    };
+                    return !1 === n.handleKey(t, a) ? (t.preventDefault(),
+                        t.stopPropagation(),
+                        !1) : void 0
+                }
             }
-    }(_s),
-        function () {
-            function e() {
-                this.modifiers = "",
-                    this.rootScope = new _s,
-                    this.scope = this.rootScope,
-                    this.prevScopes = [],
-                    window.addEventListener("keydown", this.onKeyEvent.bind(this), !0),
-                    window.addEventListener("focusin", this.onFocusIn.bind(this))
-            }
-
-            return e.init = function () {
-                return e.global || (e.global = new e),
-                    e.global
-            },
-                e.prototype.getRootScope = function () {
-                    return this.rootScope
-                },
-                e.prototype.pushScope = function (e) {
-                    this.scope !== e && (this.prevScopes.push(this.scope),
-                        this.scope = e)
-                },
-                e.prototype.popScope = function (e) {
-                    e !== this.rootScope && (this.scope === e ? this.scope = this.prevScopes.pop() || this.rootScope : this.prevScopes.remove(e))
-                },
-                e.prototype.onKeyEvent = function (t) {
-                    this.updateModifiers(t);
-                    var n = this.scope;
-                    if (n) {
-                        var r = js(t);
-                        if (!e.isModifierKey(r)) {
-                            var i = Fs(t);
-                            54 === t.which && "^" == t.key && "KeyI" === t.code && (i = "KeyI");
-                            var a = {
-                                modifiers: this.modifiers,
-                                key: r,
-                                vkey: i
-                            };
-                            return !1 === n.handleKey(t, a) ? (t.preventDefault(),
-                                t.stopPropagation(),
-                                !1) : void 0
-                        }
-                    }
-                },
-                e.prototype.onFocusIn = function (e) {
-                    var t = this
-                        , n = this.scope;
-                    if (n && n.tabFocusContainerEl) {
-                        var r = n.tabFocusContainerEl
-                            , i = e.targetNode;
-                        i && i !== activeDocument.body && i.instanceOf(Element) && !r.contains(i) && setTimeout((function () {
-                                if (!(t.scope !== n || (a = r.querySelector(["a[href]", "button", "input", "select", "textarea", '[contenteditable]:not([contenteditable="false"])', "[tabindex]"].map((function (e) {
-                                        return e + ':not([disabled]):not([tabindex="-1"])'
-                                    }
-                                )).join(","))) && (a.instanceOf(HTMLElement) || a.instanceOf(SVGElement)) && (a.focus(i),
-                                    a))) {
-                                    var e = activeDocument.activeElement;
-                                    e && e instanceof HTMLElement && e.blur()
-                                }
-                                var i, a
+        }
+        e.prototype.onFocusIn = function (e) {
+            var t = this
+                , n = this.scope;
+            if (n && n.tabFocusContainerEl) {
+                var r = n.tabFocusContainerEl
+                    , i = e.targetNode;
+                i && i !== activeDocument.body && i.instanceOf(Element) && !r.contains(i) && setTimeout((function () {
+                        if (!(t.scope !== n || (a = r.querySelector(["a[href]", "button", "input", "select", "textarea", '[contenteditable]:not([contenteditable="false"])', "[tabindex]"].map((function (e) {
+                                return e + ':not([disabled]):not([tabindex="-1"])'
                             }
-                        ), 0)
+                        )).join(","))) && (a.instanceOf(HTMLElement) || a.instanceOf(SVGElement)) && (a.focus(i),
+                            a))) {
+                            var e = activeDocument.activeElement;
+                            e && e instanceof HTMLElement && e.blur()
+                        }
+                        var i, a
                     }
-                },
-                e.prototype.updateModifiers = function (t) {
-                    this.modifiers = e.getModifiers(t)
-                },
-                e.getModifiers = function (t) {
-                    var n = [];
-                    return t.ctrlKey && n.push("Ctrl"),
-                    t.metaKey && n.push("Meta"),
-                    t.altKey && n.push("Alt"),
-                    t.shiftKey && n.push("Shift"),
-                        e.compileModifiers(n)
-                },
-                e.compileModifiers = function (e) {
-                    return e.map((function (e) {
-                            return "Mod" === e ? "MacOS" === __os ? "Meta" : "Ctrl" : e
-                        }
-                    )).sort().join(",")
-                },
-                e.decompileModifiers = function (e) {
-                    return e.split(",").map((function (e) {
-                            return "MacOS" === __os && "Meta" === e || "MacOS" !== __os && "Ctrl" === e ? "Mod" : e
-                        }
-                    )).filter((function (e) {
-                            return e
-                        }
-                    ))
-                },
-                e.isModifierKey = function (e) {
-                    return "Control" === e || "Alt" === e || "Shift" === e || "OS" === e || "Meta" === e
-                },
-                e.prototype.matchModifiers = function (e) {
-                    return this.modifiers === e
-                },
-                e.prototype.hasModifier = function (t) {
-                    return e.decompileModifiers(this.modifiers).contains(t)
-                },
-                e.isModifier = function (e, t) {
-                    return "Ctrl" === t ? e.ctrlKey : "Meta" === t ? e.metaKey : "Alt" === t ? e.altKey : "Shift" === t ? e.shiftKey : "Mod" === t && ("MacOS" === __os ? e.metaKey : e.ctrlKey)
-                },
-                e.isMatch = function (e, t) {
-                    var n = e.modifiers
-                        , r = e.key;
-                    return (null === n || n === t.modifiers) && (!r || (r === t.vkey || !(!t.key || r.toLowerCase() !== t.key.toLowerCase())))
-                },
-                e.isModEvent = function (t) {
-                    return !!t && (function (e) {
-                        return (e.instanceOf(MouseEvent) || e.instanceOf(PointerEvent)) && 1 === e.button
-                    }(t) ? "tab" : !!e.isModifier(t, "Mod") && (e.isModifier(t, "Alt") ? e.isModifier(t, "Shift") ? "window" : "split" : "tab"))
-                },
-                e
-        }()), Ws = function () {
-        function e(e) {
-            this.publish = e,
-                this.scope = new _s,
-                this.scope.register([], "Escape", this.close.bind(this)),
-                this.containerEl = createDiv("modal-container");
-            var t = this.containerEl.createDiv("modal-bg");
-            this.modalEl = this.containerEl.createDiv("modal");
-            var n = this.closeButtonEl = this.modalEl.createDiv("modal-close-button");
-            this.titleEl = this.modalEl.createDiv("modal-title"),
-                this.contentEl = this.modalEl.createDiv("modal-content"),
-                n.addEventListener("click", this.close.bind(this)),
-                t.addEventListener("click", this.close.bind(this))
+                ), 0)
+            }
         }
+        e.prototype.updateModifiers = function (t) {
+            this.modifiers = e.getModifiers(t)
+        }
+        e.getModifiers = function (t) {
+            var n = [];
+            return t.ctrlKey && n.push("Ctrl"),
+            t.metaKey && n.push("Meta"),
+            t.altKey && n.push("Alt"),
+            t.shiftKey && n.push("Shift"),
+                e.compileModifiers(n)
+        }
+        e.compileModifiers = function (e) {
+            return e.map((function (e) {
+                    return "Mod" === e ? "MacOS" === __os ? "Meta" : "Ctrl" : e
+                }
+            )).sort().join(",")
+        }
+        e.decompileModifiers = function (e) {
+            return e.split(",").map((function (e) {
+                    return "MacOS" === __os && "Meta" === e || "MacOS" !== __os && "Ctrl" === e ? "Mod" : e
+                }
+            )).filter((function (e) {
+                    return e
+                }
+            ))
+        }
+        e.isModifierKey = function (e) {
+            return "Control" === e || "Alt" === e || "Shift" === e || "OS" === e || "Meta" === e
+        }
+        e.prototype.matchModifiers = function (e) {
+            return this.modifiers === e
+        }
+        e.prototype.hasModifier = function (t) {
+            return e.decompileModifiers(this.modifiers).contains(t)
+        }
+        e.isModifier = function (e, t) {
+            return "Ctrl" === t ? e.ctrlKey : "Meta" === t ? e.metaKey : "Alt" === t ? e.altKey : "Shift" === t ? e.shiftKey : "Mod" === t && ("MacOS" === __os ? e.metaKey : e.ctrlKey)
+        }
+        e.isMatch = function (e, t) {
+            var n = e.modifiers
+                , r = e.key;
+            return (null === n || n === t.modifiers) && (!r || (r === t.vkey || !(!t.key || r.toLowerCase() !== t.key.toLowerCase())))
+        }
+        e.isModEvent = function (t) {
+            return !!t && (function (e) {
+                return (e.instanceOf(MouseEvent) || e.instanceOf(PointerEvent)) && 1 === e.button
+            }(t) ? "tab" : !!e.isModifier(t, "Mod") && (e.isModifier(t, "Alt") ? e.isModifier(t, "Shift") ? "window" : "split" : "tab"))
+        }
+        return e
+    }()
+    let Modal = function () {
+            function e(app) {
+                this.publish = app
+                this.scope = new Scope()
+                this.scope.register([], "Escape", this.close.bind(this))
+                this.containerEl = createDiv("modal-container")
+                let bgEl = this.containerEl.createDiv("modal-bg");
+                this.modalEl = this.containerEl.createDiv("modal");
+                let closeButtonEl = this.closeButtonEl = this.modalEl.createDiv("modal-close-button");
+                this.titleEl = this.modalEl.createDiv("modal-title")
+                this.contentEl = this.modalEl.createDiv("modal-content")
+                closeButtonEl.addEventListener("click", this.close.bind(this))
+                bgEl.addEventListener("click", this.close.bind(this))
+            }
 
-        return e.prototype.open = function () {
-            this.publish.keymap.pushScope(this.scope),
-                document.body.appendChild(this.containerEl),
-                this.onOpen()
-        },
+            e.prototype.open = function () {
+                this.publish.keymap.pushScope(this.scope),
+                    document.body.appendChild(this.containerEl),
+                    this.onOpen()
+            }
             e.prototype.close = function () {
                 this.publish.keymap.popScope(this.scope),
                     this.containerEl.remove(),
                     this.onClose()
-            },
+            }
             e.prototype.onOpen = function () {
-            },
+            }
             e.prototype.onClose = function () {
-            },
-            e
-    }(), Gs = function (e) {
-        function t(t, n) {
-            var r = e.call(this, t) || this;
-            return r.done = !1,
-                r.cb = n,
-                r.modalEl.addClass("mod-password-required"),
-                r.titleEl.setText("Protected site"),
-                r.closeButtonEl.hide(),
-                r
-        }
+            }
+            return e
+        }(),
+        Gs = function (Modal) {
+            function t(app, cb) {
+                let _this = Modal.call(this, app) || this;
+                _this.done = false
+                _this.cb = cb
+                _this.modalEl.addClass("mod-password-required")
+                _this.titleEl.setText("Protected site")
+                _this.closeButtonEl.hide()
+                return _this
+            }
 
-        return extend(t, e),
+            extend(t, Modal)
             t.prototype.close = function () {
-                this.done && e.prototype.close.call(this)
-            },
+                this.done && Modal.prototype.close.call(this)
+            }
             t.prototype.onOpen = function () {
                 this.showPasswordRequired()
-            },
+            }
             t.prototype.showPasswordRequired = function () {
                 var e = this
                     , t = this.contentEl;
@@ -21267,7 +21117,7 @@ require.r = module => {
                             }).addEventListener("click", e.tryUnlockSite.bind(e))
                         }
                     ))
-            },
+            }
             t.prototype.tryUnlockSite = function () {
                 return a(this, void 0, void 0, (function () {
                         var e, t, n, r;
@@ -21311,7 +21161,7 @@ require.r = module => {
                         ))
                     }
                 ))
-            },
+            }
             t.prototype.showPasswordCorrect = function () {
                 var e = this
                     , t = this.contentEl;
@@ -21338,19 +21188,20 @@ require.r = module => {
                             ))
                         }
                     ))
-            },
-            t
-    }(Ws), Ks = function (e) {
-        function t(t, n) {
-            var r = e.call(this, t) || this;
-            return r.tag = n,
-                r.titleEl.createSpan({
-                    text: "Pages with tag " + n
-                }),
-                r
-        }
+            }
+            return t
+        }(Modal),
+        Ks = function (Modal) {
+            function t(app, tag) {
+                let _this = Modal.call(this, app) || this;
+                _this.tag = tag
+                _this.titleEl.createSpan({
+                    text: "Pages with tag " + tag
+                })
+                return _this
+            }
 
-        return extend(t, e),
+            extend(t, Modal)
             t.prototype.onOpen = function () {
                 var e = this
                     , t = this.publish
@@ -21361,7 +21212,7 @@ require.r = module => {
                     , o = [];
                 for (var s in i)
                     if (i.hasOwnProperty(s)) {
-                        var l = so(i[s]);
+                        var l = getAllTags(i[s]);
                         if (l)
                             for (var c = 0, h = l; c < h.length; c++) {
                                 var u = h[c];
@@ -21395,14 +21246,15 @@ require.r = module => {
                         cls: "files-with-tag-item",
                         text: "There are no pages that contain this tag."
                     })
-            },
-            t
-    }(Ws);
+            }
+            return t
+        }(Modal);
+
     !function (e) {
-        e[e.Showing = 0] = "Showing",
-            e[e.Shown = 1] = "Shown",
-            e[e.Hiding = 2] = "Hiding",
-            e[e.Hidden = 3] = "Hidden"
+        e[e.Showing = 0] = "Showing"
+        e[e.Shown = 1] = "Shown"
+        e[e.Hiding = 2] = "Hiding"
+        e[e.Hidden = 3] = "Hidden"
     }(Us || (Us = {}));
     var Ys = []
         , Xs = []
@@ -21454,10 +21306,10 @@ require.r = module => {
             window.addEventListener("mousemove", nl),
             Js = window.setInterval(rl, 500))
     }
-        , al = function (e) {
+    let HoverPopover = function (Component) {
         function t(t, n, r) {
             void 0 === r && (r = 300);
-            var i = e.call(this) || this;
+            var i = Component.call(this) || this;
             i.onTarget = !0,
                 i.onHover = !1,
                 i.shownPos = null,
@@ -21468,226 +21320,227 @@ require.r = module => {
             var a = i.hoverEl = createDiv("popover hover-popover")
                 , o = i.onMouseIn = i.onMouseIn.bind(i)
                 , s = i.onMouseOut = i.onMouseOut.bind(i);
-            return n && (n.addEventListener("mouseover", o),
+            n && (n.addEventListener("mouseover", o),
                 n.addEventListener("mouseout", s)),
                 a.addEventListener("mouseover", (function (e) {
-                        Sr(e, a) && (i.onHover = !0,
-                            i.transition())
-                    }
-                )),
-                a.addEventListener("mouseout", (function (e) {
-                        Sr(e, a) && (i.onHover = !1,
-                            i.transition())
-                    }
-                )),
-                i.timer = window.setTimeout(i.show.bind(i), r),
-                Ys.push(i),
-                il(),
-                i
+                    Sr(e, a) && (i.onHover = !0,
+                        i.transition())
+                }))
+            a.addEventListener("mouseout", (function (e) {
+                Sr(e, a) && (i.onHover = !1,
+                    i.transition())
+            }))
+            i.timer = window.setTimeout(i.show.bind(i), r)
+            Ys.push(i)
+            il()
+            return i
         }
 
-        return extend(t, e),
-            t.prototype.onMouseIn = function (e) {
-                this.targetEl && !Sr(e, this.targetEl) || (this.onTarget = !0,
-                    this.transition())
-            },
-            t.prototype.onMouseOut = function (e) {
-                this.targetEl && !Sr(e, this.targetEl) || (this.onTarget = !1,
-                    this.transition())
-            },
-            t.prototype.detect = function (e) {
-                var t = this.targetEl
-                    , n = this.hoverEl;
-                t && (this.onTarget = e === t || t.contains(e)),
-                    this.onHover = e === n || n.contains(e)
-            },
-            t.prototype.shouldShow = function () {
-                return this.shouldShowSelf() || this.shouldShowChild()
-            },
-            t.prototype.shouldShowSelf = function () {
-                return this.onTarget || this.onHover
-            },
-            t.prototype.shouldShowChild = function () {
-                var e = this;
-                return Xs.some((function (t) {
-                        return t !== e && t.targetEl && e.hoverEl.contains(t.targetEl) && t.shouldShow()
-                    }
-                ))
-            },
-            t.prototype.transition = function () {
-                var e = this
-                    , t = this.shouldShow()
-                    , n = this.state;
-                t ? n === Us.Hiding && (this.state = Us.Shown,
-                    clearTimeout(this.timer)) : n === Us.Showing ? this.hide() : n === Us.Shown && (this.state = Us.Hiding,
-                    this.timer = window.setTimeout((function () {
-                            e.shouldShow() ? e.transition() : e.hide()
-                        }
-                    ), this.waitTime))
-            },
-            t.prototype.show = function () {
-                var e = this.targetEl;
-                !e || e.doc.body.contains(e) ? (this.state = Us.Shown,
-                    this.timer = 0,
-                    this.shownPos = Qs,
-                    this.position(Qs),
-                    this.onShow(),
-                    Ys.remove(this),
-                    Xs.push(this),
-                    il(),
-                    this.load()) : this.hide()
-            },
-            t.prototype.hide = function () {
-                var e = this
-                    , t = this
-                    , n = t.hoverEl
-                    , r = t.targetEl
-                    , i = t.timer;
-                this.state = Us.Hidden,
-                    Ys.remove(this),
-                    Xs.remove(this),
-                    clearTimeout(i),
-                    n.detach(),
-                r && (r.removeEventListener("mouseover", this.onMouseIn),
-                    r.removeEventListener("mouseout", this.onMouseOut)),
-                    this.onTarget = !1,
-                    this.onHover = !1,
-                    Xs.filter((function (t) {
-                            return t.targetEl && e.hoverEl.contains(t.targetEl)
-                        }
-                    )).forEach((function (e) {
-                            return e.hide()
-                        }
-                    )),
-                    this.onHide(),
-                    this.unload()
-            },
-            t.prototype.onShow = function () {
-                var e = this.parent;
-                e.hoverPopover && e.hoverPopover.hide(),
-                    e.hoverPopover = this
-            },
-            t.prototype.onHide = function () {
-                var e = this.parent;
-                e.hoverPopover === this && (e.hoverPopover = null)
-            },
-            t.prototype.position = function (e) {
-                void 0 === e && (e = this.shownPos);
-                var t, n = this.hoverEl, r = this.targetEl;
-                if (e)
-                    t = {
-                        top: e.y - 10,
-                        bottom: e.y + 10,
-                        left: e.x,
-                        right: e.x
-                    };
-                else if (r) {
-                    var i = Ir(r, r.doc.body);
-                    t = {
-                        top: i.top,
-                        bottom: i.top + r.offsetHeight,
-                        left: i.left,
-                        right: i.left + r.offsetWidth
-                    }
-                } else
-                    t = {
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0
-                    };
-                var a = activeDocument;
-                if (r) {
-                    a = r.doc;
-                    var o = function (e) {
-                        var t = e.frameElement;
-                        if (!t)
-                            return null;
-                        for (var n = {
-                            x: 0,
-                            y: 0,
-                            scale: 1,
-                            win: e
-                        }; null !== t;) {
-                            var r = t.getBoundingClientRect()
-                                , i = r.width / t.clientWidth;
-                            n.scale *= i,
-                                n.x = n.x * i + r.x,
-                                n.y = n.y * i + r.y,
-                                n.win = t.win,
-                                t = t.win.frameElement
-                        }
-                        return n
-                    }(r.win);
-                    if (o) {
-                        var s = o.scale
-                            , l = o.x
-                            , c = o.y;
-                        a = o.win.document,
-                            t.left = t.left * s + l,
-                            t.right = t.right * s + l,
-                            t.top = t.top * s + c,
-                            t.bottom = t.bottom * s + c
-                    }
+        extend(t, Component)
+        t.prototype.onMouseIn = function (e) {
+            this.targetEl && !Sr(e, this.targetEl) || (this.onTarget = !0,
+                this.transition())
+        }
+        t.prototype.onMouseOut = function (e) {
+            this.targetEl && !Sr(e, this.targetEl) || (this.onTarget = !1,
+                this.transition())
+        }
+        t.prototype.detect = function (e) {
+            var t = this.targetEl
+                , n = this.hoverEl;
+            t && (this.onTarget = e === t || t.contains(e)),
+                this.onHover = e === n || n.contains(e)
+        }
+        t.prototype.shouldShow = function () {
+            return this.shouldShowSelf() || this.shouldShowChild()
+        }
+        t.prototype.shouldShowSelf = function () {
+            return this.onTarget || this.onHover
+        }
+        t.prototype.shouldShowChild = function () {
+            var e = this;
+            return Xs.some((function (t) {
+                    return t !== e && t.targetEl && e.hoverEl.contains(t.targetEl) && t.shouldShow()
                 }
-                a.body.appendChild(n),
-                    Pr(t, n, {
-                        gap: 10,
-                        preventOverlap: !0
-                    })
-            },
-            t
-    }(_n)
-        , ol = createDiv("notice-container")
-        , Notice = function () {
-        function e(e, t) {
-            void 0 === t && (t = 4e3);
+            ))
+        }
+        t.prototype.transition = function () {
+            var e = this
+                , t = this.shouldShow()
+                , n = this.state;
+            t ? n === Us.Hiding && (this.state = Us.Shown,
+                clearTimeout(this.timer)) : n === Us.Showing ? this.hide() : n === Us.Shown && (this.state = Us.Hiding,
+                this.timer = window.setTimeout((function () {
+                        e.shouldShow() ? e.transition() : e.hide()
+                    }
+                ), this.waitTime))
+        }
+        t.prototype.show = function () {
+            var e = this.targetEl;
+            !e || e.doc.body.contains(e) ? (this.state = Us.Shown,
+                this.timer = 0,
+                this.shownPos = Qs,
+                this.position(Qs),
+                this.onShow(),
+                Ys.remove(this),
+                Xs.push(this),
+                il(),
+                this.load()) : this.hide()
+        }
+        t.prototype.hide = function () {
+            var e = this
+                , t = this
+                , n = t.hoverEl
+                , r = t.targetEl
+                , i = t.timer;
+            this.state = Us.Hidden,
+                Ys.remove(this),
+                Xs.remove(this),
+                clearTimeout(i),
+                n.detach(),
+            r && (r.removeEventListener("mouseover", this.onMouseIn),
+                r.removeEventListener("mouseout", this.onMouseOut)),
+                this.onTarget = !1,
+                this.onHover = !1,
+                Xs.filter((function (t) {
+                        return t.targetEl && e.hoverEl.contains(t.targetEl)
+                    }
+                )).forEach((function (e) {
+                        return e.hide()
+                    }
+                )),
+                this.onHide(),
+                this.unload()
+        }
+        t.prototype.onShow = function () {
+            var e = this.parent;
+            e.hoverPopover && e.hoverPopover.hide(),
+                e.hoverPopover = this
+        }
+        t.prototype.onHide = function () {
+            var e = this.parent;
+            e.hoverPopover === this && (e.hoverPopover = null)
+        }
+        t.prototype.position = function (e) {
+            void 0 === e && (e = this.shownPos);
+            var t, n = this.hoverEl, r = this.targetEl;
+            if (e)
+                t = {
+                    top: e.y - 10,
+                    bottom: e.y + 10,
+                    left: e.x,
+                    right: e.x
+                };
+            else if (r) {
+                var i = Ir(r, r.doc.body);
+                t = {
+                    top: i.top,
+                    bottom: i.top + r.offsetHeight,
+                    left: i.left,
+                    right: i.left + r.offsetWidth
+                }
+            } else
+                t = {
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0
+                };
+            var a = activeDocument;
+            if (r) {
+                a = r.doc;
+                var o = function (e) {
+                    var t = e.frameElement;
+                    if (!t)
+                        return null;
+                    for (var n = {
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        win: e
+                    }; null !== t;) {
+                        var r = t.getBoundingClientRect()
+                            , i = r.width / t.clientWidth;
+                        n.scale *= i,
+                            n.x = n.x * i + r.x,
+                            n.y = n.y * i + r.y,
+                            n.win = t.win,
+                            t = t.win.frameElement
+                    }
+                    return n
+                }(r.win);
+                if (o) {
+                    var s = o.scale
+                        , l = o.x
+                        , c = o.y;
+                    a = o.win.document,
+                        t.left = t.left * s + l,
+                        t.right = t.right * s + l,
+                        t.top = t.top * s + c,
+                        t.bottom = t.bottom * s + c
+                }
+            }
+            a.body.appendChild(n),
+                Pr(t, n, {
+                    gap: 10,
+                    preventOverlap: !0
+                })
+        }
+        return t
+    }(Component)
+
+    let noticeContainerEl = createDiv("notice-container")
+    const Notice = function () {
+        function e(message, duration) {
+            void 0 === duration && (duration = 4e3);
             var n = this;
-            activeDocument.body.appendChild(ol);
-            var r = this.noticeEl = ol.createDiv({
+            activeDocument.body.appendChild(noticeContainerEl);
+            var r = this.noticeEl = noticeContainerEl.createDiv({
                 cls: "notice",
-                text: e
+                text: message
             });
-            Platform.isMobile ? Qn(r, (new Gn).addProp("marginBottom", -r.offsetHeight + "px", "0", "")) : Qn(r, (new Gn).addProp("transform", "translateX(350px)", "", "")),
-            t && setTimeout((function () {
+            Platform.isMobile ? transitionElement(r, (new Gn).addProp("marginBottom", -r.offsetHeight + "px", "0", "")) : transitionElement(r, (new Gn).addProp("transform", "translateX(350px)", "", "")),
+            duration && setTimeout((function () {
                     return n.hide()
                 }
-            ), t),
+            ), duration),
                 r.addEventListener("click", (function () {
                         return n.hide()
                     }
                 ))
         }
 
-        return e.prototype.setMessage = function (e) {
+        e.prototype.setMessage = function (e) {
             return this.noticeEl.setText(e),
                 this
-        },
-            e.prototype.hide = function () {
-                var e = this;
-                setTimeout((function () {
-                        var t = e.noticeEl;
-                        if (Platform.isMobile)
-                            Qn(t, (new Gn).addProp("opacity", null, "0", ""), (function () {
-                                    t.detach(),
-                                    0 === ol.childElementCount && ol.detach()
-                                }
-                            ));
-                        else {
-                            var n = getComputedStyle(t)
-                                , r = -(t.offsetHeight + parseInt(n.marginBottom)) + "px";
-                            Qn(t, (new Gn).addProp("marginTop", "0", r, ""), (function () {
-                                    t.detach(),
-                                    0 === ol.childElementCount && ol.detach()
-                                }
-                            ))
-                        }
+        }
+        e.prototype.hide = function () {
+            var e = this;
+            setTimeout((function () {
+                    var t = e.noticeEl;
+                    if (Platform.isMobile)
+                        transitionElement(t, (new Gn).addProp("opacity", null, "0", ""), (function () {
+                                t.detach(),
+                                0 === noticeContainerEl.childElementCount && noticeContainerEl.detach()
+                            }
+                        ));
+                    else {
+                        var n = getComputedStyle(t)
+                            , r = -(t.offsetHeight + parseInt(n.marginBottom)) + "px";
+                        transitionElement(t, (new Gn).addProp("marginTop", "0", r, ""), (function () {
+                                t.detach(),
+                                0 === noticeContainerEl.childElementCount && noticeContainerEl.detach()
+                            }
+                        ))
                     }
-                ))
-            },
-            e
-    }();
-    window.Notice = Notice;
+                }
+            ))
+        }
+        return e
+    }()
+    window.Notice = Notice
+
+
     const image_extensions = ["bmp", "png", "jpg", "jpeg", "gif", "svg", "webp", "avif"],
         audio_extensions = ["mp3", "wav", "m4a", "3gp", "flac", "ogg", "oga", "opus"],
         video_extensions = ["mp4", "webm", "ogv", "mov", "mkv"],
@@ -21704,455 +21557,454 @@ require.r = module => {
             n.renderContainerEl = r,
                 n.extraTitle = i.createSpan("extra-title-text");
             var a = i.createSpan();
-            return wi(a, "lucide-x"),
-                ws(a, "Close page"),
-                a.setAttr("role", "button"),
-                a.addEventListener("click", (function () {
-                        return t.closeRenderer(n)
-                    }
-                )),
-                n
+            wi(a, "lucide-x")
+            setTooltip(a, "Close page")
+            a.setAttr("role", "button")
+            a.addEventListener("click", (function () {
+                return t.closeRenderer(n)
+            }))
+            return n
         }
 
-        return extend(t, e),
-            t.prototype.loadFile = function (e, t) {
-                return a(this, void 0, void 0, (function () {
-                        var n, r, i, a, s, l, c, h, u, f, p, d, m, v, g, M, y, b;
+        extend(t, e)
+        t.prototype.loadFile = function (e, t) {
+            return a(this, void 0, void 0, (function () {
+                    var n, r, i, a, s, l, c, h, u, f, p, d, m, v, g, M, y, b;
+                    return o(this, (function (o) {
+                            switch (o.label) {
+                                case 0:
+                                    return r = (n = this).publish,
+                                        i = n.renderer,
+                                        a = n.hoverPopover,
+                                        s = r.site,
+                                        this.currentFilepath === e ? (this.navigateSubpath(t),
+                                            [2]) : (this.currentFilepath = e,
+                                            l = vo(e),
+                                            c = bo(l),
+                                            h = wo(e),
+                                        a && (a.hide(),
+                                            this.hoverPopover = a = null),
+                                            this.extraTitle.setText(h),
+                                            u = i.header,
+                                            (f = u.el).empty(),
+                                        s.getConfig(Io) || f.createDiv({
+                                            cls: "page-header",
+                                            text: h
+                                        }),
+                                            i.updateHeader(),
+                                            i.clear(),
+                                            p = i.footer,
+                                            (d = p.el).empty(),
+                                            i.updateFooter(),
+                                            "md" !== c ? [3, 2] : [4, s.loadMarkdownFile(e)]);
+                                case 1:
+                                    return m = o.sent(),
+                                        i.set(m || " "),
+                                    this.navigateSubpath(t) || (t = ""),
+                                        [3, 3];
+                                case 2:
+                                    i.set("![[" + e + "]]"),
+                                        o.label = 3;
+                                case 3:
+                                    if (r.trigger("navigated"),
+                                    t && (v = s.getPublicHref(e) + t.split("#").map(Ls).join("#"),
+                                        history.replaceState(null, null, v)),
+                                        s.getConfig(Ro)) {
+                                        for (b in g = s.cache.cache,
+                                            M = [],
+                                            y = function (t) {
+                                                if (!g.hasOwnProperty(t) || t === e)
+                                                    return "continue";
+                                                if (ao(g[t], (function (n) {
+                                                        if (s.cache.getLinktextDest(n.link, t) === e)
+                                                            return !0
+                                                    }
+                                                ))) {
+                                                    var n = wo(t)
+                                                        ,
+                                                        r = createDiv("backlink-item", (function (e) {
+                                                                return e.createEl("a", {
+                                                                    cls: "internal-link",
+                                                                    href: s.getPublicHref(t),
+                                                                    attr: {
+                                                                        "data-href": t
+                                                                    },
+                                                                    text: n
+                                                                })
+                                                            }
+                                                        ));
+                                                    M.push({
+                                                        el: r,
+                                                        name: n
+                                                    })
+                                                }
+                                            },
+                                            g)
+                                            y(b);
+                                        M.length > 0 && i.onRendered((function () {
+                                                d.empty();
+                                                var e = d.createDiv("backlinks");
+                                                e.createDiv("published-section-header", (function (e) {
+                                                        e.createSpan("published-section-header-icon", (function (e) {
+                                                                wi(e, "lucide-link")
+                                                            }
+                                                        )),
+                                                            e.createSpan({
+                                                                text: "Links to this page"
+                                                            })
+                                                    }
+                                                ));
+                                                var t = e.createDiv("backlink-items-container");
+                                                M.sort((function (e, t) {
+                                                        return Cs(e.name, t.name)
+                                                    }
+                                                )),
+                                                    t.setChildrenInPlace(M.map((function (e) {
+                                                            return e.el
+                                                        }
+                                                    ))),
+                                                    i.updateFooter()
+                                            }
+                                        ))
+                                    }
+                                    return [2]
+                            }
+                        }
+                    ))
+                }
+            ))
+        }
+        t.prototype.onScroll = function () {
+            var e = this.publish
+                , t = this.renderer;
+            if (e.site.getConfig(Oo)) {
+                var n = t.getScroll();
+                e.outline.highlightLine(Math.round(n))
+            }
+        }
+        t.prototype.onResize = function () {
+            this.renderer.onResize()
+        }
+        t.prototype.navigateSubpath = function (e) {
+            if (e) {
+                var t = this.publish.site.cache.getCache(this.currentFilepath);
+                if (t) {
+                    var n = resolveSubpath(t, e);
+                    if (n)
+                        return this.scrollToLoc(n.start),
+                            !0
+                }
+            }
+            return !1
+        }
+        t.prototype.scrollToLoc = function (e) {
+            this.renderer.applyScrollDelayed(e.line, {
+                highlight: !0
+            }),
+                this.onScroll()
+        }
+        return t
+    }(function (Component) {
+        function t(t, n) {
+            let _this = Component.call(this) || this;
+            _this.id = genRandomHex(16)
+            _this.hoverPopover = null
+            _this.currentFilepath = null
+            _this.embedDepth = 0
+            _this.publish = t
+            let i = _this.renderer = new MarkdownPreviewRenderer(_this, _this, n, "/worker.js");
+            i.addHeader()
+            i.addFooter()
+            return _this
+        }
+
+        extend(t, Component)
+        t.prototype.renderContent = function (e, t) {
+            this.currentFilepath = t;
+            var n = this.renderer
+                , r = this.hoverPopover;
+            r && (r.hide(),
+                this.hoverPopover = null),
+                n.clear(),
+                n.set(e)
+        }
+        t.prototype.onScroll = function () {
+        }
+        t.prototype.onFoldChange = function () {
+        }
+        t.prototype.onCheckboxClick = function (e, t, n) {
+        }
+        t.prototype.onExternalLinkClick = function (e, t, n) {
+        }
+        t.prototype.onInternalLinkClick = function (e, t, n) {
+            e.preventDefault(),
+                this.publish.navigate(n, this.currentFilepath, e)
+        }
+        t.prototype.onInternalLinkDrag = function (e, t, n) {
+        }
+        t.prototype.onInternalLinkRightClick = function (e, t, n) {
+        }
+        t.prototype.onExternalLinkRightClick = function (e, t, n) {
+        }
+        t.prototype.onInternalLinkMouseover = function (e, t, n) {
+            var r = this;
+            if (this.publish.site.getConfig(zo)) {
+                var i = this.hoverPopover;
+                i && i.state !== Us.Hidden && i.targetEl === t || (i = new HoverPopover(this, t),
+                    setTimeout((function () {
+                            return a(r, void 0, void 0, (function () {
+                                    var e;
+                                    return o(this, (function (t) {
+                                            switch (t.label) {
+                                                case 0:
+                                                    return i.state === Us.Hidden ? [2] : (e = i.hoverEl,
+                                                        [4, this.loadEmbed(n, this.currentFilepath, e, !0)]);
+                                                case 1:
+                                                    return t.sent() || (e.createDiv({
+                                                        cls: "markdown-embed",
+                                                        text: "This page does not yet exist."
+                                                    }),
+                                                        e.addClass("mod-empty")),
+                                                    i.state === Us.Shown && i.position(),
+                                                        [2]
+                                            }
+                                        }
+                                    ))
+                                }
+                            ))
+                        }
+                    ), 100))
+            }
+        }
+        t.prototype.onTagClick = function (e, t, n) {
+            new Ks(this.publish, n).open()
+        }
+        t.prototype.onQueryClick = function (e, t, n) {
+        }
+        t.prototype.postProcess = function (e, t, n) {
+            var r = this
+                , i = this._postProcess({
+                docId: this.id,
+                sourcePath: this.currentFilepath,
+                frontmatter: n,
+                promises: t,
+                addChild: function (e) {
+                    return r.addChild(e)
+                },
+                getSectionInfo: function (e) {
+                    return r.renderer.getSectionInfo(e)
+                },
+                containerEl: this.renderer.sizerEl,
+                el: e.el
+            });
+            e.usesFrontMatter = !!i.usesFrontMatter
+        }
+        t.prototype.onRenderComplete = function () {
+        }
+        t.prototype._postProcess = function (e) {
+            for (var t = this, n = this.publish.site, r = n.cache, i = e.sourcePath, s = e.promises, l = e.el, c = 0, h = MarkdownPreviewRenderer.postProcessors; c < h.length; c++) {
+                var u = (0,
+                    h[c])(l, e);
+                u && u.then && s.push(u)
+            }
+            var f = l.findAll("a.internal-link");
+            if (f.length > 0)
+                for (var p = 0, d = f; p < d.length; p++) {
+                    var m = d[p];
+                    if (E = m.getAttribute("data-href")) {
+                        var v = parseLinktext(E)
+                            , g = v.path
+                            , M = v.subpath
+                            , y = r.getLinkpathDest(g, i);
+                        m.toggleClass("is-unresolved", !y),
+                        y || (y = g || ""),
+                            m.setAttr("href", n.getPublicHref(y) + M)
+                    }
+                }
+            var b = l.firstChild;
+            if (b instanceof HTMLHeadingElement) {
+                var w = b.getAttr("data-heading");
+                if (w) {
+                    b.appendText(" "),
+                        b.addClass("publish-article-heading");
+                    var k = b.createSpan({
+                        cls: "clickable-icon"
+                    });
+                    k.addEventListener("click", (function () {
+                            return a(t, void 0, void 0, (function () {
+                                    var e;
+                                    return o(this, (function (t) {
+                                            return e = n.getPublicHref(i) + "#" + Ls(stripHeadingForLink(w)),
+                                                history.replaceState(null, null, e),
+                                                function (e) {
+                                                    if (navigator.clipboard && navigator.permissions)
+                                                        navigator.clipboard.writeText(e);
+                                                    else {
+                                                        var t = document.createElement("textarea");
+                                                        t.value = e,
+                                                            t.style.top = "0",
+                                                            t.style.left = "0",
+                                                            t.style.position = "fixed",
+                                                            document.body.appendChild(t);
+                                                        try {
+                                                            t.focus(),
+                                                                t.select(),
+                                                                document.execCommand("copy")
+                                                        } catch (e) {
+                                                        }
+                                                        document.body.removeChild(t)
+                                                    }
+                                                }(e),
+                                                new Notice("Link copied to your clipboard"),
+                                                [2]
+                                        }
+                                    ))
+                                }
+                            ))
+                        }
+                    )),
+                        wi(k, "lucide-link"),
+                        setTooltip(k, "Copy link")
+                }
+            }
+            var x = l.findAll(".internal-embed:not(.is-loaded)");
+            if (x.length > 0)
+                for (var C = 0, A = x; C < A.length; C++) {
+                    var L = A[C]
+                        , E = L.getAttribute("src")
+                        , S = this.loadEmbed(E, i, L);
+                    s.push(S)
+                }
+            for (var H = 0, T = l.findAll("img:not([alt])"); H < T.length; H++) {
+                var V = T[H];
+                V.setAttr("alt", vo(V.getAttr("src")))
+            }
+            for (var O = 0, N = l.findAll('a:not([href]), a[href=""]'); O < N.length; O++) {
+                N[O].setAttr("href", "#")
+            }
+            for (var P = 0, I = l.findAll('input[type="checkbox"]:not([aria-label])'); P < I.length; P++) {
+                I[P].setAttr("aria-label", "Task")
+            }
+            return e
+        }
+        t.prototype.loadEmbed = function (e, n, r, i) {
+            return void 0 === i && (i = !1),
+                a(this, void 0, Promise, (function () {
+                        var a, s, l, c, h, u, f, p, d, m, v, g, M, y, b, w, k, x;
                         return o(this, (function (o) {
                                 switch (o.label) {
                                     case 0:
-                                        return r = (n = this).publish,
-                                            i = n.renderer,
-                                            a = n.hoverPopover,
-                                            s = r.site,
-                                            this.currentFilepath === e ? (this.navigateSubpath(t),
-                                                [2]) : (this.currentFilepath = e,
-                                                l = vo(e),
-                                                c = bo(l),
-                                                h = wo(e),
-                                            a && (a.hide(),
-                                                this.hoverPopover = a = null),
-                                                this.extraTitle.setText(h),
-                                                u = i.header,
-                                                (f = u.el).empty(),
-                                            s.getConfig(Io) || f.createDiv({
-                                                cls: "page-header",
-                                                text: h
-                                            }),
-                                                i.updateHeader(),
-                                                i.clear(),
-                                                p = i.footer,
-                                                (d = p.el).empty(),
-                                                i.updateFooter(),
-                                                "md" !== c ? [3, 2] : [4, s.loadMarkdownFile(e)]);
+                                        return a = this.publish,
+                                            s = a.site,
+                                            l = s.cache,
+                                            c = parseLinktext(e),
+                                            h = c.path,
+                                            u = c.subpath,
+                                            f = l.getLinkpathDest(h, n),
+                                            r.empty(),
+                                            f ? (p = vo(f),
+                                                d = bo(f),
+                                                m = s.getInternalUrl(f),
+                                                image_extensions.contains(d) ? (r.addClass("image-embed"),
+                                                    [4, Cr(r, m)]) : [3, 2]) : [2, !1];
                                     case 1:
-                                        return m = o.sent(),
-                                            i.set(m || " "),
-                                        this.navigateSubpath(t) || (t = ""),
-                                            [3, 3];
+                                        return o.sent(),
+                                            [3, 14];
                                     case 2:
-                                        i.set("![[" + e + "]]"),
-                                            o.label = 3;
+                                        return audio_extensions.contains(d) ? (r.addClass("media-embed"),
+                                            [4, Ar(r, m)]) : [3, 4];
                                     case 3:
-                                        if (r.trigger("navigated"),
-                                        t && (v = s.getPublicHref(e) + t.split("#").map(Ls).join("#"),
-                                            history.replaceState(null, null, v)),
-                                            s.getConfig(Ro)) {
-                                            for (b in g = s.cache.cache,
-                                                M = [],
-                                                y = function (t) {
-                                                    if (!g.hasOwnProperty(t) || t === e)
-                                                        return "continue";
-                                                    if (ao(g[t], (function (n) {
-                                                            if (s.cache.getLinktextDest(n.link, t) === e)
-                                                                return !0
-                                                        }
-                                                    ))) {
-                                                        var n = wo(t)
-                                                            ,
-                                                            r = createDiv("backlink-item", (function (e) {
-                                                                    return e.createEl("a", {
-                                                                        cls: "internal-link",
-                                                                        href: s.getPublicHref(t),
-                                                                        attr: {
-                                                                            "data-href": t
-                                                                        },
-                                                                        text: n
-                                                                    })
-                                                                }
-                                                            ));
-                                                        M.push({
-                                                            el: r,
-                                                            name: n
-                                                        })
-                                                    }
-                                                },
-                                                g)
-                                                y(b);
-                                            M.length > 0 && i.onRendered((function () {
-                                                    d.empty();
-                                                    var e = d.createDiv("backlinks");
-                                                    e.createDiv("published-section-header", (function (e) {
-                                                            e.createSpan("published-section-header-icon", (function (e) {
-                                                                    wi(e, "lucide-link")
-                                                                }
-                                                            )),
-                                                                e.createSpan({
-                                                                    text: "Links to this page"
-                                                                })
-                                                        }
-                                                    ));
-                                                    var t = e.createDiv("backlink-items-container");
-                                                    M.sort((function (e, t) {
-                                                            return Cs(e.name, t.name)
+                                        return o.sent(),
+                                            [3, 14];
+                                    case 4:
+                                        return video_extensions.contains(d) ? (r.addClass("media-embed"),
+                                            [4, Lr(r, m)]) : [3, 6];
+                                    case 5:
+                                        return o.sent(),
+                                            [3, 14];
+                                    case 6:
+                                        return pdf_extensions.contains(d) ? (r.addClass("pdf-embed"),
+                                            (v = r.createEl("iframe")).src = m + (u || ""),
+                                            v.style.width = "100%",
+                                            v.style.height = "100%",
+                                            [3, 14]) : [3, 7];
+                                    case 7:
+                                        if (!(md_extensions.contains(d) && this.embedDepth < 5))
+                                            return [3, 13];
+                                        g = l.getCache(f),
+                                            M = resolveSubpath(g, u),
+                                            y = void 0,
+                                            o.label = 8;
+                                    case 8:
+                                        return o.trys.push([8, 10, , 11]),
+                                            [4, ajaxPromise({
+                                                withCredentials: !0,
+                                                url: m
+                                            })];
+                                    case 9:
+                                        return y = o.sent(),
+                                        M && (y = po(y, g, M).content),
+                                            [3, 11];
+                                    case 10:
+                                        return b = o.sent(),
+                                            y = b instanceof XMLHttpRequest && 404 === b.status ? "File not found" : "Failed to load",
+                                            [3, 11];
+                                    case 11:
+                                        return p = p.substr(0, p.length - bo(p).length - 1),
+                                            w = r.createDiv("markdown-embed"),
+                                        i || M || w.createDiv({
+                                            cls: "markdown-embed-title",
+                                            text: p
+                                        }),
+                                            k = w.createDiv("markdown-embed-content"),
+                                            w.createDiv("markdown-embed-link", (function (t) {
+                                                    wi(t, "lucide-link"),
+                                                        setTooltip(t, "Open link"),
+                                                        t.setAttr("role", "button"),
+                                                        t.onClickEvent((function (t) {
+                                                                0 !== t.button && 1 !== t.button || (t.preventDefault(),
+                                                                    t.stopPropagation(),
+                                                                    a.navigate(e, n, t))
+                                                            }
+                                                        ))
+                                                }
+                                            )),
+                                            (x = new t(a, k)).embedDepth = this.embedDepth + 1,
+                                            x.renderContent(y, f),
+                                            [4, new Promise((function (e) {
+                                                    x.renderer.onRendered(e)
+                                                }
+                                            ))];
+                                    case 12:
+                                        return o.sent(),
+                                            [3, 14];
+                                    case 13:
+                                        r.addClass("file-embed"),
+                                            r.createDiv({
+                                                cls: "file-embed-title",
+                                                text: p
+                                            }),
+                                            r.createDiv("file-embed-link", (function (e) {
+                                                    e.addEventListener("click", (function () {
+                                                            window.open(m)
                                                         }
                                                     )),
-                                                        t.setChildrenInPlace(M.map((function (e) {
-                                                                return e.el
-                                                            }
-                                                        ))),
-                                                        i.updateFooter()
+                                                        wi(e, "lucide-arrow-up-right"),
+                                                        setTooltip(e, "Open in default app")
                                                 }
-                                            ))
-                                        }
-                                        return [2]
+                                            )),
+                                            o.label = 14;
+                                    case 14:
+                                        return r.addClass("is-loaded"),
+                                            [2, !0]
                                 }
                             }
                         ))
                     }
                 ))
-            },
-            t.prototype.onScroll = function () {
-                var e = this.publish
-                    , t = this.renderer;
-                if (e.site.getConfig(Oo)) {
-                    var n = t.getScroll();
-                    e.outline.highlightLine(Math.round(n))
-                }
-            },
-            t.prototype.onResize = function () {
-                this.renderer.onResize()
-            },
-            t.prototype.navigateSubpath = function (e) {
-                if (e) {
-                    var t = this.publish.site.cache.getCache(this.currentFilepath);
-                    if (t) {
-                        var n = fo(t, e);
-                        if (n)
-                            return this.scrollToLoc(n.start),
-                                !0
-                    }
-                }
-                return !1
-            },
-            t.prototype.scrollToLoc = function (e) {
-                this.renderer.applyScrollDelayed(e.line, {
-                    highlight: !0
-                }),
-                    this.onScroll()
-            },
-            t
-    }(function (e) {
-        function t(t, n) {
-            var r = e.call(this) || this;
-            r.id = wr(16),
-                r.hoverPopover = null,
-                r.currentFilepath = null,
-                r.embedDepth = 0,
-                r.publish = t;
-            var i = r.renderer = new Pa(r, r, n, "/worker.js");
-            return i.addHeader(),
-                i.addFooter(),
-                r
         }
-
-        return extend(t, e),
-            t.prototype.renderContent = function (e, t) {
-                this.currentFilepath = t;
-                var n = this.renderer
-                    , r = this.hoverPopover;
-                r && (r.hide(),
-                    this.hoverPopover = null),
-                    n.clear(),
-                    n.set(e)
-            },
-            t.prototype.onScroll = function () {
-            },
-            t.prototype.onFoldChange = function () {
-            },
-            t.prototype.onCheckboxClick = function (e, t, n) {
-            },
-            t.prototype.onExternalLinkClick = function (e, t, n) {
-            },
-            t.prototype.onInternalLinkClick = function (e, t, n) {
-                e.preventDefault(),
-                    this.publish.navigate(n, this.currentFilepath, e)
-            },
-            t.prototype.onInternalLinkDrag = function (e, t, n) {
-            },
-            t.prototype.onInternalLinkRightClick = function (e, t, n) {
-            },
-            t.prototype.onExternalLinkRightClick = function (e, t, n) {
-            },
-            t.prototype.onInternalLinkMouseover = function (e, t, n) {
-                var r = this;
-                if (this.publish.site.getConfig(zo)) {
-                    var i = this.hoverPopover;
-                    i && i.state !== Us.Hidden && i.targetEl === t || (i = new al(this, t),
-                        setTimeout((function () {
-                                return a(r, void 0, void 0, (function () {
-                                        var e;
-                                        return o(this, (function (t) {
-                                                switch (t.label) {
-                                                    case 0:
-                                                        return i.state === Us.Hidden ? [2] : (e = i.hoverEl,
-                                                            [4, this.loadEmbed(n, this.currentFilepath, e, !0)]);
-                                                    case 1:
-                                                        return t.sent() || (e.createDiv({
-                                                            cls: "markdown-embed",
-                                                            text: "This page does not yet exist."
-                                                        }),
-                                                            e.addClass("mod-empty")),
-                                                        i.state === Us.Shown && i.position(),
-                                                            [2]
-                                                }
-                                            }
-                                        ))
-                                    }
-                                ))
-                            }
-                        ), 100))
-                }
-            },
-            t.prototype.onTagClick = function (e, t, n) {
-                new Ks(this.publish, n).open()
-            },
-            t.prototype.onQueryClick = function (e, t, n) {
-            },
-            t.prototype.postProcess = function (e, t, n) {
-                var r = this
-                    , i = this._postProcess({
-                    docId: this.id,
-                    sourcePath: this.currentFilepath,
-                    frontmatter: n,
-                    promises: t,
-                    addChild: function (e) {
-                        return r.addChild(e)
-                    },
-                    getSectionInfo: function (e) {
-                        return r.renderer.getSectionInfo(e)
-                    },
-                    containerEl: this.renderer.sizerEl,
-                    el: e.el
-                });
-                e.usesFrontMatter = !!i.usesFrontMatter
-            },
-            t.prototype.onRenderComplete = function () {
-            },
-            t.prototype._postProcess = function (e) {
-                for (var t = this, n = this.publish.site, r = n.cache, i = e.sourcePath, s = e.promises, l = e.el, c = 0, h = Pa.postProcessors; c < h.length; c++) {
-                    var u = (0,
-                        h[c])(l, e);
-                    u && u.then && s.push(u)
-                }
-                var f = l.findAll("a.internal-link");
-                if (f.length > 0)
-                    for (var p = 0, d = f; p < d.length; p++) {
-                        var m = d[p];
-                        if (E = m.getAttribute("data-href")) {
-                            var v = io(E)
-                                , g = v.path
-                                , M = v.subpath
-                                , y = r.getLinkpathDest(g, i);
-                            m.toggleClass("is-unresolved", !y),
-                            y || (y = g || ""),
-                                m.setAttr("href", n.getPublicHref(y) + M)
-                        }
-                    }
-                var b = l.firstChild;
-                if (b instanceof HTMLHeadingElement) {
-                    var w = b.getAttr("data-heading");
-                    if (w) {
-                        b.appendText(" "),
-                            b.addClass("publish-article-heading");
-                        var k = b.createSpan({
-                            cls: "clickable-icon"
-                        });
-                        k.addEventListener("click", (function () {
-                                return a(t, void 0, void 0, (function () {
-                                        var e;
-                                        return o(this, (function (t) {
-                                                return e = n.getPublicHref(i) + "#" + Ls(uo(w)),
-                                                    history.replaceState(null, null, e),
-                                                    function (e) {
-                                                        if (navigator.clipboard && navigator.permissions)
-                                                            navigator.clipboard.writeText(e);
-                                                        else {
-                                                            var t = document.createElement("textarea");
-                                                            t.value = e,
-                                                                t.style.top = "0",
-                                                                t.style.left = "0",
-                                                                t.style.position = "fixed",
-                                                                document.body.appendChild(t);
-                                                            try {
-                                                                t.focus(),
-                                                                    t.select(),
-                                                                    document.execCommand("copy")
-                                                            } catch (e) {
-                                                            }
-                                                            document.body.removeChild(t)
-                                                        }
-                                                    }(e),
-                                                    new Notice("Link copied to your clipboard"),
-                                                    [2]
-                                            }
-                                        ))
-                                    }
-                                ))
-                            }
-                        )),
-                            wi(k, "lucide-link"),
-                            ws(k, "Copy link")
-                    }
-                }
-                var x = l.findAll(".internal-embed:not(.is-loaded)");
-                if (x.length > 0)
-                    for (var C = 0, A = x; C < A.length; C++) {
-                        var L = A[C]
-                            , E = L.getAttribute("src")
-                            , S = this.loadEmbed(E, i, L);
-                        s.push(S)
-                    }
-                for (var H = 0, T = l.findAll("img:not([alt])"); H < T.length; H++) {
-                    var V = T[H];
-                    V.setAttr("alt", vo(V.getAttr("src")))
-                }
-                for (var O = 0, N = l.findAll('a:not([href]), a[href=""]'); O < N.length; O++) {
-                    N[O].setAttr("href", "#")
-                }
-                for (var P = 0, I = l.findAll('input[type="checkbox"]:not([aria-label])'); P < I.length; P++) {
-                    I[P].setAttr("aria-label", "Task")
-                }
-                return e
-            },
-            t.prototype.loadEmbed = function (e, n, r, i) {
-                return void 0 === i && (i = !1),
-                    a(this, void 0, Promise, (function () {
-                            var a, s, l, c, h, u, f, p, d, m, v, g, M, y, b, w, k, x;
-                            return o(this, (function (o) {
-                                    switch (o.label) {
-                                        case 0:
-                                            return a = this.publish,
-                                                s = a.site,
-                                                l = s.cache,
-                                                c = io(e),
-                                                h = c.path,
-                                                u = c.subpath,
-                                                f = l.getLinkpathDest(h, n),
-                                                r.empty(),
-                                                f ? (p = vo(f),
-                                                    d = bo(f),
-                                                    m = s.getInternalUrl(f),
-                                                    image_extensions.contains(d) ? (r.addClass("image-embed"),
-                                                        [4, Cr(r, m)]) : [3, 2]) : [2, !1];
-                                        case 1:
-                                            return o.sent(),
-                                                [3, 14];
-                                        case 2:
-                                            return audio_extensions.contains(d) ? (r.addClass("media-embed"),
-                                                [4, Ar(r, m)]) : [3, 4];
-                                        case 3:
-                                            return o.sent(),
-                                                [3, 14];
-                                        case 4:
-                                            return video_extensions.contains(d) ? (r.addClass("media-embed"),
-                                                [4, Lr(r, m)]) : [3, 6];
-                                        case 5:
-                                            return o.sent(),
-                                                [3, 14];
-                                        case 6:
-                                            return pdf_extensions.contains(d) ? (r.addClass("pdf-embed"),
-                                                (v = r.createEl("iframe")).src = m + (u || ""),
-                                                v.style.width = "100%",
-                                                v.style.height = "100%",
-                                                [3, 14]) : [3, 7];
-                                        case 7:
-                                            if (!(md_extensions.contains(d) && this.embedDepth < 5))
-                                                return [3, 13];
-                                            g = l.getCache(f),
-                                                M = fo(g, u),
-                                                y = void 0,
-                                                o.label = 8;
-                                        case 8:
-                                            return o.trys.push([8, 10, , 11]),
-                                                [4, ajaxPromise({
-                                                    withCredentials: !0,
-                                                    url: m
-                                                })];
-                                        case 9:
-                                            return y = o.sent(),
-                                            M && (y = po(y, g, M).content),
-                                                [3, 11];
-                                        case 10:
-                                            return b = o.sent(),
-                                                y = b instanceof XMLHttpRequest && 404 === b.status ? "File not found" : "Failed to load",
-                                                [3, 11];
-                                        case 11:
-                                            return p = p.substr(0, p.length - bo(p).length - 1),
-                                                w = r.createDiv("markdown-embed"),
-                                            i || M || w.createDiv({
-                                                cls: "markdown-embed-title",
-                                                text: p
-                                            }),
-                                                k = w.createDiv("markdown-embed-content"),
-                                                w.createDiv("markdown-embed-link", (function (t) {
-                                                        wi(t, "lucide-link"),
-                                                            ws(t, "Open link"),
-                                                            t.setAttr("role", "button"),
-                                                            t.onClickEvent((function (t) {
-                                                                    0 !== t.button && 1 !== t.button || (t.preventDefault(),
-                                                                        t.stopPropagation(),
-                                                                        a.navigate(e, n, t))
-                                                                }
-                                                            ))
-                                                    }
-                                                )),
-                                                (x = new t(a, k)).embedDepth = this.embedDepth + 1,
-                                                x.renderContent(y, f),
-                                                [4, new Promise((function (e) {
-                                                        x.renderer.onRendered(e)
-                                                    }
-                                                ))];
-                                        case 12:
-                                            return o.sent(),
-                                                [3, 14];
-                                        case 13:
-                                            r.addClass("file-embed"),
-                                                r.createDiv({
-                                                    cls: "file-embed-title",
-                                                    text: p
-                                                }),
-                                                r.createDiv("file-embed-link", (function (e) {
-                                                        e.addEventListener("click", (function () {
-                                                                window.open(m)
-                                                            }
-                                                        )),
-                                                            wi(e, "lucide-arrow-up-right"),
-                                                            ws(e, "Open in default app")
-                                                    }
-                                                )),
-                                                o.label = 14;
-                                        case 14:
-                                            return r.addClass("is-loaded"),
-                                                [2, !0]
-                                    }
-                                }
-                            ))
-                        }
-                    ))
-            },
-            t
-    }(_n))
+        return t
+    }(Component))
         , ml = function (e, t) {
         return e[0] - t[0]
     };
@@ -22277,113 +22129,113 @@ require.r = module => {
                 ))
         }
 
-        return e.prototype.moveUp = function (e) {
+        e.prototype.moveUp = function (e) {
             if (!e.isComposing)
                 return this.setSelectedItem(this.selectedItem - 1, e),
                     !1
-        },
-            e.prototype.moveDown = function (e) {
-                if (!e.isComposing)
-                    return this.setSelectedItem(this.selectedItem + 1, e),
-                        !1
+        }
+        e.prototype.moveDown = function (e) {
+            if (!e.isComposing)
+                return this.setSelectedItem(this.selectedItem + 1, e),
+                    !1
+        }
+        Object.defineProperty(e.prototype, "rowHeight", {
+            get: function () {
+                return this.suggestions[this.selectedItem].clientHeight
             },
-            Object.defineProperty(e.prototype, "rowHeight", {
-                get: function () {
-                    return this.suggestions[this.selectedItem].clientHeight
-                },
-                enumerable: !1,
-                configurable: !0
-            }),
-            Object.defineProperty(e.prototype, "numVisibleItems", {
-                get: function () {
-                    return Math.floor(this.containerEl.clientHeight / this.rowHeight)
-                },
-                enumerable: !1,
-                configurable: !0
-            }),
-            e.prototype.pageUp = function (e) {
-                if (!e.isComposing) {
-                    var t = this
-                        , n = t.containerEl
-                        , r = t.numVisibleItems
-                        , i = t.rowHeight
-                        , a = n.scrollTop - parseFloat(getComputedStyle(n).paddingTop)
-                        , o = Math.floor(a / i);
-                    this.selectedItem <= o && (o -= r);
-                    var s = Math.max(0, o);
-                    return this.setSelectedItem(s, e),
-                        !1
+            enumerable: !1,
+            configurable: !0
+        })
+        Object.defineProperty(e.prototype, "numVisibleItems", {
+            get: function () {
+                return Math.floor(this.containerEl.clientHeight / this.rowHeight)
+            },
+            enumerable: !1,
+            configurable: !0
+        })
+        e.prototype.pageUp = function (e) {
+            if (!e.isComposing) {
+                var t = this
+                    , n = t.containerEl
+                    , r = t.numVisibleItems
+                    , i = t.rowHeight
+                    , a = n.scrollTop - parseFloat(getComputedStyle(n).paddingTop)
+                    , o = Math.floor(a / i);
+                this.selectedItem <= o && (o -= r);
+                var s = Math.max(0, o);
+                return this.setSelectedItem(s, e),
+                    !1
+            }
+        }
+        e.prototype.pageDown = function (e) {
+            if (!e.isComposing) {
+                var t = this
+                    , n = t.containerEl
+                    , r = t.numVisibleItems
+                    , i = t.rowHeight
+                    , a = n.scrollTop - parseFloat(getComputedStyle(n).paddingTop)
+                    , o = Math.floor(a / i) + (r - 1);
+                this.selectedItem >= o && (o += r);
+                var s = Math.min(this.suggestions.length - 1, o);
+                return this.setSelectedItem(s, e),
+                    !1
+            }
+        }
+        e.prototype.setSuggestions = function (e) {
+            var t = this.containerEl;
+            t.empty();
+            var n = [];
+            if (e)
+                for (var r = 0, i = e; r < i.length; r++) {
+                    var a = i[r]
+                        , o = t.createDiv("suggestion-item");
+                    this.chooser.renderSuggestion(a, o),
+                        n.push(o)
                 }
-            },
-            e.prototype.pageDown = function (e) {
-                if (!e.isComposing) {
-                    var t = this
-                        , n = t.containerEl
-                        , r = t.numVisibleItems
-                        , i = t.rowHeight
-                        , a = n.scrollTop - parseFloat(getComputedStyle(n).paddingTop)
-                        , o = Math.floor(a / i) + (r - 1);
-                    this.selectedItem >= o && (o += r);
-                    var s = Math.min(this.suggestions.length - 1, o);
-                    return this.setSelectedItem(s, e),
-                        !1
-                }
-            },
-            e.prototype.setSuggestions = function (e) {
-                var t = this.containerEl;
-                t.empty();
-                var n = [];
-                if (e)
-                    for (var r = 0, i = e; r < i.length; r++) {
-                        var a = i[r]
-                            , o = t.createDiv("suggestion-item");
-                        this.chooser.renderSuggestion(a, o),
-                            n.push(o)
-                    }
-                this.values = e,
-                    this.suggestions = n,
-                    this.setSelectedItem(0, null)
-            },
-            e.prototype.addMessage = function (e) {
-                this.containerEl.createDiv({
-                    cls: "suggestion-empty",
-                    text: e
-                })
-            },
-            e.prototype.setSelectedItem = function (e, t) {
-                var n = this.suggestions;
-                0 !== n.length && (e < 0 ? e = n.length - 1 : e >= n.length && (e = 0),
-                    this.forceSetSelectedItem(e, t))
-            },
-            e.prototype.forceSetSelectedItem = function (e, t) {
-                var n, r, i = this.suggestions, a = i[this.selectedItem];
-                a && a.removeClass("is-selected"),
-                    this.selectedItem = e;
-                var o = i[this.selectedItem];
-                o && (o.addClass("is-selected"),
-                t && t.instanceOf(KeyboardEvent) && o.scrollIntoView({
-                    block: "nearest"
-                })),
-                null === (r = (n = this.chooser).onSelectedChange) || void 0 === r || r.call(n, this.values[e], t)
-            },
-            e.prototype.onSuggestionClick = function (e, t) {
-                e.preventDefault();
-                var n = this.suggestions.indexOf(t);
-                this.setSelectedItem(n, e),
-                    this.useSelectedItem(e)
-            },
-            e.prototype.onSuggestionMouseover = function (e, t) {
-                var n = this.suggestions.indexOf(t);
-                this.setSelectedItem(n, e)
-            },
-            e.prototype.useSelectedItem = function (e) {
-                if (!this.values)
-                    return !1;
-                var t = this.values[this.selectedItem];
-                return void 0 !== t && (this.chooser.selectSuggestion(t, e),
-                    !0)
-            },
-            e
+            this.values = e,
+                this.suggestions = n,
+                this.setSelectedItem(0, null)
+        }
+        e.prototype.addMessage = function (e) {
+            this.containerEl.createDiv({
+                cls: "suggestion-empty",
+                text: e
+            })
+        }
+        e.prototype.setSelectedItem = function (e, t) {
+            var n = this.suggestions;
+            0 !== n.length && (e < 0 ? e = n.length - 1 : e >= n.length && (e = 0),
+                this.forceSetSelectedItem(e, t))
+        }
+        e.prototype.forceSetSelectedItem = function (e, t) {
+            var n, r, i = this.suggestions, a = i[this.selectedItem];
+            a && a.removeClass("is-selected"),
+                this.selectedItem = e;
+            var o = i[this.selectedItem];
+            o && (o.addClass("is-selected"),
+            t && t.instanceOf(KeyboardEvent) && o.scrollIntoView({
+                block: "nearest"
+            })),
+            null === (r = (n = this.chooser).onSelectedChange) || void 0 === r || r.call(n, this.values[e], t)
+        }
+        e.prototype.onSuggestionClick = function (e, t) {
+            e.preventDefault();
+            var n = this.suggestions.indexOf(t);
+            this.setSelectedItem(n, e),
+                this.useSelectedItem(e)
+        }
+        e.prototype.onSuggestionMouseover = function (e, t) {
+            var n = this.suggestions.indexOf(t);
+            this.setSelectedItem(n, e)
+        }
+        e.prototype.useSelectedItem = function (e) {
+            if (!this.values)
+                return !1;
+            var t = this.values[this.selectedItem];
+            return void 0 !== t && (this.chooser.selectSuggestion(t, e),
+                !0)
+        }
+        return e
     }()
         , kl = function () {
         function e(e) {
@@ -22400,7 +22252,7 @@ require.r = module => {
             });
             r.setAttribute("placeholder", "Search page or heading..."),
                 this.resultEl = createDiv("search-results");
-            var i = this.scope = new _s;
+            var i = this.scope = new Scope;
             this.chooser = new wl(this, this.resultEl, i),
                 e.on("options-updated", this.updateOptions.bind(this)),
                 r.addEventListener("input", kr(this.updateSearch.bind(this), 100, !0)),
@@ -22408,131 +22260,131 @@ require.r = module => {
                 document.addEventListener("click", this.onDocumentClick.bind(this))
         }
 
-        return e.prototype.onDocumentClick = function (e) {
+        e.prototype.onDocumentClick = function (e) {
             e.defaultPrevented || this.resultEl.remove()
-        },
-            e.prototype.updateOptions = function () {
-                var e = this.publish.site.getConfig(No);
-                Hr && (e = !1),
-                    this.outerContainerEl.toggle(e)
-            },
-            e.prototype.updateSearch = function () {
-                var e = this.resultEl
-                    , t = this.inputEl
-                    , n = t.value;
-                if (e.empty(),
-                    !n)
-                    return this.inputEl.removeClass("has-no-results"),
-                        void e.detach();
-                document.body.appendChild(e),
-                    Pr(t.getBoundingClientRect(), e, {
-                        gap: 5
-                    });
-                var r = n.toLowerCase().split(" ")
-                    , i = this.publish.site.cache
-                    , a = [];
-                for (var o in i.cache)
-                    if (i.cache.hasOwnProperty(o) && "md" === bo(o)) {
-                        var s = yo(o)
-                            , l = vo(s)
-                            , c = yl(r, n, l)
-                            , h = yl(r, n, s);
-                        c ? (c.score += .8,
-                            gl(c.matches, s.length - l.length),
-                            a.push({
-                                type: "file",
-                                path: s,
-                                match: c
-                            })) : h && (h.score += .5,
-                            a.push({
-                                type: "file",
-                                path: s,
-                                match: h
-                            }));
-                        var u = i.getCache(o);
-                        if (u) {
-                            var f = Rn(u.frontmatter);
-                            if (f)
-                                for (var p = 0, d = f; p < d.length; p++) {
-                                    var m = d[p];
-                                    (M = yl(r, n, m)) && a.push({
-                                        type: "alias",
-                                        alias: m,
-                                        path: s,
-                                        match: M
-                                    })
-                                }
-                            if (u.headings)
-                                for (var v = 0, g = u.headings; v < g.length; v++) {
-                                    var M, y = g[v];
-                                    (M = yl(r, n, y.heading)) && a.push({
-                                        type: "heading",
-                                        path: s,
-                                        heading: y,
-                                        match: M
-                                    })
-                                }
-                        }
+        }
+        e.prototype.updateOptions = function () {
+            var e = this.publish.site.getConfig(No);
+            Hr && (e = !1),
+                this.outerContainerEl.toggle(e)
+        }
+        e.prototype.updateSearch = function () {
+            var e = this.resultEl
+                , t = this.inputEl
+                , n = t.value;
+            if (e.empty(),
+                !n)
+                return this.inputEl.removeClass("has-no-results"),
+                    void e.detach();
+            document.body.appendChild(e),
+                Pr(t.getBoundingClientRect(), e, {
+                    gap: 5
+                });
+            var r = n.toLowerCase().split(" ")
+                , i = this.publish.site.cache
+                , a = [];
+            for (var o in i.cache)
+                if (i.cache.hasOwnProperty(o) && "md" === bo(o)) {
+                    var s = yo(o)
+                        , l = vo(s)
+                        , c = yl(r, n, l)
+                        , h = yl(r, n, s);
+                    c ? (c.score += .8,
+                        gl(c.matches, s.length - l.length),
+                        a.push({
+                            type: "file",
+                            path: s,
+                            match: c
+                        })) : h && (h.score += .5,
+                        a.push({
+                            type: "file",
+                            path: s,
+                            match: h
+                        }));
+                    var u = i.getCache(o);
+                    if (u) {
+                        var f = Rn(u.frontmatter);
+                        if (f)
+                            for (var p = 0, d = f; p < d.length; p++) {
+                                var m = d[p];
+                                (M = yl(r, n, m)) && a.push({
+                                    type: "alias",
+                                    alias: m,
+                                    path: s,
+                                    match: M
+                                })
+                            }
+                        if (u.headings)
+                            for (var v = 0, g = u.headings; v < g.length; v++) {
+                                var M, y = g[v];
+                                (M = yl(r, n, y.heading)) && a.push({
+                                    type: "heading",
+                                    path: s,
+                                    heading: y,
+                                    match: M
+                                })
+                            }
                     }
-                !function (e) {
-                    e.sort((function (e, t) {
-                            return t.match.score - e.match.score
+                }
+            !function (e) {
+                e.sort((function (e, t) {
+                        return t.match.score - e.match.score
+                    }
+                ))
+            }(a),
+                a = a.slice(0, 50),
+                this.chooser.setSuggestions(a),
+                this.inputEl.toggleClass("has-no-results", 0 === a.length),
+            0 === a.length && this.chooser.addMessage("No results found.")
+        }
+        e.prototype.onKeydown = function (e) {
+            if (this.inputEl === document.activeElement) {
+                var t = {
+                    modifiers: Keymap.getModifiers(e),
+                    key: js(e),
+                    vkey: Fs(e)
+                };
+                this.scope.handleKey(e, t)
+            }
+        }
+        e.prototype.renderSuggestion = function (e, t) {
+            t.addClass("mod-complex");
+            var n = t.createDiv("suggestion-content")
+                , r = t.createDiv("suggestion-aux")
+                , i = n.createDiv("suggestion-title")
+                , a = n.createDiv("suggestion-note");
+            if ("file" === e.type) {
+                var o = vo(s = e.path);
+                bl(a, s.substr(0, s.length - o.length - 1), e.match),
+                    bl(i, o, e.match, o.length - s.length)
+            } else if ("alias" === e.type) {
+                var s = e.path;
+                bl(i, e.alias, e.match),
+                    a.setText(s),
+                    r.createSpan({
+                        cls: "suggestion-flair",
+                        prepend: !0
+                    }, (function (e) {
+                            wi(e, "lucide-forward"),
+                                setTooltip(e, "Alias")
                         }
                     ))
-                }(a),
-                    a = a.slice(0, 50),
-                    this.chooser.setSuggestions(a),
-                    this.inputEl.toggleClass("has-no-results", 0 === a.length),
-                0 === a.length && this.chooser.addMessage("No results found.")
-            },
-            e.prototype.onKeydown = function (e) {
-                if (this.inputEl === document.activeElement) {
-                    var t = {
-                        modifiers: Keymap.getModifiers(e),
-                        key: js(e),
-                        vkey: Fs(e)
-                    };
-                    this.scope.handleKey(e, t)
-                }
-            },
-            e.prototype.renderSuggestion = function (e, t) {
-                t.addClass("mod-complex");
-                var n = t.createDiv("suggestion-content")
-                    , r = t.createDiv("suggestion-aux")
-                    , i = n.createDiv("suggestion-title")
-                    , a = n.createDiv("suggestion-note");
-                if ("file" === e.type) {
-                    var o = vo(s = e.path);
-                    bl(a, s.substr(0, s.length - o.length - 1), e.match),
-                        bl(i, o, e.match, o.length - s.length)
-                } else if ("alias" === e.type) {
-                    var s = e.path;
-                    bl(i, e.alias, e.match),
-                        a.setText(s),
-                        r.createSpan({
-                            cls: "suggestion-flair",
-                            prepend: !0
-                        }, (function (e) {
-                                wi(e, "lucide-forward"),
-                                    ws(e, "Alias")
-                            }
-                        ))
-                } else
-                    "heading" === e.type && (bl(i, e.heading.heading, e.match),
-                        a.setText(e.path),
-                        r.createSpan({
-                            cls: "suggestion-flair",
-                            text: "H",
-                            prepend: !0
-                        }))
-            },
-            e.prototype.selectSuggestion = function (e, t) {
-                "file" === e.type || "alias" === e.type ? this.publish.navigate(e.path, "", t instanceof MouseEvent ? t : null) : "heading" === e.type && this.publish.navigate(e.path + "#" + uo(e.heading.heading), "", t instanceof MouseEvent ? t : null),
-                    this.inputEl.value = "",
-                    this.updateSearch(),
-                    this.publish.containerEl.removeClass("is-left-column-open")
-            },
-            e
+            } else
+                "heading" === e.type && (bl(i, e.heading.heading, e.match),
+                    a.setText(e.path),
+                    r.createSpan({
+                        cls: "suggestion-flair",
+                        text: "H",
+                        prepend: !0
+                    }))
+        }
+        e.prototype.selectSuggestion = function (e, t) {
+            "file" === e.type || "alias" === e.type ? this.publish.navigate(e.path, "", t instanceof MouseEvent ? t : null) : "heading" === e.type && this.publish.navigate(e.path + "#" + stripHeadingForLink(e.heading.heading), "", t instanceof MouseEvent ? t : null),
+                this.inputEl.value = "",
+                this.updateSearch(),
+                this.publish.containerEl.removeClass("is-left-column-open")
+        }
+        return e
     }();
     var xl = 700
         , Cl = 36
@@ -22562,7 +22414,7 @@ require.r = module => {
             }
     }
 
-    const App = function (Events) {
+    const Publish = function (Events) {
         function n() {
             let _this = Events.call(this) || this;
             _this.stack = []
@@ -22760,7 +22612,7 @@ require.r = module => {
                 ))
             }
             window.require = function () {
-                return e
+                return obsidian_api
             }
             window.publish = _this
             _this.load()
@@ -23105,7 +22957,7 @@ require.r = module => {
             let site = this.site;
             if (site) {
                 this.toggleNotFound(false);
-                let i = io(e)
+                let i = parseLinktext(e)
                     , a = i.path
                     , o = i.subpath
                     , s = site.cache.getLinkpathDest(a, t);
@@ -23251,13 +23103,13 @@ require.r = module => {
             configurable: !0
         })
         n.prototype.registerMarkdownPostProcessor = function (e, t) {
-            return Pa.registerPostProcessor(e, t),
+            return MarkdownPreviewRenderer.registerPostProcessor(e, t),
                 e
         }
         n.prototype.registerMarkdownCodeBlockProcessor = function (e, t, n) {
-            var r = Pa.createCodeBlockPostProcessor(e, t);
-            return Pa.registerPostProcessor(r, n),
-                Pa.registerCodeBlockPostProcessor(e, t),
+            var r = MarkdownPreviewRenderer.createCodeBlockPostProcessor(e, t);
+            return MarkdownPreviewRenderer.registerPostProcessor(r, n),
+                MarkdownPreviewRenderer.registerCodeBlockPostProcessor(e, t),
                 r
         }
         n.prototype.trigger = function (name, ...args) {
@@ -23464,7 +23316,7 @@ require.r = module => {
     }()
 
     window.addEventListener("load", function () {
-        window.app = new App()
+        window.app = new Publish()
 
         let body = document.body;
         body.on("mouseover", "[aria-label]", ps)
