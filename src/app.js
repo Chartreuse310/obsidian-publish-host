@@ -16469,9 +16469,11 @@ require.r = e => {
                 }))
             }))
         }
+
+        // 从 site cache 中加载当前页面路径对应的文档
         n.prototype.loadFromUrl = function () {
             return a(this, void 0, void 0, (function () {
-                let _this, site, renderer, r, path, subpath, s, dest;
+                let _this, site, renderer, parsedUrl, path, subpath, currentDocPath, dest;
                 return o(this, (function (o) {
                     // debugger
                     switch (o.label) {
@@ -16479,16 +16481,16 @@ require.r = e => {
                             _this = this
                             site = _this.site
                             renderer = _this.render
-                            r = this.parseUrl()
-                            path = r.path
-                            subpath = r.subpath
-                            s = path
+                            parsedUrl = this.parseUrl()
+                            path = parsedUrl.path
+                            subpath = parsedUrl.subpath
+                            currentDocPath = path
                             if ("" === path) {
-                                s = site.getConfig(K_indexFile)
+                                currentDocPath = site.getConfig(K_indexFile)
                                 subpath = ""
                             }
                             this.toggleNotFound(false)
-                            dest = site.cache.getLinktextDest(s, "")
+                            dest = site.cache.getLinktextDest(currentDocPath, "")
                             if (dest) {
                                 return [4, renderer.loadFile(dest, subpath)]
                             } else {
