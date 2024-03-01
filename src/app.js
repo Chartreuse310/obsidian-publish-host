@@ -15584,18 +15584,20 @@ require.r = e => {
             _this.slidingWindowMode = false
             _this.keymap = new Keymap()
             _this.scope = _this.keymap.getRootScope();
-            const r = {
-                "allow-downloads": true,
-                "allow-forms": true,
-                "allow-modals": true,
-                "allow-orientation-lock": true,
-                "allow-pointer-lock": true,
-                "allow-popups": true,
-                "allow-presentation": true,
-                "allow-same-origin": true,
-                "allow-scripts": true,
-            }
+
             DOMPurify.addHook("afterSanitizeAttributes", function (iframeEl) {
+                const config = {
+                    "allow-downloads": true,
+                    "allow-forms": true,
+                    "allow-modals": true,
+                    "allow-orientation-lock": true,
+                    "allow-pointer-lock": true,
+                    "allow-popups": true,
+                    "allow-presentation": true,
+                    "allow-same-origin": true,
+                    "allow-scripts": true,
+                }
+
                 if (iframeEl.instanceOf(HTMLIFrameElement)) {
                     if (iframeEl.hasAttribute("sandbox")) {
                         let sandboxValue = iframeEl.getAttribute("sandbox")
@@ -15604,7 +15606,7 @@ require.r = e => {
                         for (let i = 0; i < features.length; i++) {
                             let feature = features[i]
                             feature = feature.trim().toLowerCase()
-                            if (r.hasOwnProperty(feature) && r[feature]) {
+                            if (config.hasOwnProperty(feature) && config[feature]) {
                                 a.push(feature)
                             }
                         }
