@@ -13157,29 +13157,41 @@ require.r = e => {
             : filepath.slice(idx + 1)
     }
 
-    function go(e) {
-        var t = e.lastIndexOf("/");
-        return -1 === t ? "" : e.slice(0, t)
+    function dirname(filepath) {
+        let idx = filepath.lastIndexOf("/");
+        return -1 === idx
+            ? ""
+            : filepath.slice(0, idx)
     }
 
-    function Mo(e) {
-        var t = basename(e), n = t.lastIndexOf(".");
-        return -1 === n || n === t.length - 1 || 0 === n ? t : t.substr(0, n)
+    // 文件名，不包含扩展名
+    function fileName(filepath) {
+        let filename = basename(filepath),
+            idx = filename.lastIndexOf(".");
+        return -1 === idx || idx === filename.length - 1 || 0 === idx
+            ? filename
+            : filename.substr(0, idx)
     }
 
-    function yo(e) {
-        var t = e.lastIndexOf(".");
-        return -1 === t || t === e.length - 1 || 0 === t ? e : e.substr(0, t)
+    function fileName2(filename) {
+        let idx = filename.lastIndexOf(".");
+        return -1 === idx || idx === filename.length - 1 || 0 === idx
+            ? filename
+            : filename.substr(0, idx)
     }
 
-    function bo(e) {
-        var t = e.lastIndexOf(".");
-        return -1 === t || t === e.length - 1 || 0 === t ? "" : e.substr(t + 1).toLowerCase()
+    // 文件扩展名，不包含.
+    function fileExt(filename) {
+        let idx = filename.lastIndexOf(".");
+        return -1 === idx || idx === filename.length - 1 || 0 === idx
+            ? ""
+            : filename.substr(idx + 1).toLowerCase()
     }
 
-    function wo(e) {
-        var t = basename(e);
-        return "md" === bo(t) ? Mo(t) : t
+    // 文件名，md文件不包含.md后缀，其他文件包含扩展名
+    function betterFilename(filepath) {
+        let filename = basename(filepath);
+        return "md" === fileExt(filename) ? fileName(filename) : filename
     }
 
 
@@ -13367,7 +13379,7 @@ require.r = e => {
                 return this.renderer.fNodeSizeMult * Math.max(8, Math.min(3 * Math.sqrt(this.weight + 1), 30))
             }, e.prototype.getDisplayText = function () {
                 var e, t = this.id;
-                return e = "md", bo(t) === e && (t = Mo(t)), t
+                return e = "md", fileExt(t) === e && (t = fileName(t)), t
             }, e.prototype.getRelated = function () {
                 return Object.keys(this.forward).concat(Object.keys(this.reverse))
             }, e
@@ -14074,12 +14086,12 @@ require.r = e => {
                             var n = t.showAttachments, r = t.hideUnresolved, i = t.showTags, a = {},
                                 o = function (t) {
                                     if (e.cache.hasOwnProperty(t)) {
-                                        if (!n && "md" !== bo(t)) return "continue";
+                                        if (!n && "md" !== fileExt(t)) return "continue";
                                         var o = (a[t] = Qo()).links, s = e.cache[t];
                                         if (ao(s, (function (i) {
                                             var s = getLinkpath(i.link), l = e.getLinktextDest(s, t);
                                             if (l) {
-                                                if (!n && "md" !== bo(l)) return;
+                                                if (!n && "md" !== fileExt(l)) return;
                                                 o[l] = !0
                                             } else r && (o[s] = !0, a.hasOwnProperty(s) || (a[s] = Qo("unresolved")))
                                         })), i) {
@@ -14340,7 +14352,7 @@ require.r = e => {
                 var i = e.call(this, r) || this;
                 i.owner = t, i.file = n;
                 var a = i, o = a.selfEl, s = a.innerEl, l = n.name;
-                return "file" === n.type && (l = Mo(l)), s.setText(l), o.setAttr("data-path", n.path), i
+                return "file" === n.type && (l = fileName(l)), s.setText(l), o.setAttr("data-path", n.path), i
             }
 
             return extend(t, e), t.prototype.setActive = function (e) {
@@ -14418,7 +14430,7 @@ require.r = e => {
                 }
                 return 0 === n.children.length ? null : (e && e.children.push(n), n)
             }, t.prototype.renderFile = function (e, t) {
-                if ("md" !== bo(t.path)) return null;
+                if ("md" !== fileExt(t.path)) return null;
                 var n = new Ns(this, t);
                 e.children.push(n)
             }, t
@@ -14860,7 +14872,7 @@ require.r = e => {
                     return i.createEl("a", {
                         cls: "internal-link",
                         href: r.getPublicHref(n),
-                        text: wo(n)
+                        text: betterFilename(n)
                     }).addEventListener("click", (function (r) {
                         r.preventDefault(), e.close(), t.navigate(n, "")
                     }))
@@ -15085,7 +15097,7 @@ require.r = e => {
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = basename(e), c = bo(l), h = wo(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(K_hideTitle) || f.createDiv({
+                            return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = basename(e), c = fileExt(l), h = betterFilename(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(K_hideTitle) || f.createDiv({
                                 cls: "page-header",
                                 text: h
                             }), i.updateHeader(), i.clear(), p = i.footer, (d = p.el).empty(), i.updateFooter(), "md" !== c ? [3, 2] : [4, s.loadMarkdownFile(e)]);
@@ -15100,7 +15112,7 @@ require.r = e => {
                                     if (ao(g[t], (function (n) {
                                         if (s.cache.getLinktextDest(n.link, t) === e) return !0
                                     }))) {
-                                        var n = wo(t), r = createDiv("backlink-item", (function (e) {
+                                        var n = betterFilename(t), r = createDiv("backlink-item", (function (e) {
                                             return e.createEl("a", {
                                                 cls: "internal-link",
                                                 href: s.getPublicHref(t),
@@ -15301,7 +15313,7 @@ require.r = e => {
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            return a = this.publish, s = a.site, l = s.cache, c = parseLinktext(e), h = c.path, u = c.subpath, f = l.getLinkpathDest(h, n), r.empty(), f ? (p = basename(f), d = bo(f), m = s.getInternalUrl(f), image_extensions.contains(d) ? (r.addClass("image-embed"), [4, Cr(r, m)]) : [3, 2]) : [2, !1];
+                            return a = this.publish, s = a.site, l = s.cache, c = parseLinktext(e), h = c.path, u = c.subpath, f = l.getLinkpathDest(h, n), r.empty(), f ? (p = basename(f), d = fileExt(f), m = s.getInternalUrl(f), image_extensions.contains(d) ? (r.addClass("image-embed"), [4, Cr(r, m)]) : [3, 2]) : [2, !1];
                         case 1:
                             return o.sent(), [3, 14];
                         case 2:
@@ -15324,7 +15336,7 @@ require.r = e => {
                         case 10:
                             return b = o.sent(), y = b instanceof XMLHttpRequest && 404 === b.status ? "File not found" : "Failed to load", [3, 11];
                         case 11:
-                            return p = p.substr(0, p.length - bo(p).length - 1), w = r.createDiv("markdown-embed"), i || M || w.createDiv({
+                            return p = p.substr(0, p.length - fileExt(p).length - 1), w = r.createDiv("markdown-embed"), i || M || w.createDiv({
                                 cls: "markdown-embed-title",
                                 text: p
                             }), k = w.createDiv("markdown-embed-content"), w.createDiv("markdown-embed-link", (function (t) {
@@ -15569,8 +15581,8 @@ require.r = e => {
                 i = this.publish.site.cache,
                 a = [];
             for (let o in i.cache) {
-                if (i.cache.hasOwnProperty(o) && "md" === bo(o)) {
-                    var s = yo(o), l = basename(s), c = yl(r, inputValue, l), h = yl(r, inputValue, s);
+                if (i.cache.hasOwnProperty(o) && "md" === fileExt(o)) {
+                    var s = fileName2(o), l = basename(s), c = yl(r, inputValue, l), h = yl(r, inputValue, s);
                     c ? (c.score += .8, gl(c.matches, s.length - l.length), a.push({
                         type: "file",
                         path: s,
@@ -15753,10 +15765,10 @@ require.r = e => {
         e.prototype._getLinkpathDest = function (e, t) {
             var n = e.toLowerCase(), r = basename(n), i = this.uniqueFiles.get(r);
             if (!i) return [];
-            var a = go(t).toLowerCase();
+            var a = dirname(t).toLowerCase();
             if (n.startsWith("./") || n.startsWith("../")) {
                 if (n.startsWith("./../") && (n = n.substr(2)), n.startsWith("./")) "" !== a && (a += "/"), n = a + n.substring(2); else {
-                    for (; n.startsWith("../");) n = n.substr(3), a = go(a);
+                    for (; n.startsWith("../");) n = n.substr(3), a = dirname(a);
                     "" !== a && (a += "/"), n = a + n
                 }
                 for (var o = 0, s = i; o < s.length; o++) {
@@ -15949,7 +15961,7 @@ require.r = e => {
         }
         e.prototype.getPublicHref = function (filepath) {
             let cacheItem = this.cache.getCache(filepath)
-            if ("md" === bo(basename(filepath))) {
+            if ("md" === fileExt(basename(filepath))) {
                 filepath = filepath.substr(0, filepath.length - 3)
             }
             let linkpath = this.encodeFilepath(filepath, true)
@@ -16755,7 +16767,7 @@ require.r = e => {
                 siteTitle = site.isCustomDomain() ? "" : " - Obsidian Publish";
             if (currentFilepath) {
                 this.setNoIndex(false);
-                let docTitle = wo(currentFilepath);
+                let docTitle = betterFilename(currentFilepath);
                 document.title = docTitle + " - " + site.getSiteName() + siteTitle;
                 let href = site.getPublicHref(currentFilepath);
                 if (location.href !== href) {
