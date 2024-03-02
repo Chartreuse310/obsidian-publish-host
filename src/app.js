@@ -14148,25 +14148,39 @@ require.r = e => {
         return encodeURIComponent(segment).replace(/%20/g, "+")
     }
 
-    function Es(e, t, n) {
-        void 0 === n && (n = !0);
-        if (n) for (var r = 0, i = e; r < i.length; r++) {
-            var a = i[r];
-            "folder" === a.type && Es(a.children, t, n)
-        }
-        e.sort((function (e, n) {
-            var r = t.hasOwnProperty(e.path) ? t[e.path] : void 0,
-                i = t.hasOwnProperty(n.path) ? t[n.path] : void 0;
-            if (void 0 !== r && void 0 !== i) return r - i;
-            if (void 0 !== r) return -1;
-            if (void 0 !== i) return 1;
-            var a = "folder" === e.type, o = "folder" === n.type;
-            if (a || o) {
-                if (a && !o) return -1;
-                if (o && !a) return 1
+    function sortNodes(nodes, t, recursion = true) {
+        if (recursion) {
+            for (let i = 0; i < nodes.length; i++) {
+                let node = nodes[i]
+                if ("folder" === node.type) {
+                    sortNodes(node.children, t, recursion)
+                }
             }
-            return compareFn(e.name, n.name)
-        }))
+        }
+        nodes.sort(function (node1, node2) {
+            let r = t.hasOwnProperty(node1.path) ? t[node1.path] : undefined,
+                i = t.hasOwnProperty(node2.path) ? t[node2.path] : undefined;
+            if (undefined !== r && undefined !== i) {
+                return r - i
+            }
+            if (undefined !== r) {
+                return -1
+            }
+            if (undefined !== i) {
+                return 1
+            }
+            let a = "folder" === node1.type,
+                o = "folder" === node2.type;
+            if (a || o) {
+                if (a && !o) {
+                    return -1
+                }
+                if (o && !a) {
+                    return 1
+                }
+            }
+            return compareFn(node1.name, node2.name)
+        })
     }
 
     let Ss = function (e) {
@@ -14247,7 +14261,7 @@ require.r = e => {
         }
         return e
     }())
-    let Hs = function () {
+    let TreeView = function () {
         function e(childrenEl) {
             this.children = []
             this.childrenEl = childrenEl
@@ -14271,30 +14285,68 @@ require.r = e => {
         return e
     }()
 
-    function Ts(e, t, n) {
-        var r = {type: "folder", name: "", path: "", children: [], parent: null}, i = {};
-        i[""] = r;
-        for (var a = 0, o = e; a < o.length; a++) for (var s = o[a].split("/"), l = r, c = "", h = 0; h < s.length; h++) {
-            var u = s[h], f = c + u;
-            if (h === s.length - 1) l.children.push({type: "file", name: u, path: f, parent: l}); else {
-                var p = i[c = f + "/"];
-                p || (p = {
-                    type: "folder",
-                    path: f,
-                    name: u,
-                    children: [],
-                    parent: l
-                }, i[c] = p, l.children.push(p)), l = p
+    function buildFileTree(allFiles, t, hiddenItems) {
+        let root = {
+            type: "folder",
+            name: "",
+            path: "",
+            children: [],
+            parent: null
+        }
+        const directory = {}
+        directory[""] = root
+        for (let i = 0; i < allFiles.length; i++) {
+            let pathPortions = allFiles[i].split("/")
+            let parent = root
+            let currentDir = ""
+            for (let j = 0; j < pathPortions.length; j++) {
+                let segment = pathPortions[j]
+                let currentPath = currentDir + segment
+                if (j === pathPortions.length - 1) {
+                    // 最后一段
+                    parent.children.push({
+                        type: "file",
+                        name: segment,
+                        path: currentPath,
+                        parent: parent,
+                    })
+                } else {
+                    currentDir = currentPath + "/"
+                    let folderNode = directory[currentDir]
+                    if (!folderNode) {
+                        folderNode = {
+                            type: "folder",
+                            path: currentPath,
+                            name: segment,
+                            children: [],
+                            parent: parent
+                        }
+                        directory[currentDir] = folderNode
+                        parent.children.push(folderNode)
+                    }
+                    parent = folderNode
+                }
             }
         }
-        var d = function (e) {
-            for (var t = [], r = 0, i = e.children; r < i.length; r++) {
-                var a = i[r];
-                n.has(a.path) || t.push(a), "folder" === a.type && d(a)
+
+        const filterHiddenItems = function (node) {
+            let validChildren = []
+            let children = node.children
+            for (let i = 0; i < children.length; i++) {
+                let item = children[i]
+                if (!hiddenItems.has(item.path)) {
+                    validChildren.push(item)
+                }
+                if ("folder" === item.type) {
+                    filterHiddenItems(item)
+                }
             }
-            e.children = t
-        };
-        return d(r), Es(r.children, t), r
+            node.children = validChildren
+        }
+        filterHiddenItems(root)
+
+        sortNodes(root.children, t)
+        return root
     }
 
     const NavView = function () {
@@ -14303,7 +14355,7 @@ require.r = e => {
             this.publish = app
             let outerEl = this.outerEl = el.createDiv("nav-view-outer");
             this.containerEl = outerEl.createDiv("nav-view")
-            this.treeView = new Is(this.containerEl, this.publish, this.onItemClick.bind(this))
+            this.treeView = new NavTreeView(this.containerEl, this.publish, this.onItemClick.bind(this))
             app.on("options-updated", this.updateOptions.bind(this))
             app.on("navigated", this.onNavigated.bind(this))
         }
@@ -14312,155 +14364,241 @@ require.r = e => {
             return this.outerEl
         }
         e.prototype.updateOptions = function () {
-            var e = this, t = this.publish.site.getConfig(K_showNavigation);
-            if (isBotAgent && (t = !1), this.containerEl.toggle(t), this.publish.containerEl.toggleClass("has-navigation", t), t) {
-                this.init();
+            let _this = this
+            let showNavigation = this.publish.site.getConfig(K_showNavigation)
+
+            if (isBotAgent) {
+                showNavigation = false
+            }
+            this.containerEl.toggle(showNavigation)
+            this.publish.containerEl.toggleClass("has-navigation", showNavigation)
+            if (showNavigation) {
+                this.init()
                 try {
-                    window.matchMedia("(max-width: 750px)").addEventListener("change", (function () {
-                        return e.init()
-                    }))
+                    window.matchMedia("(max-width: 750px)").addEventListener("change", function () {
+                        return _this.init()
+                    })
                 } catch (e) {
                     console.error(e)
                 }
             }
         }
-        e.prototype.init = function (e) {
-            if (void 0 === e && (e = !1), !this.initialized) {
-                var t = this.publish.site;
-                if (t.getConfig(K_showNavigation) && (e || !(this.containerEl.getBoundingClientRect().right <= 0))) {
-                    this.initialized = !0;
-                    for (var n = t.getConfig(K_navigationOrdering), r = new Set(t.getConfig(K_navigationHiddenItems)), i = {}, a = 0; a < n.length; a++) {
-                        i[n[a]] = a
+        e.prototype.init = function (e = false) {
+            if (!this.initialized) {
+                let site = this.publish.site
+                if (site.getConfig(K_showNavigation)) {
+                    if (e || !(this.containerEl.getBoundingClientRect().right <= 0)) {
+                        this.initialized = true
+                        let navigationOrdering = site.getConfig(K_navigationOrdering),
+                            hiddenItems = new Set(site.getConfig(K_navigationHiddenItems)),
+                            i = {}
+                        for (let a = 0; a < navigationOrdering.length; a++) {
+                            i[navigationOrdering[a]] = a
+                        }
+                        let tree = buildFileTree(Object.keys(site.cache.cache), i, hiddenItems)
+                        this.treeView.renderTree(tree)
+                        this.treeView.setActiveItem(this.publish.render.currentFilepath)
                     }
-                    var o = Ts(Object.keys(t.cache.cache), i, r);
-                    this.treeView.renderTree(o), this.treeView.setActiveItem(this.publish.render.currentFilepath)
                 }
             }
         }
         e.prototype.onNavigated = function () {
             this.treeView.setActiveItem(this.publish.render.currentFilepath)
         }
-        e.prototype.onItemClick = function (e, t) {
-            var n = this.publish;
-            t.preventDefault(), n.containerEl.removeClass("is-left-column-open"), n.navigate(e.getItemPath(), "", t)
+        e.prototype.onItemClick = function (e, evt) {
+            let app = this.publish
+            evt.preventDefault()
+            app.containerEl.removeClass("is-left-column-open")
+            app.navigate(e.getItemPath(), "", evt)
         }
         return e
     }()
-    var Os = function (e) {
-            function t(t, n, r) {
-                void 0 === r && (r = "div");
-                var i = e.call(this, r) || this;
-                i.owner = t, i.file = n;
-                var a = i, o = a.selfEl, s = a.innerEl, l = n.name;
-                return "file" === n.type && (l = fileName(l)), s.setText(l), o.setAttr("data-path", n.path), i
+    const NavItem = function (e) {
+        function t(owner, file, tagName = 'div') {
+            let _this = e.call(this, tagName) || this
+            _this.owner = owner
+            _this.file = file
+            let selfEl = _this.selfEl,
+                innerEl = _this.innerEl,
+                filename = file.name;
+            if ("file" === file.type) {
+                filename = fileName(filename)
             }
+            innerEl.setText(filename)
+            selfEl.setAttr("data-path", file.path)
+            return _this
+        }
 
-            return extend(t, e), t.prototype.setActive = function (e) {
-                this.selfEl.toggleClass("mod-active", e)
-            }, t.prototype.getItemPath = function () {
-                return this.file.path
-            }, t
-        }(Ss),
-        Ns = function (e) {
-            function t(t, n) {
-                var r = e.call(this, t, n, "a") || this;
-                return r.setCollapsible(!1), r
+        extend(t, e)
+        t.prototype.setActive = function (e) {
+            this.selfEl.toggleClass("mod-active", e)
+        }
+        t.prototype.getItemPath = function () {
+            return this.file.path
+        }
+        return t
+    }(Ss)
+    const Nav_FileItem = function (NavItem) {
+        function t(owner, file) {
+            let _this = NavItem.call(this, owner, file, "a") || this
+            _this.setCollapsible(false)
+            return _this
+        }
+
+        extend(t, NavItem)
+        t.prototype.onSelfClick = function (e) {
+            e.defaultPrevented || this.owner.onItemClick(this, e)
+        }
+        t.prototype.render = function () {
+            NavItem.prototype.render.call(this);
+            var t = this.owner.publish.site.getPublicHref(this.getItemPath());
+            this.selfEl.setAttr("href", t), this.selfEl.addClass("is-clickable")
+        }
+        return t
+    }(NavItem)
+    const Nav_FolderItem = function (NavItem) {
+        function t(owner, file) {
+            let _this = NavItem.call(this, owner, file) || this
+            _this.children = []
+            _this.setCollapsible("" !== file.name)
+            _this.setCollapsed(true, false)
+            return _this
+        }
+
+        extend(t, NavItem)
+        t.prototype.onSelfClick = function (e) {
+            e.defaultPrevented || this.toggleCollapsed(!0)
+        }
+        t.prototype.render = function () {
+            NavItem.prototype.render.call(this), this.selfEl.addClass("is-clickable")
+        }
+        return t
+    }(NavItem)
+
+    const NavTreeView = function (TreeView) {
+        function t(containerEl, app, onItemClick) {
+            let _this = TreeView.call(this, containerEl) || this
+            _this.activeItem = null
+            _this.rootFolder = null
+            _this.publish = app
+            _this.onItemClick = onItemClick
+            return _this
+        }
+
+        extend(t, TreeView)
+        t.prototype.setActiveItem = function (filepath) {
+            let activeItem = this.activeItem;
+            if (null != activeItem) {
+                activeItem.setActive(false)
             }
-
-            return extend(t, e), t.prototype.onSelfClick = function (e) {
-                e.defaultPrevented || this.owner.onItemClick(this, e)
-            }, t.prototype.render = function () {
-                e.prototype.render.call(this);
-                var t = this.owner.publish.site.getPublicHref(this.getItemPath());
-                this.selfEl.setAttr("href", t), this.selfEl.addClass("is-clickable")
-            }, t
-        }(Os),
-        Ps = function (e) {
-            function t(t, n) {
-                var r = e.call(this, t, n) || this;
-                return r.children = [], r.setCollapsible("" !== n.name), r.setCollapsed(!0, !1), r
-            }
-
-            return extend(t, e), t.prototype.onSelfClick = function (e) {
-                e.defaultPrevented || this.toggleCollapsed(!0)
-            }, t.prototype.render = function () {
-                e.prototype.render.call(this), this.selfEl.addClass("is-clickable")
-            }, t
-        }(Os),
-        Is = function (e) {
-            function t(t, n, r) {
-                var i = e.call(this, t) || this;
-                return i.activeItem = null, i.rootFolder = null, i.publish = n, i.onItemClick = r, i
-            }
-
-            return extend(t, e), t.prototype.setActiveItem = function (e) {
-                var t = this.activeItem;
-                if (null == t || t.setActive(!1), e) {
-                    for (var n = [], r = e.split("/"), i = this.rootFolder, a = 0, o = r; a < o.length; a++) {
-                        var s = o[a];
-                        if (!(i instanceof Ps)) return;
-                        for (var l = null, c = 0, h = i.children; c < h.length; c++) {
-                            var u = h[c];
-                            if (u.file.name === s) {
-                                l = u;
-                                break
-                            }
+            if (filepath) {
+                let n = [],
+                    portion = filepath.split("/"),
+                    rootFolder = this.rootFolder
+                for (let a = 0; a < portion.length; a++) {
+                    let segment = portion[a]
+                    if (!(rootFolder instanceof Nav_FolderItem)) {
+                        return
+                    }
+                    for (var l = null, c = 0, h = rootFolder.children; c < h.length; c++) {
+                        var u = h[c];
+                        if (u.file.name === segment) {
+                            l = u;
+                            break
                         }
-                        if (!l) return;
-                        n.push(l), i = l
                     }
-                    for (var f = null, p = 0, d = n; p < d.length; p++) {
-                        var m = d[p];
-                        m instanceof Ps && m.collapsed && (f ? m.setCollapsed(!1, !1) : f = m), t = m
+                    if (!l) {
+                        return
                     }
-                    f && f.setCollapsed(!1, !0), this.activeItem = t, t && t.setActive(!0)
+                    n.push(l)
+                    rootFolder = l
                 }
-            }, t.prototype.renderTree = function (e) {
-                var t = this.rootFolder = this.renderFolder(null, e);
-                for (null === t && (t = new Ps(this, e)); 1 === t.children.length;) {
-                    var n = t.children[0];
-                    if (!(n instanceof Ps)) break;
-                    t = n
+                let f = null
+                for (let i = 0; i < n.length; i++) {
+                    let item = n[i]
+                    if (item instanceof Nav_FolderItem && item.collapsed) {
+                        f
+                            ? item.setCollapsed(false, false)
+                            : f = item
+                    }
+                    activeItem = item
                 }
-                t.setCollapsed(!1, !1), t.setCollapsible(!1), t.selfEl.addClass("mod-root"), this.addRoot(t), this.render()
-            }, t.prototype.renderFolder = function (e, t) {
-                for (var n = new Ps(this, t), r = 0, i = t.children; r < i.length; r++) {
-                    var a = i[r];
-                    "file" === a.type ? this.renderFile(n, a) : "folder" === a.type && this.renderFolder(n, a)
-                }
-                return 0 === n.children.length ? null : (e && e.children.push(n), n)
-            }, t.prototype.renderFile = function (e, t) {
-                if ("md" !== fileExt(t.path)) return null;
-                var n = new Ns(this, t);
-                e.children.push(n)
-            }, t
-        }(Hs),
-        Ds = function (e) {
-            function t(t, n) {
-                var r = e.call(this) || this;
-                return r.owner = t, r.heading = n, r.innerEl.setText(function (e) {
-                    var t = jn(Dn(e.heading));
-                    return t || (t = e.heading), t
-                }(n)), r
+                f && f.setCollapsed(false, true)
+                this.activeItem = activeItem
+                activeItem && activeItem.setActive(true)
             }
-
-            return extend(t, e), t.prototype.onSelfClick = function (e) {
-                if (!e.defaultPrevented) {
-                    var t = this.owner;
-                    t.onItemClick && t.onItemClick(this.heading)
+        }
+        t.prototype.renderTree = function (tree) {
+            let rootFolder = this.rootFolder = this.renderFolder(null, tree)
+            if (null === rootFolder) {
+                rootFolder = new Nav_FolderItem(this, tree)
+            }
+            for (; 1 === rootFolder.children.length;) {
+                let item = rootFolder.children[0];
+                if (!(item instanceof Nav_FolderItem)) {
+                    break
                 }
-            }, t.prototype.render = function () {
-                e.prototype.render.call(this);
-                var t = this.owner, n = this.children;
-                this.setCollapsible(t.collapsible && n && n.length > 0), this.setClickable(!!t.onItemClick)
-            }, t.prototype.setActive = function (e) {
-                this.selfEl.toggleClass("mod-active", e)
-            }, t
-        }(Ss)
+                rootFolder = item
+            }
+            rootFolder.setCollapsed(false, false)
+            rootFolder.setCollapsible(false)
+            rootFolder.selfEl.addClass("mod-root")
+            this.addRoot(rootFolder)
+            this.render()
+        }
+        t.prototype.renderFolder = function (parent, tree) {
+            let folderItem = new Nav_FolderItem(this, tree)
+            let children = tree.children
+            for (let i = 0; i < children.length; i++) {
+                let node = children[i]
+                if ("file" === node.type) {
+                    this.renderFile(folderItem, node)
+                } else if ("folder" === node.type) {
+                    this.renderFolder(folderItem, node)
+                }
+            }
+            if (0 === folderItem.children.length) {
+                return null
+            } else {
+                parent && parent.children.push(folderItem)
+                return folderItem
+            }
+        }
+        t.prototype.renderFile = function (parent, node) {
+            if ("md" !== fileExt(node.path)) {
+                return null
+            }
+            let fileItem = new Nav_FileItem(this, node)
+            parent.children.push(fileItem)
+        }
+        return t
+    }(TreeView)
+    const Ds = function (e) {
+        function t(t, n) {
+            var r = e.call(this) || this;
+            return r.owner = t, r.heading = n, r.innerEl.setText(function (e) {
+                var t = jn(Dn(e.heading));
+                return t || (t = e.heading), t
+            }(n)), r
+        }
 
-    const TreeView = function (e) {
-        function t(t, onItemClick) {
-            let _this = e.call(this, t) || this;
+        return extend(t, e), t.prototype.onSelfClick = function (e) {
+            if (!e.defaultPrevented) {
+                var t = this.owner;
+                t.onItemClick && t.onItemClick(this.heading)
+            }
+        }, t.prototype.render = function () {
+            e.prototype.render.call(this);
+            var t = this.owner, n = this.children;
+            this.setCollapsible(t.collapsible && n && n.length > 0), this.setClickable(!!t.onItemClick)
+        }, t.prototype.setActive = function (e) {
+            this.selfEl.toggleClass("mod-active", e)
+        }, t
+    }(Ss)
+
+    const OutlineTreeView = function (TreeView) {
+        function t(containerEl, onItemClick) {
+            let _this = TreeView.call(this, containerEl) || this;
             _this.collapsible = true
             _this.highlighted = null
             _this.allItems = []
@@ -14468,13 +14606,26 @@ require.r = e => {
             return _this
         }
 
-        extend(t, e)
+        extend(t, TreeView)
         t.prototype.renderOutline = function (e) {
-            for (var t = [], n = this.allItems = [], r = 0, i = e; r < i.length; r++) {
-                for (var a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;) t.pop(), l = t.last();
-                t.push(s), l ? (l.children = l.children || [], l.children.push(s)) : this.addRoot(s), n.push(s)
+            let t = [],
+                n = this.allItems = []
+            for (let r = 0, i = e; r < i.length; r++) {
+                for (let a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;) {
+                    t.pop()
+                    l = t.last()
+                }
+                t.push(s)
+                if (l) {
+                    l.children = l.children || []
+                    l.children.push(s)
+                } else {
+                    this.addRoot(s)
+                }
+                n.push(s)
             }
-            this.highlighted = null, this.render()
+            this.highlighted = null
+            this.render()
         }
         t.prototype.highlightLine = function (e) {
             for (var t = this.highlighted, n = null, r = 0, i = this.allItems; r < i.length; r++) {
@@ -14485,7 +14636,7 @@ require.r = e => {
             n !== t && (t && t.setActive(!1), this.highlighted = n, n && n.setActive(!0))
         }
         return t
-    }(Hs)
+    }(TreeView)
 
     const OutlineView = function () {
         function e(app, el) {
@@ -14497,7 +14648,7 @@ require.r = e => {
                 })), e.createSpan({text: "On this page"})
             })
             let viewEl = containerEl.createDiv("outline-view");
-            this.treeView = new TreeView(viewEl, this.onItemClick.bind(this))
+            this.treeView = new OutlineTreeView(viewEl, this.onItemClick.bind(this))
             this.treeView.collapsible = false
             app.on("options-updated", this.updateOptions.bind(this))
             app.on("navigated", this.onNavigated.bind(this))
