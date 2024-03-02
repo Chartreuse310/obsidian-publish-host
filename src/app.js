@@ -4261,8 +4261,8 @@ require.r = e => {
                     error && error(response, xhr)
                 }
             }
-            xhr.onerror = function (e) {
-                error && error(e, xhr)
+            xhr.onerror = function (evt) {
+                error && error(evt, xhr)
             }
             if (headers) {
                 for (let key in headers) {
@@ -4292,8 +4292,8 @@ require.r = e => {
         window.ajaxPromise = function (options) {
             return new Promise(function (resolve, reject) {
                 options.success = resolve
-                options.error = function (e, t) {
-                    return reject(t)
+                options.error = function (evt, xhr) {
+                    return reject(xhr)
                 }
                 ajax(options)
             })
@@ -12932,13 +12932,23 @@ require.r = e => {
         t && Array.isArray(t) && 6 === t.length && (delete e.pos, e.position = eo(t))
     }
 
-    function no(e) {
-        var t;
-        if (e.frontmatter && Array.isArray(e.frontmatter) && (e.frontmatter = null, delete e.frontmatterPos, delete e.frontmatterLinks), e.frontmatter) {
-            var n = null !== (t = e.frontmatterPos) && void 0 !== t ? t : e.frontmatter.pos;
-            n && (e.frontmatterPosition = eo(n)), delete e.frontmatterPos, delete e.frontmatter.pos, e.frontmatterLinks || (e.frontmatterLinks = Ja(e.frontmatter))
+    function no(metadata) {
+        if (metadata.frontmatter && Array.isArray(metadata.frontmatter)) {
+            metadata.frontmatter = null
+            delete metadata.frontmatterPos
+            delete metadata.frontmatterLinks
         }
-        return Qa(e, to)
+        if (metadata.frontmatter) {
+            let t = metadata.frontmatterPos
+            let n = null !== t && undefined !== t ? t : metadata.frontmatter.pos;
+            n && (metadata.frontmatterPosition = eo(n))
+            delete metadata.frontmatterPos
+            delete metadata.frontmatter.pos
+            if (!metadata.frontmatterLinks) {
+                metadata.frontmatterLinks = Ja(metadata.frontmatter)
+            }
+        }
+        return Qa(metadata, to)
     }
 
     function getLinkpath(linktext) {
@@ -13140,9 +13150,11 @@ require.r = e => {
         return e
     }();
 
-    function vo(e) {
-        var t = e.lastIndexOf("/");
-        return -1 === t ? e : e.slice(t + 1)
+    function basename(filepath) {
+        let idx = filepath.lastIndexOf("/");
+        return -1 === idx
+            ? filepath
+            : filepath.slice(idx + 1)
     }
 
     function go(e) {
@@ -13151,7 +13163,7 @@ require.r = e => {
     }
 
     function Mo(e) {
-        var t = vo(e), n = t.lastIndexOf(".");
+        var t = basename(e), n = t.lastIndexOf(".");
         return -1 === n || n === t.length - 1 || 0 === n ? t : t.substr(0, n)
     }
 
@@ -13166,7 +13178,7 @@ require.r = e => {
     }
 
     function wo(e) {
-        var t = vo(e);
+        var t = basename(e);
         return "md" === bo(t) ? Mo(t) : t
     }
 
@@ -14115,12 +14127,13 @@ require.r = e => {
         numeric: true
     }).compare
 
-    function decodePathComponent(path) {
+    function decodeURIComponentAndHandleSpace(path) {
         return decodeURIComponent(path.replace(/\+/g, "%20"))
     }
 
-    function Ls(e) {
-        return encodeURIComponent(e).replace(/%20/g, "+")
+    // 对编码结果中的 %20 替换成 +，也就是说，空格(space)字符被编码成字符(+)
+    function encodeURIComponentAndReplaceSpace(segment) {
+        return encodeURIComponent(segment).replace(/%20/g, "+")
     }
 
     function Es(e, t, n) {
@@ -15072,7 +15085,7 @@ require.r = e => {
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = vo(e), c = bo(l), h = wo(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(K_hideTitle) || f.createDiv({
+                            return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = basename(e), c = bo(l), h = wo(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(K_hideTitle) || f.createDiv({
                                 cls: "page-header",
                                 text: h
                             }), i.updateHeader(), i.clear(), p = i.footer, (d = p.el).empty(), i.updateFooter(), "md" !== c ? [3, 2] : [4, s.loadMarkdownFile(e)]);
@@ -15081,7 +15094,7 @@ require.r = e => {
                         case 2:
                             i.set("![[" + e + "]]"), o.label = 3;
                         case 3:
-                            if (r.trigger("navigated"), t && (v = s.getPublicHref(e) + t.split("#").map(Ls).join("#"), history.replaceState(null, null, v)), s.getConfig(K_showBacklinks)) {
+                            if (r.trigger("navigated"), t && (v = s.getPublicHref(e) + t.split("#").map(encodeURIComponentAndReplaceSpace).join("#"), history.replaceState(null, null, v)), s.getConfig(K_showBacklinks)) {
                                 for (b in g = s.cache.cache, M = [], y = function (t) {
                                     if (!g.hasOwnProperty(t) || t === e) return "continue";
                                     if (ao(g[t], (function (n) {
@@ -15249,7 +15262,7 @@ require.r = e => {
                         return a(t, void 0, void 0, (function () {
                             var e;
                             return o(this, (function (t) {
-                                return e = n.getPublicHref(i) + "#" + Ls(stripHeadingForLink(w)), history.replaceState(null, null, e), function (e) {
+                                return e = n.getPublicHref(i) + "#" + encodeURIComponentAndReplaceSpace(stripHeadingForLink(w)), history.replaceState(null, null, e), function (e) {
                                     if (navigator.clipboard && navigator.permissions) navigator.clipboard.writeText(e); else {
                                         var t = document.createElement("textarea");
                                         t.value = e, t.style.top = "0", t.style.left = "0", t.style.position = "fixed", document.body.appendChild(t);
@@ -15272,7 +15285,7 @@ require.r = e => {
             }
             for (var H = 0, T = l.findAll("img:not([alt])"); H < T.length; H++) {
                 var V = T[H];
-                V.setAttr("alt", vo(V.getAttr("src")))
+                V.setAttr("alt", basename(V.getAttr("src")))
             }
             for (var O = 0, N = l.findAll('a:not([href]), a[href=""]'); O < N.length; O++) {
                 N[O].setAttr("href", "#")
@@ -15288,7 +15301,7 @@ require.r = e => {
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            return a = this.publish, s = a.site, l = s.cache, c = parseLinktext(e), h = c.path, u = c.subpath, f = l.getLinkpathDest(h, n), r.empty(), f ? (p = vo(f), d = bo(f), m = s.getInternalUrl(f), image_extensions.contains(d) ? (r.addClass("image-embed"), [4, Cr(r, m)]) : [3, 2]) : [2, !1];
+                            return a = this.publish, s = a.site, l = s.cache, c = parseLinktext(e), h = c.path, u = c.subpath, f = l.getLinkpathDest(h, n), r.empty(), f ? (p = basename(f), d = bo(f), m = s.getInternalUrl(f), image_extensions.contains(d) ? (r.addClass("image-embed"), [4, Cr(r, m)]) : [3, 2]) : [2, !1];
                         case 1:
                             return o.sent(), [3, 14];
                         case 2:
@@ -15557,7 +15570,7 @@ require.r = e => {
                 a = [];
             for (let o in i.cache) {
                 if (i.cache.hasOwnProperty(o) && "md" === bo(o)) {
-                    var s = yo(o), l = vo(s), c = yl(r, inputValue, l), h = yl(r, inputValue, s);
+                    var s = yo(o), l = basename(s), c = yl(r, inputValue, l), h = yl(r, inputValue, s);
                     c ? (c.score += .8, gl(c.matches, s.length - l.length), a.push({
                         type: "file",
                         path: s,
@@ -15607,7 +15620,7 @@ require.r = e => {
             var n = t.createDiv("suggestion-content"), r = t.createDiv("suggestion-aux"),
                 i = n.createDiv("suggestion-title"), a = n.createDiv("suggestion-note");
             if ("file" === e.type) {
-                var o = vo(s = e.path);
+                var o = basename(s = e.path);
                 bl(a, s.substr(0, s.length - o.length - 1), e.match), bl(i, o, e.match, o.length - s.length)
             } else if ("alias" === e.type) {
                 var s = e.path;
@@ -15636,14 +15649,25 @@ require.r = e => {
     let publish_js = "publish.js"
     let favicon_re = /^favicon-([0-9]+)(x[0-9]+)?.png$/i;
 
-    function Hl(req) {
-        return !req || req.getAllResponseHeaders().toLowerCase().contains("obs-status") && null !== req.getResponseHeader("obs-status")
+    // 检查响应中的 obs-status header是否有值
+    function checkResponseObsStatusByXHR(xhr) {
+        if (!xhr) {
+            return true
+        }
+
+        return xhr.getAllResponseHeaders().toLowerCase().contains("obs-status") && null !== xhr.getResponseHeader("obs-status")
     }
 
-    function Tl(resp) {
-        return !resp || resp.headers.has("obs-status") && null !== resp.headers.get("obs-status")
+    // 检查响应中的 obs-status header是否有值
+    function checkResponseObsStatus(response) {
+        if (!response) {
+            return true
+        }
+
+        return response.headers.has("obs-status") && null !== response.headers.get("obs-status")
     }
 
+    // 删除 preload 元素
     function detachPreloadEls() {
         for (let i = 0, nodes = Array.from(document.head.childNodes); i < nodes.length; i++) {
             let node = nodes[i]
@@ -15669,19 +15693,19 @@ require.r = e => {
             this.permalinks = {}
         }
 
-        e.prototype.load = function (cache) {
+        e.prototype.load = function (cacheItem) {
             return a(this, void 0, void 0, (function () {
-                let uniqueFiles, key, r, frontmatter, a, c, permalink;
+                let uniqueFiles, metadata, frontmatter, a, c, permalink;
                 return o(this, (function (o) {
-                    this.cache = cache
+                    this.cache = cacheItem
                     uniqueFiles = this.uniqueFiles = new UniqueFileLookup()
-                    for (key in cache) {
-                        if (cache.hasOwnProperty(key)) {
-                            uniqueFiles.add(vo(key).toLowerCase(), key)
-                            r = cache[key]
-                            if (r) {
-                                no(r)
-                                frontmatter = r.frontmatter
+                    for (let key in cacheItem) {
+                        if (cacheItem.hasOwnProperty(key)) {
+                            uniqueFiles.add(basename(key).toLowerCase(), key)
+                            metadata = cacheItem[key]
+                            if (metadata) {
+                                no(metadata)
+                                frontmatter = metadata.frontmatter
                                 if (frontmatter) {
                                     a = Rn(frontmatter)
                                     if (a) {
@@ -15723,11 +15747,11 @@ require.r = e => {
             if ((n = this._getLinkpathDest(e + ".md", t)).length > 0) return n[0];
             var r = this.aliases, i = e.toLowerCase();
             if (r.hasOwnProperty(i)) return r[i];
-            var a = vo(e);
+            var a = basename(e);
             return r.hasOwnProperty(a) ? r[a] : null
         }
         e.prototype._getLinkpathDest = function (e, t) {
-            var n = e.toLowerCase(), r = vo(n), i = this.uniqueFiles.get(r);
+            var n = e.toLowerCase(), r = basename(n), i = this.uniqueFiles.get(r);
             if (!i) return [];
             var a = go(t).toLowerCase();
             if (n.startsWith("./") || n.startsWith("../")) {
@@ -15775,25 +15799,25 @@ require.r = e => {
         // https://publish-01.obsidian.md/cache/3ad46614835acbee6d56ec829aa8db5d
         e.prototype.loadCache = function () {
             return a(this, void 0, void 0, (function () {
-                let preloadCache, cacheResp, _siteCache, cacheLoadFn, reqConfig, resp;
+                let siteCachePromise, cacheResponse, _siteCache, cacheLoadFn, reqConfig, resp;
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            preloadCache = window.preloadCache
-                            if (!preloadCache) {
+                            siteCachePromise = window.preloadCache
+                            if (!siteCachePromise) {
                                 return [3, 7];
                             }
                             o.label = 1;
                         case 1:
                             o.trys.push([1, 6, , 7])
                             delete window.preloadCache
-                            return [4, preloadCache];
+                            return [4, siteCachePromise];
                         case 2:
-                            cacheResp = o.sent()
-                            if (cacheResp.ok && Tl(cacheResp)) {
+                            cacheResponse = o.sent()
+                            if (cacheResponse.ok && checkResponseObsStatus(cacheResponse)) {
                                 _siteCache = this.cache
                                 cacheLoadFn = _siteCache.load
-                                return [4, cacheResp.json()]
+                                return [4, cacheResponse.json()]
                             } else {
                                 return [3, 5]
                             }
@@ -15815,7 +15839,7 @@ require.r = e => {
                             return [4, ajaxPromise(reqConfig)];
                         case 8:
                             resp = o.sent()
-                            return Hl(reqConfig.req) ? [4, this.cache.load(JSON.parse(resp))] : [2];
+                            return checkResponseObsStatusByXHR(reqConfig.req) ? [4, this.cache.load(JSON.parse(resp))] : [2];
                         case 9:
                             o.sent()
                             return [2]
@@ -15828,24 +15852,24 @@ require.r = e => {
         // https://publish-01.obsidian.md/options/3ad46614835acbee6d56ec829aa8db5d
         e.prototype.loadOptions = function () {
             return a(this, void 0, void 0, (function () {
-                let preloadOptions, optionsResp, _this, reqConfig, resp, err;
+                let siteOptionsPromise, siteOptionsResponse, _this, reqConfig, resp, err;
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            preloadOptions = window.preloadOptions
-                            if (!preloadOptions) {
+                            siteOptionsPromise = window.preloadOptions
+                            if (!siteOptionsPromise) {
                                 return [3, 6];
                             }
                             o.label = 1;
                         case 1:
                             o.trys.push([1, 5, , 6])
                             delete window.preloadOptions
-                            return [4, preloadOptions];
+                            return [4, siteOptionsPromise];
                         case 2:
-                            optionsResp = o.sent()
-                            if (optionsResp.ok && Tl(optionsResp)) {
+                            siteOptionsResponse = o.sent()
+                            if (siteOptionsResponse.ok && checkResponseObsStatus(siteOptionsResponse)) {
                                 _this = this
-                                return [4, optionsResp.json()]
+                                return [4, siteOptionsResponse.json()]
                             } else {
                                 return [3, 4];
                             }
@@ -15867,7 +15891,7 @@ require.r = e => {
                             return [4, ajaxPromise(reqConfig)];
                         case 7:
                             resp = o.sent()
-                            if (Hl(reqConfig.req)) {
+                            if (checkResponseObsStatusByXHR(reqConfig.req)) {
                                 this.options = JSON.parse(resp)
                                 return [3, 9]
                             } else {
@@ -15917,39 +15941,56 @@ require.r = e => {
         e.prototype.getSiteLogoUrl = function () {
             return this.getConfig(K_logo) || ""
         }
-        e.prototype.encodeFilepath = function (path, t) {
-            return path.split("/").map(t ? Ls : encodeURIComponent).join("/")
+        e.prototype.encodeFilepath = function (path, usePlusSign) {
+            return path.split("/").map(usePlusSign ? encodeURIComponentAndReplaceSpace : encodeURIComponent).join("/")
         }
-        e.prototype.getInternalUrl = function (path) {
-            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(path, false) + this.getPathSuffix()
+        e.prototype.getInternalUrl = function (filepath) {
+            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(filepath, false) + this.getPathSuffix()
         }
-        e.prototype.getPublicHref = function (e) {
-            let t, n = this.cache.getCache(e);
-            "md" === bo(vo(e)) && (e = e.substr(0, e.length - 3));
-            var r = this.encodeFilepath(e, !0),
-                i = null === (t = null == n ? void 0 : n.frontmatter) || void 0 === t ? void 0 : t.permalink;
-            return i && "string" == typeof i && (i.startsWith("/") && (i = i.substring(1)), r = i), this.slug ? this.publish.origin + "/" + encodeURIComponent(this.slug) + "/" + r : this.customurl ? "https://" + this.customurl + "/" + r : ""
+        e.prototype.getPublicHref = function (filepath) {
+            let cacheItem = this.cache.getCache(filepath)
+            if ("md" === bo(basename(filepath))) {
+                filepath = filepath.substr(0, filepath.length - 3)
+            }
+            let linkpath = this.encodeFilepath(filepath, true)
+            let frontmatter = null == cacheItem ? undefined : cacheItem.frontmatter
+            let permalink = null === frontmatter || undefined === frontmatter
+                ? undefined
+                : frontmatter.permalink;
+            if (permalink && "string" == typeof permalink) {
+                if (permalink.startsWith("/")) {
+                    permalink = permalink.substring(1)
+                }
+                linkpath = permalink
+            }
+            return this.slug
+                ? this.publish.origin + "/" + encodeURIComponent(this.slug) + "/" + linkpath
+                : this.customurl
+                    ? "https://" + this.customurl + "/" + linkpath
+                    : ""
         }
-        e.prototype.loadMarkdownFile = function (path) {
+
+        // 加载 markdown 文件的文本内容
+        e.prototype.loadMarkdownFile = function (filepath) {
             return a(this, void 0, Promise, (function () {
-                let url, preloadPage, r, i;
+                let url, preloadPagePromise, preloadPageResponse, xhr;
                 return o(this, (function (a) {
                     switch (a.label) {
                         case 0:
-                            url = this.getInternalUrl(path)
-                            preloadPage = window.preloadPage
-                            if (!preloadPage) {
+                            url = this.getInternalUrl(filepath)
+                            preloadPagePromise = window.preloadPage
+                            if (!preloadPagePromise) {
                                 return [3, 4];
                             }
                             delete window.preloadPage
                             a.label = 1;
                         case 1:
                             a.trys.push([1, 3, , 4])
-                            return [4, preloadPage];
+                            return [4, preloadPagePromise];
                         case 2:
-                            r = a.sent()
-                            if (r.ok && r.url === url) {
-                                return [2, r.text()]
+                            preloadPageResponse = a.sent()
+                            if (preloadPageResponse.ok && preloadPageResponse.url === url) {
+                                return [2, preloadPageResponse.text()]
                             } else {
                                 return [3, 4]
                             }
@@ -15962,17 +16003,17 @@ require.r = e => {
                         case 5:
                             return [2, a.sent()];
                         case 6:
-                            i = a.sent()
-                            if (i instanceof XMLHttpRequest) {
-                                if (404 === i.status) {
-                                    new Notice('"'.concat(path, '" does not exist'))
+                            xhr = a.sent()
+                            if (xhr instanceof XMLHttpRequest) {
+                                if (404 === xhr.status) {
+                                    new Notice('"'.concat(filepath, '" does not exist'))
                                 } else {
-                                    new Notice('An error occurred while loading "'.concat(path, '"'))
-                                    console.error(i.response)
+                                    new Notice('An error occurred while loading "'.concat(filepath, '"'))
+                                    console.error(xhr.response)
                                 }
                             } else {
-                                new Notice('An error occurred while loading "'.concat(path, '"'))
-                                console.error(i)
+                                new Notice('An error occurred while loading "'.concat(filepath, '"'))
+                                console.error(xhr)
                             }
                             return [3, 7];
                         case 7:
@@ -16423,7 +16464,7 @@ require.r = e => {
                             U = docHead.find('link[rel="icon"]:not([sizes])')
                             for (let _ in _cache) {
                                 if (_cache.hasOwnProperty(_)) {
-                                    filename = vo(_)
+                                    filename = basename(_)
                                     if ("favicon.ico" === filename) {
                                         docHead.createEl("link", {
                                             href: site.getInternalUrl(_),
@@ -16543,7 +16584,6 @@ require.r = e => {
             this.updateSlidingWindow()
         }
         n.prototype.parseUrl = function () {
-            debugger
             let path,
                 pathname = location.pathname,
                 customurl = this.site.customurl,
@@ -16565,9 +16605,9 @@ require.r = e => {
             let permalinks = this.site.cache.permalinks;
             path = permalinks.hasOwnProperty(pathname)
                 ? permalinks[pathname]
-                : pathname.split("/").filter(e => e).map(decodePathComponent).join("/");
+                : pathname.split("/").filter(e => e).map(decodeURIComponentAndHandleSpace).join("/");
             let hash = location.hash || ""
-            hash = hash.split("#").map(decodePathComponent).join("#")
+            hash = hash.split("#").map(decodeURIComponentAndHandleSpace).join("#")
             return {
                 path: path,
                 subpath: hash,
