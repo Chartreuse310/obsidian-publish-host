@@ -8009,10 +8009,12 @@ require.r = e => {
         return !(!e.startsWith("./") && !e.startsWith("../")) || -1 === e.indexOf(":")
     }
 
-    var Ln = /\u00A0/g;
+    // U+00A0 No-Break Space
+    const Ln = /\u00A0/g;
 
-    function En(e) {
-        return e.replace(Ln, " ")
+    // 替换文本中的非换行空格字符为普通的空格字符
+    function replaceNoBreakSpace(linktext) {
+        return linktext.replace(Ln, " ")
     }
 
     function Sn(e) {
@@ -8024,7 +8026,7 @@ require.r = e => {
     function Hn(e) {
         var t = "", n = e.indexOf("|"), r = n > 0;
         return r ? (t = e.substr(n + 1).trim(), e = e.substr(0, n).trim()) : t = Sn(e = e.trim()), e.endsWith("\\") && (e = e.substr(0, e.length - 1)), {
-            href: e = En(e).trim(),
+            href: e = replaceNoBreakSpace(e).trim(),
             title: t,
             isAlias: r
         }
@@ -8046,7 +8048,7 @@ require.r = e => {
     var Nn = new rn, Pn = new rn, In = {};
 
     // 解析 markdown 的 ast
-    function Dn(markdown) {
+    function __parseMarkdown(markdown) {
         let t = m()(markdown)
         let n = new On(String(t), t)
         n.setOptions(On.globalOptions);
@@ -8389,7 +8391,7 @@ require.r = e => {
                         } catch (e) {
                             return
                         }
-                        var a = En(i).trim();
+                        var a = replaceNoBreakSpace(i).trim();
                         n.children[t] = {
                             type: "ilink",
                             href: a,
@@ -8418,7 +8420,7 @@ require.r = e => {
                         } catch (e) {
                             return
                         }
-                        var a = En(i).trim();
+                        var a = replaceNoBreakSpace(i).trim();
                         n.children[t] = {
                             type: "iembed",
                             href: a,
@@ -8738,32 +8740,57 @@ require.r = e => {
         return p()(e)
     }
 
-    function Bn(e) {
-        var t = [];
-        if (!e) return t;
-        for (var n = 0, r = e; n < r.length; n++) {
-            var i = r[n];
-            t.push(jn(i))
+    function Bn(nodes) {
+        let result = []
+        if (!nodes) {
+            return result
         }
-        return t
+        for (let i = 0; i < nodes.length; i++) {
+            let node = nodes[i]
+            result.push(printNode(node))
+        }
+        return result
     }
 
-    function jn(e) {
-        if (!e) return "";
-        var t = e.type;
-        if ("iembed" === t) return e.href;
-        if ("listItem" === t) {
-            var n = Bn(e.children);
-            return 1 === n.length ? n[0] + "\n" : n.join("\n")
+    function printNode(node) {
+        if (!node) {
+            return ""
         }
-        if ("tag" === t) return e.tag;
-        if ("comment" === t) return "";
-        var r = e.value || e.alt || e.title || e.hasOwnProperty("children") && Bn(e.children).join("") || "";
-        return "list" === t && e.start && (r = e.start + ". " + r), "paragraph" === t || "break" === t ? r += "\n" : r.endsWith("\n") && (r = r.substring(0, r.length - 1)), "tableCell" === t ? r += " " : "tableRow" === t && (r += "\n"), r
+        let type = node.type
+        if ("iembed" === type) {
+            return node.href
+        }
+        if ("listItem" === type) {
+            let n = Bn(node.children)
+            return 1 === n.length
+                ? n[0] + "\n"
+                : n.join("\n")
+        }
+        if ("tag" === type) {
+            return node.tag
+        }
+        if ("comment" === type) {
+            return ""
+        }
+        let text = node.value || node.alt || node.title || (node.hasOwnProperty("children") && Bn(node.children).join("")) || ""
+        if ("list" === type && node.start) {
+            text = node.start + ". " + text
+        }
+        if ("paragraph" === type || "break" === type) {
+            text += "\n"
+        } else if (text.endsWith("\n")) {
+            text = text.substring(0, text.length - 1)
+        }
+        if ("tableCell" === type) {
+            text += " "
+        } else if ("tableRow" === type) {
+            text += "\n"
+        }
+        return text
     }
 
     function Fn(e) {
-        var t = Dn(e), n = {definitions: Zn(t)}, r = [], i = [], a = [], o = t.children, s = function (e) {
+        var t = __parseMarkdown(e), n = {definitions: Zn(t)}, r = [], i = [], a = [], o = t.children, s = function (e) {
             var t = e.children[0];
             if (t && "yaml" === t.type) try {
                 var n = Kt(t.value, void 0, {});
@@ -9537,17 +9564,20 @@ require.r = e => {
     //     }
     // }();
 
-    loadScriptAsync("/lib/pdfjs/pdf.min.js", {
+    const __libPath__ = '/obsidian-publish/resources'
+    loadScriptAsync(`${__libPath__}/lib/pdfjs/pdf.min.js`, {
         after: function () {
-            window.pdfjsLib.GlobalWorkerOptions.workerSrc = "/lib/pdfjs/pdf.worker.min.js", pr(window, "pdfjsLib"), pr(pdfjsLib.GlobalWorkerOptions, "workerSrc")
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = `${__libPath__}/lib/pdfjs/pdf.worker.min.js`
+            pr(window, "pdfjsLib")
+            pr(pdfjsLib.GlobalWorkerOptions, "workerSrc")
         }
     })
-    loadScriptAsync("/lib/pdfjs/pdf.viewer.min.js", {
+    loadScriptAsync(`${__libPath__}/lib/pdfjs/pdf.viewer.min.js`, {
         after: function () {
             pr(window, "pdfjsViewer")
         }
     })
-    loadScriptAsync("/lib/codemirror/modes.min.js")
+    loadScriptAsync(`${__libPath__}/lib/codemirror/modes.min.js`)
 
     var Kr = {
         primaryColor: "var(--background-primary-alt)",
@@ -9637,7 +9667,7 @@ require.r = e => {
     for (var Yr = 0; Yr < 12; Yr++) {
         Kr["cScaleLabel" + Yr] = "var(--text-normal)";
     }
-    var Xr = loadScriptAsync("/lib/mermaid.min.js", {
+    var Xr = loadScriptAsync(`${__libPath__}/lib/mermaid.min.js`, {
         after: function () {
             mermaid.initialize({
                 startOnLoad: !1,
@@ -9660,8 +9690,8 @@ require.r = e => {
             }), mermaid.mermaidAPI.updateSiteConfig({themeVariables: Kr})
         }
     });
-    var Jr = loadScriptAsync("/lib/prism.min.js");
-    var Qr = loadScriptAsync("/lib/mathjax/tex-chtml-full.js", {
+    var Jr = loadScriptAsync(`${__libPath__}/lib/prism.min.js`);
+    var Qr = loadScriptAsync(`${__libPath__}/lib/mathjax/tex-chtml-full.js`, {
         before: function () {
             window.MathJax = {
                 tex: {
@@ -12952,12 +12982,17 @@ require.r = e => {
     }
 
     function getLinkpath(linktext) {
-        return (linktext = En(linktext).normalize("NFC")).split("#")[0]
+        linktext = replaceNoBreakSpace(linktext).normalize("NFC")
+        return linktext.split("#")[0]
     }
 
     function parseLinktext(linktext) {
-        var t = (linktext = En(linktext).normalize("NFC")).split("#")[0];
-        return {path: t, subpath: linktext.substr(t.length)}
+        linktext = replaceNoBreakSpace(linktext).normalize("NFC")
+        let linkPath = linktext.split("#")[0];
+        return {
+            path: linkPath,
+            subpath: linktext.substr(linkPath.length),
+        }
     }
 
     function ao(e, t) {
@@ -14000,7 +14035,7 @@ require.r = e => {
         el.setAttribute("aria-label", tooltip), bs(el, options), cs === el && Ms(el, tooltip, options)
     }
 
-    const ks = loadScriptAsync("/lib/pixi.min.js?7.2.4")
+    const ks = loadScriptAsync(`${__libPath__}/lib/pixi-7.2.4.min.js`)
     const GraphView = function () {
         function e(e, t) {
             var n = this;
@@ -14573,27 +14608,40 @@ require.r = e => {
         }
         return t
     }(TreeView)
-    const Ds = function (e) {
-        function t(t, n) {
-            var r = e.call(this) || this;
-            return r.owner = t, r.heading = n, r.innerEl.setText(function (e) {
-                var t = jn(Dn(e.heading));
-                return t || (t = e.heading), t
-            }(n)), r
+    const HeadingItem = function (Ss) {
+        function t(owner, heading) {
+            let _this = Ss.call(this) || this
+            _this.owner = owner
+            _this.heading = heading
+            _this.innerEl.setText(function (heading) {
+                let text = printNode(__parseMarkdown(heading.heading));
+                if (!text) {
+                    text = heading.heading
+                }
+                return text
+            }(heading))
+            return _this
         }
 
-        return extend(t, e), t.prototype.onSelfClick = function (e) {
-            if (!e.defaultPrevented) {
-                var t = this.owner;
-                t.onItemClick && t.onItemClick(this.heading)
+        extend(t, Ss)
+        t.prototype.onSelfClick = function (evt) {
+            if (!evt.defaultPrevented) {
+                let owner = this.owner
+                if (owner.onItemClick) {
+                    owner.onItemClick(this.heading)
+                }
             }
-        }, t.prototype.render = function () {
-            e.prototype.render.call(this);
-            var t = this.owner, n = this.children;
-            this.setCollapsible(t.collapsible && n && n.length > 0), this.setClickable(!!t.onItemClick)
-        }, t.prototype.setActive = function (e) {
-            this.selfEl.toggleClass("mod-active", e)
-        }, t
+        }
+        t.prototype.render = function () {
+            Ss.prototype.render.call(this)
+            let owner = this.owner, children = this.children;
+            this.setCollapsible(owner.collapsible && children && children.length > 0)
+            this.setClickable(!!owner.onItemClick)
+        }
+        t.prototype.setActive = function (active) {
+            this.selfEl.toggleClass("mod-active", active)
+        }
+        return t
     }(Ss)
 
     const OutlineTreeView = function (TreeView) {
@@ -14607,33 +14655,48 @@ require.r = e => {
         }
 
         extend(t, TreeView)
-        t.prototype.renderOutline = function (e) {
-            let t = [],
-                n = this.allItems = []
-            for (let r = 0, i = e; r < i.length; r++) {
-                for (let a = i[r], o = a.level, s = new Ds(this, a), l = t.last(); l && l.heading.level >= o;) {
-                    t.pop()
-                    l = t.last()
+        t.prototype.renderOutline = function (toc) {
+            debugger
+
+            let headingItems = []
+            let allItems = this.allItems = []
+            for (let i = 0; i < toc.length; i++) {
+                let heading = toc[i]
+                let level = heading.level
+                let headingItem = new HeadingItem(this, heading)
+                let lastHeadingItem = headingItems.last()
+                for (; lastHeadingItem && lastHeadingItem.heading.level >= level;) {
+                    headingItems.pop()
+                    lastHeadingItem = headingItems.last()
                 }
-                t.push(s)
-                if (l) {
-                    l.children = l.children || []
-                    l.children.push(s)
+                headingItems.push(headingItem)
+                if (lastHeadingItem) {
+                    lastHeadingItem.children = lastHeadingItem.children || []
+                    lastHeadingItem.children.push(headingItem)
                 } else {
-                    this.addRoot(s)
+                    this.addRoot(headingItem)
                 }
-                n.push(s)
+                allItems.push(headingItem)
             }
             this.highlighted = null
             this.render()
         }
-        t.prototype.highlightLine = function (e) {
-            for (var t = this.highlighted, n = null, r = 0, i = this.allItems; r < i.length; r++) {
-                var a = i[r];
-                if (!(a.heading.position.start.line <= e)) break;
-                n = a
+        t.prototype.highlightLine = function (lineNo) {
+            let highlighted = this.highlighted
+            let targetHeadingItem = null
+            let allItems = this.allItems
+            for (let i = 0; i < allItems.length; i++) {
+                let headingItem = allItems[i]
+                if (headingItem.heading.position.start.line > lineNo) {
+                    break
+                }
+                targetHeadingItem = headingItem
             }
-            n !== t && (t && t.setActive(!1), this.highlighted = n, n && n.setActive(!0))
+            if (targetHeadingItem !== highlighted) {
+                highlighted && highlighted.setActive(false)
+                this.highlighted = targetHeadingItem
+                targetHeadingItem && targetHeadingItem.setActive(true)
+            }
         }
         return t
     }(TreeView)
@@ -14655,24 +14718,45 @@ require.r = e => {
         }
 
         e.prototype.updateOptions = function () {
-            var e = this.publish.site.getConfig(K_showOutline);
-            isBotAgent && (e = !1), this.publish.containerEl.toggleClass("has-outline", e), this.containerEl.toggle(e), e && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
+            let showOutline = this.publish.site.getConfig(K_showOutline);
+            if (isBotAgent) {
+                showOutline = false
+            }
+            this.publish.containerEl.toggleClass("has-outline", showOutline)
+            this.containerEl.toggle(showOutline)
+            showOutline && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
         }
-        e.prototype.onItemClick = function (e) {
-            var t = this.publish;
-            t.render.scrollToLoc(e.position.start);
-            var n = t.site.getPublicHref(t.render.currentFilepath) + "#" + stripHeadingForLink(e.heading);
-            history.replaceState(null, null, n)
+        e.prototype.onItemClick = function (heading) {
+            debugger
+
+            let app = this.publish
+            app.render.scrollToLoc(heading.position.start)
+            let url = app.site.getPublicHref(app.render.currentFilepath) + "#" + stripHeadingForLink(heading.heading);
+            history.replaceState(null, null, url)
         }
         e.prototype.onNavigated = function () {
-            var e = this, t = e.publish, n = e.treeView, r = e.containerEl, i = t.site;
-            if (i.getConfig(K_showOutline) && (n.clear(), r.isShown())) {
-                var a = t.render.currentFilepath, o = i.cache.getCache(a);
-                o && o.headings && 0 !== o.headings.length ? (r.toggleVisibility(!0), n.renderOutline(o.headings), this.highlightLine(0)) : r.toggleVisibility(!1)
+            let _this = this,
+                app = _this.publish,
+                treeView = _this.treeView,
+                containerEl = _this.containerEl,
+                site = app.site;
+            if (site.getConfig(K_showOutline)) {
+                treeView.clear()
+                if (containerEl.isShown()) {
+                    let currentFilepath = app.render.currentFilepath
+                    let fileMeta = site.cache.getCache(currentFilepath)
+                    if (fileMeta && fileMeta.headings && 0 !== fileMeta.headings.length) {
+                        containerEl.toggleVisibility(true)
+                        treeView.renderOutline(fileMeta.headings)
+                        this.highlightLine(0)
+                    } else {
+                        containerEl.toggleVisibility(false)
+                    }
+                }
             }
         }
-        e.prototype.highlightLine = function (e) {
-            this.treeView.highlightLine(e)
+        e.prototype.highlightLine = function (lineNo) {
+            this.treeView.highlightLine(lineNo)
         }
         return e
     }()
@@ -15035,10 +15119,13 @@ require.r = e => {
         return t
     }(Modal)
 
-    const Us = {}
-    !function (e) {
-        e[e.Showing = 0] = "Showing", e[e.Shown = 1] = "Shown", e[e.Hiding = 2] = "Hiding", e[e.Hidden = 3] = "Hidden"
-    }(Us)
+    const HoverPopover_State = {}
+    HoverPopover_State[HoverPopover_State.Showing = 0] = "Showing"
+    HoverPopover_State[HoverPopover_State.Shown = 1] = "Shown"
+    HoverPopover_State[HoverPopover_State.Hiding = 2] = "Hiding"
+    HoverPopover_State[HoverPopover_State.Hidden = 3] = "Hidden"
+
+
     var Ys = [],
         Xs = [],
         Js = 0,
@@ -15079,7 +15166,7 @@ require.r = e => {
         function t(t, n, r) {
             void 0 === r && (r = 300);
             var i = Component.call(this) || this;
-            i.onTarget = !0, i.onHover = !1, i.shownPos = null, i.parent = t, i.targetEl = n, i.waitTime = r, i.state = Us.Showing;
+            i.onTarget = !0, i.onHover = !1, i.shownPos = null, i.parent = t, i.targetEl = n, i.waitTime = r, i.state = HoverPopover_State.Showing;
             var a = i.hoverEl = createDiv("popover hover-popover"), o = i.onMouseIn = i.onMouseIn.bind(i),
                 s = i.onMouseOut = i.onMouseOut.bind(i);
             return n && (n.addEventListener("mouseover", o), n.addEventListener("mouseout", s)), a.addEventListener("mouseover", (function (e) {
@@ -15114,17 +15201,17 @@ require.r = e => {
         }
         t.prototype.transition = function () {
             var e = this, t = this.shouldShow(), n = this.state;
-            t ? n === Us.Hiding && (this.state = Us.Shown, clearTimeout(this.timer)) : n === Us.Showing ? this.hide() : n === Us.Shown && (this.state = Us.Hiding, this.timer = window.setTimeout((function () {
+            t ? n === HoverPopover_State.Hiding && (this.state = HoverPopover_State.Shown, clearTimeout(this.timer)) : n === HoverPopover_State.Showing ? this.hide() : n === HoverPopover_State.Shown && (this.state = HoverPopover_State.Hiding, this.timer = window.setTimeout((function () {
                 e.shouldShow() ? e.transition() : e.hide()
             }), this.waitTime))
         }
         t.prototype.show = function () {
             var e = this.targetEl;
-            !e || e.doc.body.contains(e) ? (this.state = Us.Shown, this.timer = 0, this.shownPos = Qs, this.position(Qs), this.onShow(), Ys.remove(this), Xs.push(this), il(), this.load()) : this.hide()
+            !e || e.doc.body.contains(e) ? (this.state = HoverPopover_State.Shown, this.timer = 0, this.shownPos = Qs, this.position(Qs), this.onShow(), Ys.remove(this), Xs.push(this), il(), this.load()) : this.hide()
         }
         t.prototype.hide = function () {
             var e = this, t = this, n = t.hoverEl, r = t.targetEl, i = t.timer;
-            this.state = Us.Hidden, Ys.remove(this), Xs.remove(this), clearTimeout(i), n.detach(), r && (r.removeEventListener("mouseover", this.onMouseIn), r.removeEventListener("mouseout", this.onMouseOut)), this.onTarget = !1, this.onHover = !1, Xs.filter((function (t) {
+            this.state = HoverPopover_State.Hidden, Ys.remove(this), Xs.remove(this), clearTimeout(i), n.detach(), r && (r.removeEventListener("mouseover", this.onMouseIn), r.removeEventListener("mouseout", this.onMouseOut)), this.onTarget = !1, this.onHover = !1, Xs.filter((function (t) {
                 return t.targetEl && e.hoverEl.contains(t.targetEl)
             })).forEach((function (e) {
                 return e.hide()
@@ -15221,105 +15308,7 @@ require.r = e => {
         canvas_extensions = ["canvas"];
     [].concat(image_extensions, audio_extensions, video_extensions, pdf_extensions, md_extensions, canvas_extensions);
 
-    const Renderer = function (e) {
-        function t(app) {
-            let pubRendererEl = createDiv("publish-renderer")
-
-            let _this = this
-            _this = e.call(this, app, pubRendererEl) || this
-
-            let extraTitleEl = pubRendererEl.createDiv("extra-title");
-            _this.renderContainerEl = pubRendererEl
-            _this.extraTitle = extraTitleEl.createSpan("extra-title-text");
-            let closeBtn = extraTitleEl.createSpan()
-            setIcon(closeBtn, "lucide-x")
-            setTooltip(closeBtn, "Close page")
-            closeBtn.setAttr("role", "button")
-            closeBtn.addEventListener("click", function () {
-                return app.closeRenderer(_this)
-            })
-            return _this
-        }
-
-        extend(t, e)
-        t.prototype.loadFile = function (e, t) {
-            return a(this, void 0, void 0, (function () {
-                var n, r, i, a, s, l, c, h, u, f, p, d, m, v, g, M, y, b;
-                return o(this, (function (o) {
-                    switch (o.label) {
-                        case 0:
-                            return r = (n = this).publish, i = n.renderer, a = n.hoverPopover, s = r.site, this.currentFilepath === e ? (this.navigateSubpath(t), [2]) : (this.currentFilepath = e, l = basename(e), c = fileExt(l), h = betterFilename(e), a && (a.hide(), this.hoverPopover = a = null), this.extraTitle.setText(h), u = i.header, (f = u.el).empty(), s.getConfig(K_hideTitle) || f.createDiv({
-                                cls: "page-header",
-                                text: h
-                            }), i.updateHeader(), i.clear(), p = i.footer, (d = p.el).empty(), i.updateFooter(), "md" !== c ? [3, 2] : [4, s.loadMarkdownFile(e)]);
-                        case 1:
-                            return m = o.sent(), i.set(m || " "), this.navigateSubpath(t) || (t = ""), [3, 3];
-                        case 2:
-                            i.set("![[" + e + "]]"), o.label = 3;
-                        case 3:
-                            if (r.trigger("navigated"), t && (v = s.getPublicHref(e) + t.split("#").map(encodeURIComponentAndReplaceSpace).join("#"), history.replaceState(null, null, v)), s.getConfig(K_showBacklinks)) {
-                                for (b in g = s.cache.cache, M = [], y = function (t) {
-                                    if (!g.hasOwnProperty(t) || t === e) return "continue";
-                                    if (ao(g[t], (function (n) {
-                                        if (s.cache.getLinktextDest(n.link, t) === e) return !0
-                                    }))) {
-                                        var n = betterFilename(t), r = createDiv("backlink-item", (function (e) {
-                                            return e.createEl("a", {
-                                                cls: "internal-link",
-                                                href: s.getPublicHref(t),
-                                                attr: {"data-href": t},
-                                                text: n
-                                            })
-                                        }));
-                                        M.push({el: r, name: n})
-                                    }
-                                }, g) y(b);
-                                M.length > 0 && i.onRendered((function () {
-                                    d.empty();
-                                    var e = d.createDiv("backlinks");
-                                    e.createDiv("published-section-header", (function (e) {
-                                        e.createSpan("published-section-header-icon", (function (e) {
-                                            setIcon(e, "lucide-link")
-                                        })), e.createSpan({text: "Links to this page"})
-                                    }));
-                                    var t = e.createDiv("backlink-items-container");
-                                    M.sort((function (e, t) {
-                                        return compareFn(e.name, t.name)
-                                    })), t.setChildrenInPlace(M.map((function (e) {
-                                        return e.el
-                                    }))), i.updateFooter()
-                                }))
-                            }
-                            return [2]
-                    }
-                }))
-            }))
-        }
-        t.prototype.onScroll = function () {
-            var e = this.publish, t = this.renderer;
-            if (e.site.getConfig(K_showOutline)) {
-                var n = t.getScroll();
-                e.outline.highlightLine(Math.round(n))
-            }
-        }
-        t.prototype.onResize = function () {
-            this.renderer.onResize()
-        }
-        t.prototype.navigateSubpath = function (e) {
-            if (e) {
-                var t = this.publish.site.cache.getCache(this.currentFilepath);
-                if (t) {
-                    var n = resolveSubpath(t, e);
-                    if (n) return this.scrollToLoc(n.start), !0
-                }
-            }
-            return !1
-        }
-        t.prototype.scrollToLoc = function (e) {
-            this.renderer.applyScrollDelayed(e.line, {highlight: !0}), this.onScroll()
-        }
-        return t
-    }(function (Component) {
+    const RenderBase = function (Component) {
         function t(app, publishRendererEl) {
             let _this = Component.call(this) || this
             _this.id = genRandomHex(16)
@@ -15347,8 +15336,9 @@ require.r = e => {
         }
         t.prototype.onExternalLinkClick = function (e, t, n) {
         }
-        t.prototype.onInternalLinkClick = function (e, t, n) {
-            e.preventDefault(), this.publish.navigate(n, this.currentFilepath, e)
+        t.prototype.onInternalLinkClick = function (evt, t, linktext) {
+            evt.preventDefault()
+            this.publish.navigate(linktext, this.currentFilepath, evt)
         }
         t.prototype.onInternalLinkDrag = function (e, t, n) {
         }
@@ -15357,25 +15347,40 @@ require.r = e => {
         t.prototype.onExternalLinkRightClick = function (e, t, n) {
         }
         t.prototype.onInternalLinkMouseover = function (e, t, n) {
-            var r = this;
+            let _this = this;
             if (this.publish.site.getConfig(K_showHoverPreview)) {
-                var i = this.hoverPopover;
-                i && i.state !== Us.Hidden && i.targetEl === t || (i = new HoverPopover(this, t), setTimeout((function () {
-                    return a(r, void 0, void 0, (function () {
-                        var e;
-                        return o(this, (function (t) {
-                            switch (t.label) {
-                                case 0:
-                                    return i.state === Us.Hidden ? [2] : (e = i.hoverEl, [4, this.loadEmbed(n, this.currentFilepath, e, !0)]);
-                                case 1:
-                                    return t.sent() || (e.createDiv({
-                                        cls: "markdown-embed",
-                                        text: "This page does not yet exist."
-                                    }), e.addClass("mod-empty")), i.state === Us.Shown && i.position(), [2]
-                            }
+                let hoverPopover = this.hoverPopover
+                if (!hoverPopover || hoverPopover.state === HoverPopover_State.Hidden || hoverPopover.targetEl !== t) {
+                    hoverPopover = new HoverPopover(this, t)
+                    setTimeout(function () {
+                        return a(_this, void 0, void 0, (function () {
+                            let hoverEl;
+                            return o(this, (function (t) {
+                                switch (t.label) {
+                                    case 0:
+                                        if (hoverPopover.state === HoverPopover_State.Hidden) {
+                                            return [2]
+                                        } else {
+                                            hoverEl = hoverPopover.hoverEl
+                                            return [4, this.loadEmbed(n, this.currentFilepath, hoverEl, true)]
+                                        }
+                                    case 1:
+                                        if (!t.sent()) {
+                                            hoverEl.createDiv({
+                                                cls: "markdown-embed",
+                                                text: "This page does not yet exist."
+                                            })
+                                            hoverEl.addClass("mod-empty")
+                                        }
+                                        if (hoverPopover.state === HoverPopover_State.Shown) {
+                                            hoverPopover.position()
+                                        }
+                                        return [2]
+                                }
+                            }))
                         }))
-                    }))
-                }), 100))
+                    }, 100)
+                }
             }
         }
         t.prototype.onTagClick = function (e, t, tag) {
@@ -15383,17 +15388,17 @@ require.r = e => {
         }
         t.prototype.onQueryClick = function (e, t, n) {
         }
-        t.prototype.postProcess = function (e, t, n) {
-            var r = this, i = this._postProcess({
+        t.prototype.postProcess = function (e, promises, frontmatter) {
+            let _this = this, i = this._postProcess({
                 docId: this.id,
                 sourcePath: this.currentFilepath,
-                frontmatter: n,
-                promises: t,
+                frontmatter: frontmatter,
+                promises: promises,
                 addChild: function (e) {
-                    return r.addChild(e)
+                    return _this.addChild(e)
                 },
                 getSectionInfo: function (e) {
-                    return r.renderer.getSectionInfo(e)
+                    return _this.renderer.getSectionInfo(e)
                 },
                 containerEl: this.renderer.sizerEl,
                 el: e.el
@@ -15458,64 +15463,298 @@ require.r = e => {
             }
             return e
         }
-        t.prototype.loadEmbed = function (e, n, r, i) {
-            return void 0 === i && (i = !1), a(this, void 0, Promise, (function () {
-                var a, s, l, c, h, u, f, p, d, m, v, g, M, y, b, w, k, x;
+        t.prototype.loadEmbed = function (linktext, docPath, r, i = false) {
+            return a(this, void 0, Promise, (function () {
+                let app, site, cache, c, linkPath, subpath, dest, destFilename, destExt, url, iframeEl, g, M, y, b,
+                    embedEl, embedContentEl, x;
                 return o(this, (function (o) {
                     switch (o.label) {
                         case 0:
-                            return a = this.publish, s = a.site, l = s.cache, c = parseLinktext(e), h = c.path, u = c.subpath, f = l.getLinkpathDest(h, n), r.empty(), f ? (p = basename(f), d = fileExt(f), m = s.getInternalUrl(f), image_extensions.contains(d) ? (r.addClass("image-embed"), [4, Cr(r, m)]) : [3, 2]) : [2, !1];
+                            app = this.publish
+                            site = app.site
+                            cache = site.cache
+                            c = parseLinktext(linktext)
+                            linkPath = c.path
+                            subpath = c.subpath
+                            dest = cache.getLinkpathDest(linkPath, docPath)
+                            r.empty()
+                            if (dest) {
+                                destFilename = basename(dest)
+                                destExt = fileExt(dest)
+                                url = site.getInternalUrl(dest)
+                                if (image_extensions.contains(destExt)) {
+                                    r.addClass("image-embed")
+                                    return [4, Cr(r, url)]
+                                } else {
+                                    return [3, 2]
+                                }
+                            } else {
+                                return [2, false]
+                            }
                         case 1:
-                            return o.sent(), [3, 14];
+                            o.sent()
+                            return [3, 14];
                         case 2:
-                            return audio_extensions.contains(d) ? (r.addClass("media-embed"), [4, Ar(r, m)]) : [3, 4];
+                            if (audio_extensions.contains(destExt)) {
+                                r.addClass("media-embed")
+                                return [4, Ar(r, url)]
+                            } else {
+                                return [3, 4]
+                            }
                         case 3:
-                            return o.sent(), [3, 14];
+                            o.sent()
+                            return [3, 14];
                         case 4:
-                            return video_extensions.contains(d) ? (r.addClass("media-embed"), [4, Lr(r, m)]) : [3, 6];
+                            if (video_extensions.contains(destExt)) {
+                                r.addClass("media-embed")
+                                return [4, Lr(r, url)]
+                            } else {
+                                return [3, 6]
+                            }
                         case 5:
-                            return o.sent(), [3, 14];
+                            o.sent()
+                            return [3, 14];
                         case 6:
-                            return pdf_extensions.contains(d) ? (r.addClass("pdf-embed"), (v = r.createEl("iframe")).src = m + (u || ""), v.style.width = "100%", v.style.height = "100%", [3, 14]) : [3, 7];
+                            if (pdf_extensions.contains(destExt)) {
+                                r.addClass("pdf-embed")
+                                iframeEl = r.createEl("iframe")
+                                iframeEl.src = url + (subpath || "")
+                                iframeEl.style.width = "100%"
+                                iframeEl.style.height = "100%"
+                                return [3, 14]
+                            } else {
+                                return [3, 7]
+                            }
                         case 7:
-                            if (!(md_extensions.contains(d) && this.embedDepth < 5)) return [3, 13];
-                            g = l.getCache(f), M = resolveSubpath(g, u), y = void 0, o.label = 8;
+                            if (!(md_extensions.contains(destExt) && this.embedDepth < 5)) {
+                                return [3, 13]
+                            }
+                            g = cache.getCache(dest)
+                            M = resolveSubpath(g, subpath)
+                            y = void 0
+                            o.label = 8;
                         case 8:
-                            return o.trys.push([8, 10, , 11]), [4, ajaxPromise({withCredentials: !0, url: m})];
+                            o.trys.push([8, 10, , 11])
+                            return [4, ajaxPromise({withCredentials: true, url: url})]
                         case 9:
-                            return y = o.sent(), M && (y = po(y, g, M).content), [3, 11];
+                            y = o.sent()
+                            if (M) {
+                                y = po(y, g, M).content
+                            }
+                            return [3, 11]
                         case 10:
-                            return b = o.sent(), y = b instanceof XMLHttpRequest && 404 === b.status ? "File not found" : "Failed to load", [3, 11];
+                            b = o.sent()
+                            y = b instanceof XMLHttpRequest && 404 === b.status ? "File not found" : "Failed to load"
+                            return [3, 11]
                         case 11:
-                            return p = p.substr(0, p.length - fileExt(p).length - 1), w = r.createDiv("markdown-embed"), i || M || w.createDiv({
+                            destFilename = destFilename.substr(0, destFilename.length - fileExt(destFilename).length - 1)
+                            embedEl = r.createDiv("markdown-embed")
+                            i || M || embedEl.createDiv({
                                 cls: "markdown-embed-title",
-                                text: p
-                            }), k = w.createDiv("markdown-embed-content"), w.createDiv("markdown-embed-link", (function (t) {
-                                setIcon(t, "lucide-link"), setTooltip(t, "Open link"), t.setAttr("role", "button"), t.onClickEvent((function (t) {
-                                    0 !== t.button && 1 !== t.button || (t.preventDefault(), t.stopPropagation(), a.navigate(e, n, t))
-                                }))
-                            })), (x = new t(a, k)).embedDepth = this.embedDepth + 1, x.renderContent(y, f), [4, new Promise((function (e) {
-                                x.renderer.onRendered(e)
-                            }))];
+                                text: destFilename
+                            })
+                            embedContentEl = embedEl.createDiv("markdown-embed-content")
+                            embedEl.createDiv("markdown-embed-link", function (el) {
+                                setIcon(el, "lucide-link")
+                                setTooltip(el, "Open link")
+                                el.setAttr("role", "button")
+                                el.onClickEvent(function (evt) {
+                                    if (0 === evt.button || 1 === evt.button) {
+                                        evt.preventDefault()
+                                        evt.stopPropagation()
+                                        app.navigate(linktext, docPath, evt)
+                                    }
+                                })
+                            })
+                            x = new t(app, embedContentEl)
+                            x.embedDepth = this.embedDepth + 1
+                            x.renderContent(y, dest)
+                            return [4, new Promise(function (resolve) {
+                                x.renderer.onRendered(resolve)
+                            })]
                         case 12:
-                            return o.sent(), [3, 14];
+                            o.sent()
+                            return [3, 14];
                         case 13:
-                            r.addClass("file-embed"), r.createDiv({
+                            r.addClass("file-embed")
+                            r.createDiv({
                                 cls: "file-embed-title",
-                                text: p
-                            }), r.createDiv("file-embed-link", (function (e) {
-                                e.addEventListener("click", (function () {
-                                    window.open(m)
-                                })), setIcon(e, "lucide-arrow-up-right"), setTooltip(e, "Open in default app")
-                            })), o.label = 14;
+                                text: destFilename
+                            })
+                            r.createDiv("file-embed-link", function (el) {
+                                el.addEventListener("click", function () {
+                                    window.open(url)
+                                })
+                                setIcon(el, "lucide-arrow-up-right")
+                                setTooltip(el, "Open in default app")
+                            })
+                            o.label = 14;
                         case 14:
-                            return r.addClass("is-loaded"), [2, !0]
+                            r.addClass("is-loaded")
+                            return [2, true]
                     }
                 }))
             }))
         }
         return t
-    }(Component))
+    }(Component)
+    const Renderer = function (RenderBase) {
+        function t(app) {
+            let pubRendererEl = createDiv("publish-renderer")
+
+            let _this = this
+            _this = RenderBase.call(this, app, pubRendererEl) || this
+
+            let extraTitleEl = pubRendererEl.createDiv("extra-title");
+            _this.renderContainerEl = pubRendererEl
+            _this.extraTitle = extraTitleEl.createSpan("extra-title-text");
+            let closeBtn = extraTitleEl.createSpan()
+            setIcon(closeBtn, "lucide-x")
+            setTooltip(closeBtn, "Close page")
+            closeBtn.setAttr("role", "button")
+            closeBtn.addEventListener("click", function () {
+                return app.closeRenderer(_this)
+            })
+            return _this
+        }
+
+        extend(t, RenderBase)
+        t.prototype.loadFile = function (filepath, subpath) {
+            return a(this, void 0, void 0, (function () {
+                let _this, app, renderer, hoverPopover, site, fileName, ext, title, u, f, p, d, mdContent, v, cache,
+                    backlinks, y, b;
+                return o(this, (function (o) {
+                    switch (o.label) {
+                        case 0:
+                            _this = this
+                            app = _this.publish
+                            renderer = _this.renderer
+                            hoverPopover = _this.hoverPopover
+                            site = app.site
+                            if (this.currentFilepath === filepath) {
+                                this.navigateSubpath(subpath)
+                                return [2]
+                            } else {
+                                this.currentFilepath = filepath
+                                fileName = basename(filepath)
+                                ext = fileExt(fileName)
+                                title = betterFilename(filepath)
+                                if (hoverPopover) {
+                                    hoverPopover.hide()
+                                    this.hoverPopover = hoverPopover = null
+                                }
+                                this.extraTitle.setText(title)
+                                u = renderer.header
+                                f = u.el
+                                f.empty()
+                                if (!site.getConfig(K_hideTitle)) {
+                                    f.createDiv({
+                                        cls: "page-header",
+                                        text: title
+                                    })
+                                }
+                                renderer.updateHeader()
+                                renderer.clear()
+                                p = renderer.footer
+                                d = p.el
+                                d.empty()
+                                renderer.updateFooter()
+                                return "md" !== ext
+                                    ? [3, 2]
+                                    : [4, site.loadMarkdownFile(filepath)]
+                            }
+                        case 1:
+                            mdContent = o.sent()
+                            renderer.set(mdContent || " ")
+                            this.navigateSubpath(subpath) || (subpath = "")
+                            return [3, 3]
+                        case 2:
+                            renderer.set("![[" + filepath + "]]")
+                            o.label = 3;
+                        case 3:
+                            app.trigger("navigated")
+                            if (subpath) {
+                                v = site.getPublicHref(filepath) + subpath.split("#").map(encodeURIComponentAndReplaceSpace).join("#")
+                                history.replaceState(null, null, v)
+                            }
+                            if (site.getConfig(K_showBacklinks)) {
+                                cache = site.cache.cache
+                                backlinks = []
+                                y = function (_filepath) {
+                                    if (!cache.hasOwnProperty(_filepath) || _filepath === filepath) {
+                                        return "continue"
+                                    }
+                                    if (ao(cache[_filepath], (n) => {
+                                        if (site.cache.getLinktextDest(n.link, _filepath) === filepath) {
+                                            return true
+                                        }
+                                    })) {
+                                        let name = betterFilename(_filepath),
+                                            el = createDiv("backlink-item", function (el) {
+                                                return el.createEl("a", {
+                                                    cls: "internal-link",
+                                                    href: site.getPublicHref(_filepath),
+                                                    attr: {"data-href": _filepath},
+                                                    text: name
+                                                })
+                                            })
+                                        backlinks.push({el: el, name: name})
+                                    }
+                                }
+                                for (let path in cache) {
+                                    y(path)
+                                }
+                                if (backlinks.length > 0) {
+                                    renderer.onRendered(function () {
+                                        d.empty();
+                                        let backlinksEl = d.createDiv("backlinks");
+                                        backlinksEl.createDiv("published-section-header", function (el) {
+                                            el.createSpan("published-section-header-icon", function (el) {
+                                                setIcon(el, "lucide-link")
+                                            })
+                                            el.createSpan({text: "Links to this page"})
+                                        })
+                                        let t = backlinksEl.createDiv("backlink-items-container");
+                                        backlinks.sort((a, b) => compareFn(a.name, b.name))
+                                        t.setChildrenInPlace(backlinks.map(e => e.el))
+                                        renderer.updateFooter()
+                                    })
+                                }
+                            }
+                            return [2]
+                    }
+                }))
+            }))
+        }
+        t.prototype.onScroll = function () {
+            let app = this.publish, renderer = this.renderer;
+            if (app.site.getConfig(K_showOutline)) {
+                let n = renderer.getScroll()
+                app.outline.highlightLine(Math.round(n))
+            }
+        }
+        t.prototype.onResize = function () {
+            this.renderer.onResize()
+        }
+        t.prototype.navigateSubpath = function (subpath) {
+            if (subpath) {
+                let t = this.publish.site.cache.getCache(this.currentFilepath);
+                if (t) {
+                    let n = resolveSubpath(t, subpath);
+                    if (n) {
+                        this.scrollToLoc(n.start)
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+        t.prototype.scrollToLoc = function (loc) {
+            this.renderer.applyScrollDelayed(loc.line, {highlight: true})
+            this.onScroll()
+        }
+        return t
+    }(RenderBase)
 
     var ml = function (e, t) {
         return e[0] - t[0]
@@ -15858,16 +16097,16 @@ require.r = e => {
             this.permalinks = {}
         }
 
-        e.prototype.load = function (cacheItem) {
+        e.prototype.load = function (siteCache) {
             return a(this, void 0, void 0, (function () {
                 let uniqueFiles, metadata, frontmatter, a, c, permalink;
                 return o(this, (function (o) {
-                    this.cache = cacheItem
+                    this.cache = siteCache
                     uniqueFiles = this.uniqueFiles = new UniqueFileLookup()
-                    for (let key in cacheItem) {
-                        if (cacheItem.hasOwnProperty(key)) {
+                    for (let key in siteCache) {
+                        if (siteCache.hasOwnProperty(key)) {
                             uniqueFiles.add(basename(key).toLowerCase(), key)
-                            metadata = cacheItem[key]
+                            metadata = siteCache[key]
                             if (metadata) {
                                 no(metadata)
                                 frontmatter = metadata.frontmatter
@@ -15894,46 +16133,87 @@ require.r = e => {
                 }))
             }))
         }
-        e.prototype.getCache = function (e) {
-            var t = this.cache;
-            return t.hasOwnProperty(e) ? t[e] : null
+        e.prototype.getCache = function (filepath) {
+            let _cache = this.cache;
+            return _cache.hasOwnProperty(filepath) ? _cache[filepath] : null
         }
-        e.prototype.has = function (e) {
-            return this.cache.hasOwnProperty(e)
+        e.prototype.has = function (filepath) {
+            return this.cache.hasOwnProperty(filepath)
         }
-        e.prototype.getLinktextDest = function (e, t) {
-            var n = getLinkpath(e);
-            return this.getLinkpathDest(n, t)
+        e.prototype.getLinktextDest = function (linktext, docPath) {
+            // debugger
+
+            let linkPath = getLinkpath(linktext)
+            return this.getLinkpathDest(linkPath, docPath)
         }
-        e.prototype.getLinkpathDest = function (e, t) {
-            if ("" === e && t && this.cache.hasOwnProperty(t)) return t;
-            var n = this._getLinkpathDest(e, t);
-            if (n.length > 0) return n[0];
-            if ((n = this._getLinkpathDest(e + ".md", t)).length > 0) return n[0];
-            var r = this.aliases, i = e.toLowerCase();
-            if (r.hasOwnProperty(i)) return r[i];
-            var a = basename(e);
-            return r.hasOwnProperty(a) ? r[a] : null
+        e.prototype.getLinkpathDest = function (linkPath, docPath) {
+            // debugger
+
+            // linkPath 为空表示链接文档自身
+            if ("" === linkPath && docPath && this.cache.hasOwnProperty(docPath)) {
+                return docPath
+            }
+            let n = this._getLinkpathDest(linkPath, docPath);
+            if (n.length > 0) {
+                return n[0]
+            }
+            n = this._getLinkpathDest(linkPath + ".md", docPath)
+            if (n.length > 0) {
+                return n[0]
+            }
+            let aliases = this.aliases,
+                i = linkPath.toLowerCase();
+            if (aliases.hasOwnProperty(i)) {
+                return aliases[i]
+            }
+            let a = basename(linkPath);
+            return aliases.hasOwnProperty(a) ? aliases[a] : null
         }
-        e.prototype._getLinkpathDest = function (e, t) {
-            var n = e.toLowerCase(), r = basename(n), i = this.uniqueFiles.get(r);
-            if (!i) return [];
-            var a = dirname(t).toLowerCase();
-            if (n.startsWith("./") || n.startsWith("../")) {
-                if (n.startsWith("./../") && (n = n.substr(2)), n.startsWith("./")) "" !== a && (a += "/"), n = a + n.substring(2); else {
-                    for (; n.startsWith("../");) n = n.substr(3), a = dirname(a);
-                    "" !== a && (a += "/"), n = a + n
+        e.prototype._getLinkpathDest = function (linkPath, docPath) {
+            // debugger
+
+            let linkpath = linkPath.toLowerCase(),
+                linkFileName = basename(linkpath),
+                i = this.uniqueFiles.get(linkFileName);
+            if (!i) {
+                return [];
+            }
+            let linkDirectory = dirname(docPath).toLowerCase();
+            if (linkpath.startsWith("./") || linkpath.startsWith("../")) {
+                if (linkpath.startsWith("./../")) {
+                    linkpath = linkpath.substr(2)
                 }
-                for (var o = 0, s = i; o < s.length; o++) {
-                    if ((m = (d = s[o]).toLowerCase()) === n) return [d]
+                if (linkpath.startsWith("./")) {
+                    // linkpath 位于当前目录
+                    if ("" !== linkDirectory) {
+                        linkDirectory += "/"
+                    }
+                    linkpath = linkDirectory + linkpath.substring(2);
+                } else {
+                    // linkpath 位于上层目录
+                    for (; linkpath.startsWith("../");) {
+                        linkpath = linkpath.substr(3)
+                        linkDirectory = dirname(linkDirectory)
+                    }
+                    if ("" !== linkDirectory) {
+                        linkDirectory += "/"
+                    }
+                    linkpath = linkDirectory + linkpath
+                }
+                for (let o = 0, s = i; o < s.length; o++) {
+                    d = s[o]
+                    m = d.toLowerCase()
+                    if (m === linkpath) {
+                        return [d]
+                    }
                 }
             }
             for (var l = 0, c = i; l < c.length; l++) {
-                if ((m = (d = c[l]).toLowerCase()) === n) return [d]
+                if ((m = (d = c[l]).toLowerCase()) === linkpath) return [d]
             }
             for (var h = [], u = [], f = 0, p = i; f < p.length; f++) {
                 var d, m;
-                (m = (d = p[f]).toLowerCase()).endsWith(n) && (m.startsWith(a) ? h.push(d) : u.push(d))
+                (m = (d = p[f]).toLowerCase()).endsWith(linkpath) && (m.startsWith(linkDirectory) ? h.push(d) : u.push(d))
             }
             return h.sort((function (e, t) {
                 return e.length - t.length
@@ -16778,14 +17058,14 @@ require.r = e => {
                 subpath: hash,
             }
         }
-        n.prototype.navigate = function (linktext, t, evt) {
+        n.prototype.navigate = function (linktext, docPath, evt) {
             let site = this.site;
             if (site) {
                 this.toggleNotFound(false)
                 let i = parseLinktext(linktext),
                     path = i.path,
                     subpath = i.subpath,
-                    dest = site.cache.getLinkpathDest(path, t);
+                    dest = site.cache.getLinkpathDest(path, docPath);
                 if (dest) {
                     if (evt && Keymap.isModEvent(evt)) {
                         window.open(site.getPublicHref(dest))
