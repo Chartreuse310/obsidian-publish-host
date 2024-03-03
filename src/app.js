@@ -9102,44 +9102,58 @@ require.r = e => {
             this.data = {}
         }
 
-        e.prototype.add = function (e, t) {
-            var n, r = this.data;
-            r.hasOwnProperty(e) ? n = r[e] : r[e] = n = [], n.contains(t) || n.push(t)
-        }
-        e.prototype.remove = function (e, t) {
-            var n = this.data;
-            if (n.hasOwnProperty(e)) {
-                var r = n[e];
-                r.remove(t), 0 === r.length && delete n[e]
+        e.prototype.add = function (key, value) {
+            let set
+            if (this.data.hasOwnProperty(key)) {
+                set = this.data[key]
+            } else {
+                this.data[key] = set = []
+            }
+            if (!set.contains(value)) {
+                set.push(value)
             }
         }
-        e.prototype.removeKey = function (e) {
-            delete this.data[e]
+        e.prototype.remove = function (key, value) {
+            let data = this.data
+            if (data.hasOwnProperty(key)) {
+                let set = data[key]
+                set.remove(value)
+                if (0 === set.length) {
+                    delete data[key]
+                }
+            }
         }
-        e.prototype.get = function (e) {
-            return this.data.hasOwnProperty(e) ? this.data[e] : null
+        e.prototype.removeKey = function (key) {
+            delete this.data[key]
+        }
+        e.prototype.get = function (key) {
+            return this.data.hasOwnProperty(key) ? this.data[key] : null
         }
         e.prototype.keys = function () {
             return Object.keys(this.data)
         }
-        e.prototype.clear = function (e) {
-            delete this.data[e]
+        e.prototype.clear = function (key) {
+            delete this.data[key]
         }
         e.prototype.clearAll = function () {
             this.data = {}
         }
-        e.prototype.contains = function (e, t) {
-            var n = this.data;
-            if (n.hasOwnProperty(e)) {
-                var r = n[e];
-                return r && r.contains(t)
+        e.prototype.contains = function (key, value) {
+            let data = this.data;
+            if (data.hasOwnProperty(key)) {
+                let set = data[key]
+                return set && set.contains(value)
             }
-            return !1
+            return false
         }
         e.prototype.count = function () {
-            var e = this.data, t = 0;
-            for (var n in e) e.hasOwnProperty(n) && (t += e[n].length);
-            return t
+            let data = this.data, count = 0;
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    count += data[key].length
+                }
+            }
+            return count
         }
         return e
     }();
@@ -12911,74 +12925,131 @@ require.r = e => {
         Ya = require(8010),
         Xa = require.n(Ya);
 
-    function Ja(e) {
-        var t = [], n = function (e, n, i) {
-            var a = e ? e + "." + n : n;
-            if ("string" == typeof i) {
-                if (i.startsWith("[[") && i.endsWith("]]")) {
-                    var o = Hn(i.substring(2, i.length - 2)), s = o.title, l = o.href;
-                    t.push({key: a, link: l, original: i, displayText: s})
+    function Ja(frontmatter) {
+        let links = []
+        let n = function (prefix, key, original) {
+            let _key = prefix ? prefix + "." + key : key;
+            if ("string" == typeof original) {
+                if (original.startsWith("[[") && original.endsWith("]]")) {
+                    let o = Hn(original.substring(2, original.length - 2))
+                    let title = o.title
+                    let href = o.href
+                    links.push({
+                        key: _key,
+                        link: href,
+                        original: original,
+                        displayText: title,
+                    })
                 }
-            } else r(a, i)
-        }, r = function (e, t) {
-            if (Array.isArray(t)) for (var r = 0; r < t.length; r++) {
-                var i = t[r];
-                n(e, String(r), i)
-            } else if ("object" == typeof t) for (var a in t) t.hasOwnProperty(a) && n(e, a, t[a])
-        };
-        return r("", e), t
+            } else {
+                r(_key, original)
+            }
+        }
+        let r = function (prefix, frontmatter) {
+            if (Array.isArray(frontmatter)) {
+                for (let i = 0; i < frontmatter.length; i++) {
+                    let original = frontmatter[i];
+                    n(prefix, String(i), original)
+                }
+            } else if ("object" == typeof frontmatter) {
+                for (let key in frontmatter) {
+                    if (frontmatter.hasOwnProperty(key)) {
+                        n(prefix, key, frontmatter[key])
+                    }
+                }
+            }
+        }
+        r("", frontmatter)
+        return links
     }
 
-    function Qa(e, t) {
-        if (!e) return e;
-        if (e.links) for (var n = 0, r = e.links; n < r.length; n++) {
-            t(r[n])
+    function iterateMetaData(meta, cb) {
+        if (!meta) {
+            return meta
         }
-        if (e.embeds) for (var i = 0, a = e.embeds; i < a.length; i++) {
-            t(a[i])
+        if (meta.links) {
+            for (let i = 0, links = meta.links; i < links.length; i++) {
+                cb(links[i])
+            }
         }
-        if (e.tags) for (var o = 0, s = e.tags; o < s.length; o++) {
-            t(s[o])
+        if (meta.embeds) {
+            for (let i = 0, embeds = meta.embeds; i < embeds.length; i++) {
+                cb(embeds[i])
+            }
         }
-        if (e.headings) for (var l = 0, c = e.headings; l < c.length; l++) {
-            t(c[l])
+        if (meta.tags) {
+            for (let i = 0, tags = meta.tags; i < tags.length; i++) {
+                cb(tags[i])
+            }
         }
-        if (e.sections) for (var h = 0, u = e.sections; h < u.length; h++) {
-            t(u[h])
+        if (meta.headings) {
+            for (let i = 0, headings = meta.headings; i < headings.length; i++) {
+                cb(headings[i])
+            }
         }
-        if (e.listItems) for (var f = 0, p = e.listItems; f < p.length; f++) {
-            t(p[f])
+        if (meta.sections) {
+            for (let i = 0, sections = meta.sections; i < sections.length; i++) {
+                cb(sections[i])
+            }
         }
-        if (e.blocks) for (var d in e.blocks) e.blocks.hasOwnProperty(d) && t(e.blocks[d]);
-        return e
+        if (meta.listItems) {
+            for (let i = 0, listItems = meta.listItems; i < listItems.length; i++) {
+                cb(listItems[i])
+            }
+        }
+        if (meta.blocks) {
+            for (let key in meta.blocks) {
+                if (meta.blocks.hasOwnProperty(key)) {
+                    cb(meta.blocks[key])
+                }
+            }
+        }
+        return meta
     }
 
-    function eo(e) {
-        return {start: {line: e[0], col: e[1], offset: e[2]}, end: {line: e[3], col: e[4], offset: e[5]}}
+    function decodePos(pos) {
+        return {
+            start: {
+                line: pos[0],
+                col: pos[1],
+                offset: pos[2]
+            },
+            end: {
+                line: pos[3],
+                col: pos[4],
+                offset: pos[5]
+            }
+        }
     }
 
-    function to(e) {
-        var t = e.pos;
-        t && Array.isArray(t) && 6 === t.length && (delete e.pos, e.position = eo(t))
+    function handleItemPos(item) {
+        let pos = item.pos
+        if (pos && Array.isArray(pos) && 6 === pos.length) {
+            delete item.pos
+            item.position = decodePos(pos)
+        }
     }
 
     function no(metadata) {
+        // frontmatter是数组的话无效？
         if (metadata.frontmatter && Array.isArray(metadata.frontmatter)) {
             metadata.frontmatter = null
             delete metadata.frontmatterPos
             delete metadata.frontmatterLinks
         }
         if (metadata.frontmatter) {
-            let t = metadata.frontmatterPos
-            let n = null !== t && undefined !== t ? t : metadata.frontmatter.pos;
-            n && (metadata.frontmatterPosition = eo(n))
+            let frontmatterPos = metadata.frontmatterPos
+            let pos = null !== frontmatterPos && undefined !== frontmatterPos ? frontmatterPos : metadata.frontmatter.pos
+            if (pos) {
+                metadata.frontmatterPosition = decodePos(pos)
+            }
             delete metadata.frontmatterPos
             delete metadata.frontmatter.pos
             if (!metadata.frontmatterLinks) {
                 metadata.frontmatterLinks = Ja(metadata.frontmatter)
             }
         }
-        return Qa(metadata, to)
+        return iterateMetaData(metadata, handleItemPos)
     }
 
     function getLinkpath(linktext) {
@@ -14656,8 +14727,6 @@ require.r = e => {
 
         extend(t, TreeView)
         t.prototype.renderOutline = function (toc) {
-            debugger
-
             let headingItems = []
             let allItems = this.allItems = []
             for (let i = 0; i < toc.length; i++) {
@@ -14727,8 +14796,6 @@ require.r = e => {
             showOutline && this.containerEl.onNodeInserted(this.onNavigated.bind(this))
         }
         e.prototype.onItemClick = function (heading) {
-            debugger
-
             let app = this.publish
             app.render.scrollToLoc(heading.position.start)
             let url = app.site.getPublicHref(app.render.currentFilepath) + "#" + stripHeadingForLink(heading.heading);
@@ -16101,6 +16168,8 @@ require.r = e => {
             return a(this, void 0, void 0, (function () {
                 let uniqueFiles, metadata, frontmatter, a, c, permalink;
                 return o(this, (function (o) {
+                    debugger
+
                     this.cache = siteCache
                     uniqueFiles = this.uniqueFiles = new UniqueFileLookup()
                     for (let key in siteCache) {
