@@ -15805,8 +15805,10 @@ require.r = e => {
         return e
     }()
 
-    let xl = 700
-    let Cl = 36
+    // 开启 slidingWindowMode 的最小宽度
+    let K_SlidingWindowModeWidth = 700
+    // 堆叠窗口左边距离
+    let K_SlidingModeLeft = 36
     let obsidian_css = "obsidian.css"
     let publish_css = "publish.css"
     let publish_js = "publish.js"
@@ -16848,21 +16850,21 @@ require.r = e => {
             let site = this.site,
                 renderContainerInnerEl = this.renderContainerInnerEl;
             if (site) {
-                let n = document.body.clientWidth - this.leftColumnEl.clientWidth - this.rightColumnEl.clientWidth,
-                    r = site.getConfig(K_slidingWindowMode) && n >= xl,
-                    i = this.slidingWindowMode !== r;
+                let containerWidth = document.body.clientWidth - this.leftColumnEl.clientWidth - this.rightColumnEl.clientWidth,
+                    openSlidingMode = site.getConfig(K_slidingWindowMode) && containerWidth >= K_SlidingWindowModeWidth,
+                    i = this.slidingWindowMode !== openSlidingMode;
                 if (i) {
-                    this.slidingWindowMode = r
+                    this.slidingWindowMode = openSlidingMode
                     this.stack = [this.render]
-                    document.body.toggleClass("sliding-windows", r)
+                    document.body.toggleClass("sliding-windows", openSlidingMode)
                 }
-                if (r || i) {
+                if (openSlidingMode || i) {
                     for (let stack = this.stack, i = 0; i < stack.length; i++) {
                         let style = stack[i].renderContainerEl.style;
-                        if (r) {
+                        if (openSlidingMode) {
                             style.minWidth = "700px"
-                            style.left = i * Cl + "px"
-                            style.right = (stack.length - i) * Cl - xl + "px"
+                            style.left = i * K_SlidingModeLeft + "px"
+                            style.right = (stack.length - i) * K_SlidingModeLeft - K_SlidingWindowModeWidth + "px"
                         } else {
                             style.minWidth = ""
                             style.left = ""
@@ -16880,10 +16882,10 @@ require.r = e => {
             if (-1 !== idx) {
                 this.render = renderer
                 this.trigger("navigated");
-                let i = idx * xl;
-                if (renderContainerEl.scrollLeft < i || renderContainerEl.scrollLeft + renderContainerEl.clientWidth > i + xl) {
+                let i = idx * K_SlidingWindowModeWidth;
+                if (renderContainerEl.scrollLeft < i || renderContainerEl.scrollLeft + renderContainerEl.clientWidth > i + K_SlidingWindowModeWidth) {
                     renderContainerEl.scrollTo({
-                        left: i - idx * Cl,
+                        left: i - idx * K_SlidingModeLeft,
                         top: 0,
                         behavior: "smooth"
                     })
@@ -16908,8 +16910,8 @@ require.r = e => {
                 r = scrollLeft + renderContainerEl.clientWidth
             for (let i = 0; i < stack.length; i++) {
                 let el = stack[i]
-                el.renderContainerEl.toggleClass("mod-overlay", i > 0 && scrollLeft > 664 * (i - 1) || i * xl + (stack.length - i - 1) * Cl > r)
-                el.renderContainerEl.toggleClass("mod-squished", scrollLeft >= 664 * (i + 1) || i * xl + (stack.length - i) * Cl >= r)
+                el.renderContainerEl.toggleClass("mod-overlay", i > 0 && scrollLeft > 664 * (i - 1) || i * K_SlidingWindowModeWidth + (stack.length - i - 1) * K_SlidingModeLeft > r)
+                el.renderContainerEl.toggleClass("mod-squished", scrollLeft >= 664 * (i + 1) || i * K_SlidingWindowModeWidth + (stack.length - i) * K_SlidingModeLeft >= r)
             }
         }
         n.prototype.onNavigated = function () {
