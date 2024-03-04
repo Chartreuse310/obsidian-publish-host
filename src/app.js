@@ -12963,48 +12963,48 @@ require.r = e => {
         return links
     }
 
-    function iterateMetaData(meta, cb) {
-        if (!meta) {
-            return meta
+    function iterateMetaData(metadata, cb) {
+        if (!metadata) {
+            return metadata
         }
-        if (meta.links) {
-            for (let i = 0, links = meta.links; i < links.length; i++) {
+        if (metadata.links) {
+            for (let i = 0, links = metadata.links; i < links.length; i++) {
                 cb(links[i])
             }
         }
-        if (meta.embeds) {
-            for (let i = 0, embeds = meta.embeds; i < embeds.length; i++) {
+        if (metadata.embeds) {
+            for (let i = 0, embeds = metadata.embeds; i < embeds.length; i++) {
                 cb(embeds[i])
             }
         }
-        if (meta.tags) {
-            for (let i = 0, tags = meta.tags; i < tags.length; i++) {
+        if (metadata.tags) {
+            for (let i = 0, tags = metadata.tags; i < tags.length; i++) {
                 cb(tags[i])
             }
         }
-        if (meta.headings) {
-            for (let i = 0, headings = meta.headings; i < headings.length; i++) {
+        if (metadata.headings) {
+            for (let i = 0, headings = metadata.headings; i < headings.length; i++) {
                 cb(headings[i])
             }
         }
-        if (meta.sections) {
-            for (let i = 0, sections = meta.sections; i < sections.length; i++) {
+        if (metadata.sections) {
+            for (let i = 0, sections = metadata.sections; i < sections.length; i++) {
                 cb(sections[i])
             }
         }
-        if (meta.listItems) {
-            for (let i = 0, listItems = meta.listItems; i < listItems.length; i++) {
+        if (metadata.listItems) {
+            for (let i = 0, listItems = metadata.listItems; i < listItems.length; i++) {
                 cb(listItems[i])
             }
         }
-        if (meta.blocks) {
-            for (let key in meta.blocks) {
-                if (meta.blocks.hasOwnProperty(key)) {
-                    cb(meta.blocks[key])
+        if (metadata.blocks) {
+            for (let key in metadata.blocks) {
+                if (metadata.blocks.hasOwnProperty(key)) {
+                    cb(metadata.blocks[key])
                 }
             }
         }
-        return meta
+        return metadata
     }
 
     function decodePos(pos) {
@@ -13030,7 +13030,7 @@ require.r = e => {
         }
     }
 
-    function no(metadata) {
+    function processMetaData(metadata) {
         // frontmatter是数组的话无效？
         if (metadata.frontmatter && Array.isArray(metadata.frontmatter)) {
             metadata.frontmatter = null
@@ -13301,7 +13301,7 @@ require.r = e => {
     }
 
 
-    let K_indexFile = "indexFile",
+    const K_indexFile = "indexFile",
         K_siteName = "siteName",
         K_logo = "logo",
         K_noindex = "noindex",
@@ -13321,26 +13321,27 @@ require.r = e => {
         K_navigationOrdering = "navigationOrdering",
         K_navigationHiddenItems = "navigationHiddenItems"
 
-    let defaultConfig = {}
-    defaultConfig[K_indexFile] = ""
-    defaultConfig[K_siteName] = ""
-    defaultConfig[K_logo] = ""
-    defaultConfig[K_noindex] = false
-    defaultConfig[K_defaultTheme] = "light"
-    defaultConfig[K_showThemeToggle] = false
-    defaultConfig[K_showNavigation] = true
-    defaultConfig[K_showGraph] = true
-    defaultConfig[K_showOutline] = false
-    defaultConfig[K_showSearch] = false
-    defaultConfig[K_googleAnalytics] = ""
-    defaultConfig[K_hideTitle] = false
-    defaultConfig[K_readableLineLength] = true
-    defaultConfig[K_strictLineBreaks] = false
-    defaultConfig[K_showHoverPreview] = false
-    defaultConfig[K_showBacklinks] = false
-    defaultConfig[K_slidingWindowMode] = false
-    defaultConfig[K_navigationOrdering] = []
-    defaultConfig[K_navigationHiddenItems] = []
+    const DEFAULT_SITE_OPTIONS = {
+        indexFile: "",
+        siteName: "",
+        logo: "",
+        noindex: false,
+        defaultTheme: "light",
+        showThemeToggle: false,
+        showNavigation: true,
+        showGraph: true,
+        showOutline: false,
+        showSearch: false,
+        googleAnalytics: "",
+        hideTitle: false,
+        readableLineLength: true,
+        strictLineBreaks: false,
+        showHoverPreview: false,
+        showBacklinks: false,
+        slidingWindowMode: false,
+        navigationOrdering: [],
+        navigationHiddenItems: [],
+    }
 
 
     var Uo = function (e) {
@@ -13358,7 +13359,7 @@ require.r = e => {
         } : null
     }
 
-    var Wo = .2,
+    var Wo = 0.2,
         Go = function (e, t, n) {
             return void 0 === n && (n = .9), e * n + t * (1 - n)
         },
@@ -13952,8 +13953,9 @@ require.r = e => {
                 }))
             }, e
         }();
-    let ls = null, cs = null;
-    let hs = null;
+    let ls = null
+    let cs = null
+    let hs = null
 
     function us() {
         hs && (clearTimeout(hs), hs = null)
@@ -14289,7 +14291,7 @@ require.r = e => {
         })
     }
 
-    let Ss = function (e) {
+    let TreeItemBase = function (e) {
         function t() {
             let _this = null !== e && e.apply(this, arguments) || this
             _this.children = null
@@ -14298,20 +14300,20 @@ require.r = e => {
 
         extend(t, e)
         t.prototype.render = function () {
-            var e = this.childrenEl, t = this.children;
-            if (null !== t) {
-                e.setChildrenInPlace(t.map((function (e) {
-                    return e.el
-                })));
-                for (var n = 0, r = t; n < r.length; n++) {
-                    r[n].render()
+            let childrenEl = this.childrenEl
+            let children = this.children
+            if (null !== children) {
+                childrenEl.setChildrenInPlace(children.map(e => e.el))
+                for (let i = 0; i < children.length; i++) {
+                    children[i].render()
                 }
-            } else e.empty()
+            } else {
+                childrenEl.empty()
+            }
         }
         return t
     }(function () {
-        function e(tagName) {
-            void 0 === tagName && (tagName = "div")
+        function e(tagName = "div") {
             let _this = this
             this.collapsible = true
             this.collapsed = false
@@ -14543,7 +14545,7 @@ require.r = e => {
             return this.file.path
         }
         return t
-    }(Ss)
+    }(TreeItemBase)
     const Nav_FileItem = function (NavItem) {
         function t(owner, file) {
             let _this = NavItem.call(this, owner, file, "a") || this
@@ -14713,7 +14715,7 @@ require.r = e => {
             this.selfEl.toggleClass("mod-active", active)
         }
         return t
-    }(Ss)
+    }(TreeItemBase)
 
     const OutlineTreeView = function (TreeView) {
         function t(containerEl, onItemClick) {
@@ -16177,7 +16179,7 @@ require.r = e => {
                             uniqueFiles.add(basename(key).toLowerCase(), key)
                             metadata = siteCache[key]
                             if (metadata) {
-                                no(metadata)
+                                processMetaData(metadata)
                                 frontmatter = metadata.frontmatter
                                 if (frontmatter) {
                                     a = Rn(frontmatter)
@@ -16445,7 +16447,7 @@ require.r = e => {
         e.prototype.getConfig = function (name) {
             let value = this.options[name];
             if (undefined === value) {
-                value = defaultConfig[name]
+                value = DEFAULT_SITE_OPTIONS[name]
             }
             return value
         }

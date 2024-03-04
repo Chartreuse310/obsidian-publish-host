@@ -1,0 +1,15 @@
+{
+  "name": "obsidian-publish",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:jooooock/obsidian-publish.git",
+  "author": "champkeh <findsource@proton.me>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node src/parser/index.js"
+  },
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.0.0"
+  }
+}
