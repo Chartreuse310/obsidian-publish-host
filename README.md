@@ -1,6 +1,11 @@
-# obsidian-publish
+<div align="center">
 
-Implement the official publish **for FREE** (some functions are missing)
+<h1 align="center">Obsidian Publish for Free</h1>
+
+English / [简体中文](./README_CN.md)
+
+Implement the official publish **for FREE** (some functions are missing), see [demo](https://obs.deno.dev).
+</div>
 
 
 ## Known missing features:

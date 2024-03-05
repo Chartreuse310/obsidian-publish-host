@@ -1,8 +1,12 @@
-# obsidian-publish
+<div align="center">
 
-实现免费的官方发布功能(部分功能缺失)
+<h1 align="center">Obsidian Publish for Free</h1>
 
-可以查看 [demo](https://obs.deno.dev) 确认效果。
+[English](./README.md) / 简体中文
+
+实现免费的官方发布功能(部分功能缺失)，可以查看 [demo](https://obs.deno.dev) 确认实际效果。
+</div>
+
 
 ## 已知的缺失功能：
 
