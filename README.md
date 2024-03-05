@@ -13,3 +13,4 @@ Implement the official publish **for FREE** (some functions are missing), see [d
 - backlink
 - outline (toc)
 - graph view (exist bug)
+- password
