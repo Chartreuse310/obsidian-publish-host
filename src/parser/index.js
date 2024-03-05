@@ -1,6 +1,12 @@
+import * as url from 'url'
 import fs from 'node:fs/promises'
+import path from 'node:path'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 
-const tree = fromMarkdown('## Hello, *World*!')
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-console.log(tree)
+const markdownContent = `## Hello, *World*!`
+const ast = fromMarkdown(markdownContent)
+
+await fs.writeFile(path.resolve(__dirname, 'ast.json'), JSON.stringify(ast, null, '  '))
