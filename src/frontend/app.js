@@ -16706,13 +16706,13 @@ require.r = e => {
             _this.graph = new GraphView(_this, rightColumnInnerEl)
             _this.outline = new OutlineView(_this, rightColumnInnerEl)
 
-            footerEl.createEl("a", {
-                attr: {
-                    href: "https://publish.obsidian.md",
-                    target: "_blank"
-                },
-                text: "Powered by ck"
-            })
+            // footerEl.createEl("a", {
+            //     attr: {
+            //         href: "https://publish.obsidian.md",
+            //         target: "_blank"
+            //     },
+            //     text: "Powered by Obsidian"
+            // })
 
             window.addEventListener("popstate", function () {
                 return _this.loadFromUrl()
