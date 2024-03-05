@@ -36,10 +36,10 @@
         }
     </style>
 <!--    <base href="https://publish.obsidian.md">-->
-    <script defer="defer" src="app.js"></script>
-    <link rel="preload" href="app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script defer="defer" src="/app.js"></script>
+    <link rel="preload" href="/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="app.css">
+        <link rel="stylesheet" href="/app.css">
     </noscript>
     <title>hello - Obsidian Publish</title>
     <link rel="icon" href="/favicon.ico">
@@ -47,7 +47,7 @@
         const siteID = '7c80b9cd74dc20161b0cba6acb31151a'
         window.siteInfo = {
             "uid": siteID,
-            "host": "publish-01.obsidian.md",
+            "host": "localhost:8000",
             "status": "active",
             "slug": "docs",
             "redirect": null,
@@ -57,9 +57,12 @@
             let f = url => url && fetch(url, {
                 credentials: "include"
             });
-            window.preloadOptions = f(`https://publish-01.obsidian.md/options/${siteID}`);
-            window.preloadCache = f(`https://publish-01.obsidian.md/cache/${siteID}`);
-            window.preloadPage = f(`https://publish-01.obsidian.md/access/${siteID}/hello.md`);
+            // window.preloadOptions = f(`https://publish-01.obsidian.md/options/${siteID}`);
+            window.preloadOptions = f(`/api/options`);
+            // window.preloadCache = f(`https://publish-01.obsidian.md/cache/${siteID}`);
+            window.preloadCache = f(`/api/cache`);
+            // window.preloadPage = f(`https://publish-01.obsidian.md/access/${siteID}/hello.md`);
+            window.preloadPage = f(`/notes/hello.md`);
         })();
     </script>
     <meta name="description" content="hello - Powered by Obsidian Publish.">

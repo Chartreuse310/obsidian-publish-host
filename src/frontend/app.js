@@ -9578,7 +9578,7 @@ require.r = e => {
     //     }
     // }();
 
-    const __libPath__ = '/obsidian-publish/resources'
+    const __libPath__ = ''
     loadScriptAsync(`${__libPath__}/lib/pdfjs/pdf.min.js`, {
         after: function () {
             window.pdfjsLib.GlobalWorkerOptions.workerSrc = `${__libPath__}/lib/pdfjs/pdf.worker.min.js`
@@ -16317,6 +16317,7 @@ require.r = e => {
             return a(this, void 0, void 0, (function () {
                 let siteCachePromise, cacheResponse, _siteCache, cacheLoadFn, reqConfig, resp;
                 return o(this, (function (o) {
+                    debugger
                     switch (o.label) {
                         case 0:
                             siteCachePromise = window.preloadCache
@@ -16350,7 +16351,8 @@ require.r = e => {
                         case 7:
                             reqConfig = {
                                 withCredentials: true,
-                                url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
+                                // url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
+                                url: '/api/cache'
                             }
                             return [4, ajaxPromise(reqConfig)];
                         case 8:
@@ -16402,7 +16404,8 @@ require.r = e => {
                             o.trys.push([6, 8, , 9])
                             reqConfig = {
                                 withCredentials: true,
-                                url: this.host + "/options/" + encodeURIComponent(this.id)
+                                // url: this.host + "/options/" + encodeURIComponent(this.id)
+                                url: '/api/options'
                             }
                             return [4, ajaxPromise(reqConfig)];
                         case 7:
@@ -16461,7 +16464,8 @@ require.r = e => {
             return path.split("/").map(usePlusSign ? encodeURIComponentAndReplaceSpace : encodeURIComponent).join("/")
         }
         e.prototype.getInternalUrl = function (filepath) {
-            return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(filepath, false) + this.getPathSuffix()
+            // return this.host + "/access/" + encodeURIComponent(this.id) + "/" + this.encodeFilepath(filepath, false) + this.getPathSuffix()
+            return this.host + "/notes/" + this.encodeFilepath(filepath, false) + this.getPathSuffix()
         }
         e.prototype.getPublicHref = function (filepath) {
             let cacheItem = this.cache.getCache(filepath)
