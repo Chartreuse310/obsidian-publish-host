@@ -3,9 +3,9 @@ import {routeApi} from "./router.ts";
 
 
 Deno.serve((req: Request) => {
+    console.log(req.url)
     const url = new URL(req.url)
     const accept = req.headers.get('Accept') || ""
-    console.log(url)
     const {pathname} = url
     if (/^\/api\//.test(pathname)) {
         // /api/* 接口
@@ -14,15 +14,15 @@ Deno.serve((req: Request) => {
         // /notes/* 笔记文件
         // todo: 这里可以用来验证 md 的密码，优先级依次为 md密码 => site密码 => null
         return fs.serveDir(req, {
-            fsRoot: "../../notes",
+            fsRoot: "notes",
             urlRoot: "notes"
         })
     } else if (accept.includes("text/html")) {
-        return fs.serveFile(req, '../frontend/index.html')
+        return fs.serveFile(req, 'src/frontend/index.html')
     } else {
         // 静态页面请求
         return fs.serveDir(req, {
-            fsRoot: "../frontend/",
+            fsRoot: "src/frontend",
             quiet: true,
             showDirListing: false,
             showDotfiles: false,
