@@ -16296,14 +16296,15 @@ require.r = e => {
     }()
     const Site = function () {
         function e(app, siteInfo) {
-            let host = siteInfo.host
+            // let host = siteInfo.host
 
             this.pwts = 0
             this.pwsig = ""
             this.options = {}
             this.publish = app
             this.id = siteInfo.uid
-            this.host = host.startsWith("127.0.0.1") || host.startsWith("localhost") ? "http://" + host : "https://" + host
+            // this.host = host.startsWith("127.0.0.1") || host.startsWith("localhost") ? "http://" + host : "https://" + host
+            this.host = siteInfo.host
             this.status = siteInfo.status
             this.slug = siteInfo.slug
             this.customurl = siteInfo.customurl
@@ -16352,7 +16353,7 @@ require.r = e => {
                             reqConfig = {
                                 withCredentials: true,
                                 // url: this.host + "/cache/" + encodeURIComponent(this.id) + this.getPathSuffix()
-                                url: '/api/cache'
+                                url: '/api/cache' + this.getPathSuffix()
                             }
                             return [4, ajaxPromise(reqConfig)];
                         case 8:

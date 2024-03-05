@@ -44,10 +44,10 @@
     <title>hello - Obsidian Publish</title>
     <link rel="icon" href="/favicon.ico">
     <script type="text/javascript">
-        const siteID = '7c80b9cd74dc20161b0cba6acb31151a'
+        const siteID = ''
         window.siteInfo = {
             "uid": siteID,
-            "host": "localhost:8000",
+            "host": "",
             "status": "active",
             "slug": "docs",
             "redirect": null,
@@ -57,11 +57,8 @@
             let f = url => url && fetch(url, {
                 credentials: "include"
             });
-            // window.preloadOptions = f(`https://publish-01.obsidian.md/options/${siteID}`);
             window.preloadOptions = f(`/api/options`);
-            // window.preloadCache = f(`https://publish-01.obsidian.md/cache/${siteID}`);
             window.preloadCache = f(`/api/cache`);
-            // window.preloadPage = f(`https://publish-01.obsidian.md/access/${siteID}/hello.md`);
             window.preloadPage = f(`/notes/hello.md`);
         })();
     </script>
