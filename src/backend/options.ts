@@ -1,5 +1,5 @@
 export default {
-    "siteName": "cc's docs",
+    "siteName": "publish demo",
     "indexFile": "hello",
     "defaultTheme": "light",
     "showThemeToggle": true,
