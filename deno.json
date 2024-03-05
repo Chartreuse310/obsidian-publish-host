@@ -1,3 +1,7 @@
 {
-  "unstable": ["kv", "cron"]
+  "unstable": ["kv", "cron"],
+  "tasks": {
+    "dev": "deno run -A src/backend/server.ts",
+    "parse": "deno run -A parse.ts"
+  }
 }
