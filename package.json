@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "dev": "deno run -A src/backend/server.ts",
-    "parse": "deno run -A parse.ts"
+    "parse": "deno run -A parse.ts",
+    "test": "deno run -A src/backend/parser/index.ts"
   },
   "dependencies": {
     "mdast-util-from-markdown": "^2.0.0"

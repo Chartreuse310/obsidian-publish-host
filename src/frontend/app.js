@@ -23284,13 +23284,13 @@ n.r = e => {
                 , b = _this.rightColumnInnerEl = y.createDiv("site-body-right-column-inner");
             _this.graph = new Ss(_this, b)
             _this.outline = new Fs(_this, b)
-            M.createEl("a", {
-                attr: {
-                    href: "https://publish.obsidian.md",
-                    target: "_blank"
-                },
-                text: "Powered by Obsidian Publish"
-            })
+            // M.createEl("a", {
+            //     attr: {
+            //         href: "https://publish.obsidian.md",
+            //         target: "_blank"
+            //     },
+            //     text: "Powered by Obsidian Publish"
+            // })
             window.addEventListener("popstate", (function () {
                 return _this.loadFromUrl()
             }))

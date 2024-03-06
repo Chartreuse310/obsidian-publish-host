@@ -1,3 +1,5 @@
+import {parseHeadings} from "./src/backend/parser/index.ts";
+
 const cache: Record<string, any> = {}
 
 function iterateDir(dir: string, cache: Record<string, any>) {
@@ -5,7 +7,14 @@ function iterateDir(dir: string, cache: Record<string, any>) {
     for (const item of items) {
         const name = `${dir}/${item.name}`
         if (item.isFile) {
-            cache[name.replace(/^vault\//, '')] = name.endsWith('.md') ? {} : null
+            const key = name.replace(/^vault\//, '')
+            if (name.endsWith('.md')) {
+                cache[key] = {
+                    headings: parseHeadings(Deno.readTextFileSync(name))
+                }
+            } else {
+                cache[key] = null
+            }
         } else if (item.isDirectory) {
             iterateDir(name, cache)
         }
