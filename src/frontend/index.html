@@ -35,18 +35,16 @@
             }
         }
     </style>
-<!--    <base href="https://publish.obsidian.md">-->
-    <script defer="defer" src="/app.js"></script>
-    <link rel="preload" href="/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script defer="defer" src="/app.js?c41d2033f20704d06ce0"></script>
+    <link rel="preload" href="/app.css?c41d2033f20704d06ce0" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="/app.css">
+        <link rel="stylesheet" href="/app.css?c41d2033f20704d06ce0">
     </noscript>
-    <title>hello - Obsidian Publish</title>
-    <link rel="icon" href="/favicon.ico">
+    <title>docs - Obsidian Publish</title>
+    <link rel="icon" href="/favicon.ico?c41d2033f20704d06ce0">
     <script type="text/javascript">
-        const siteID = ''
         window.siteInfo = {
-            "uid": siteID,
+            "uid": "",
             "host": "",
             "status": "active",
             "slug": "docs",
@@ -57,15 +55,15 @@
             let f = url => url && fetch(url, {
                 credentials: "include"
             });
-            window.preloadOptions = f(`/api/options`);
-            window.preloadCache = f(`/api/cache`);
-            window.preloadPage = f(`/notes/Home.md`);
+            window.preloadOptions = f("/api/options");
+            window.preloadCache = f("/api/cache");
+            window.preloadPage = f("/notes/Home.md");
         })();
     </script>
-    <meta name="description" content="hello - Powered by Obsidian Publish.">
-    <meta property="og:description" content="hello - Powered by Obsidian Publish.">
+    <meta name="description" content="docs - Powered by Obsidian Publish.">
+    <meta property="og:description" content="docs - Powered by Obsidian Publish.">
 </head>
-<body class="theme-light">
+<body class="theme-dark">
 <div class="preload" style="text-align:center">
     <svg style="width:50px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
         <path style="transform-origin:50px 50px;animation:1s linear infinite rotate" fill="currentColor"
@@ -73,7 +71,7 @@
     </svg>
 </div>
 <script type="text/javascript">
-    // 从缓存读取主题配置
+    // 缓存中的主题配置优先级最高
     (function () {
         let siteTheme = localStorage.getItem('site-theme'),
             classList = document.body.classList;
