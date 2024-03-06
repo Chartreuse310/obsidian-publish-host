@@ -4,7 +4,7 @@
 
 [English](./README.md) / 简体中文
 
-免费的 Obsidian Publish 托管服务，采用官方 UI
+免费的 Obsidian Publish 托管服务，采用官方 Publish UI
 </div>
 
 ## 示例
