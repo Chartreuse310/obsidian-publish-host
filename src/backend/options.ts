@@ -1,6 +1,6 @@
 export default {
-    "siteName": "publish demo",
-    "indexFile": "hello",
+    "siteName": "Publish Demo",
+    "indexFile": "Home",
     "defaultTheme": "light",
     "showThemeToggle": true,
     "showHoverPreview": true,
