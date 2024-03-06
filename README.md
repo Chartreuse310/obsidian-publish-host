@@ -14,3 +14,6 @@ Implement the official publish **for FREE** (some functions are missing), see [d
 - outline (toc)
 - graph view (exist bug)
 - password
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y3VBAML)

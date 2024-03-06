@@ -44,3 +44,5 @@ publish的配置文件位于`src/backend/options.ts`
 - 尽量实现上面缺失的功能(需要编写md解析器)
 - 开发插件以便在ob中即可发布
 - 实现单文档密码与整站密码分离
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y3VBAML)
