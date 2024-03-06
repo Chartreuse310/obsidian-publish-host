@@ -1,0 +1,258 @@
+{
+  "links": [
+    {
+      "link": "View",
+      "displayText": "alias",
+      "pos": [
+        27,
+        0,
+        386,
+        27,
+        14,
+        400
+      ]
+    },
+    {
+      "link": "View",
+      "displayText": "View",
+      "pos": [
+        28,
+        0,
+        401,
+        28,
+        12,
+        413
+      ]
+    },
+    {
+      "link": "Basic formatting syntax",
+      "displayText": "Markdown syntax",
+      "pos": [
+        101,
+        0,
+        1869,
+        101,
+        44,
+        1913
+      ]
+    },
+    {
+      "link": "caminandes-llamigos.mp4",
+      "displayText": "mp4",
+      "pos": [
+        136,
+        0,
+        2379,
+        136,
+        31,
+        2410
+      ]
+    }
+  ],
+  "embeds": [
+    {
+      "link": "og-image.png",
+      "displayText": "200",
+      "pos": [
+        101,
+        47,
+        1916,
+        101,
+        69,
+        1938
+      ]
+    },
+    {
+      "link": "caminandes-llamigos.mp4",
+      "displayText": "video",
+      "pos": [
+        138,
+        0,
+        2412,
+        138,
+        34,
+        2446
+      ]
+    },
+    {
+      "link": "Audio Recorder#^bbebd5",
+      "displayText": "Audio Recorder > ^bbebd5",
+      "pos": [
+        143,
+        0,
+        2467,
+        143,
+        27,
+        2494
+      ]
+    }
+  ],
+  "headings": [
+    {
+      "heading": "Basic formatting syntax",
+      "level": 1,
+      "pos": [
+        8,
+        0,
+        75,
+        8,
+        25,
+        100
+      ]
+    },
+    {
+      "heading": "This is a heading 1",
+      "level": 1,
+      "pos": [
+        14,
+        0,
+        152,
+        14,
+        21,
+        173
+      ]
+    },
+    {
+      "heading": "This is a heading 2",
+      "level": 2,
+      "pos": [
+        15,
+        0,
+        174,
+        15,
+        22,
+        196
+      ]
+    },
+    {
+      "heading": "This is a heading 3",
+      "level": 2,
+      "pos": [
+        16,
+        0,
+        197,
+        16,
+        22,
+        219
+      ]
+    }
+  ],
+  "listItems": [
+    {
+      "parent": -43,
+      "pos": [
+        43,
+        0,
+        922,
+        43,
+        17,
+        939
+      ]
+    },
+    {
+      "parent": -43,
+      "pos": [
+        44,
+        0,
+        940,
+        44,
+        18,
+        958
+      ]
+    },
+    {
+      "parent": -43,
+      "pos": [
+        45,
+        0,
+        959,
+        45,
+        17,
+        976
+      ]
+    },
+    {
+      "parent": -47,
+      "pos": [
+        47,
+        0,
+        978,
+        47,
+        18,
+        996
+      ]
+    },
+    {
+      "parent": -47,
+      "pos": [
+        48,
+        0,
+        997,
+        48,
+        19,
+        1016
+      ]
+    },
+    {
+      "parent": -47,
+      "pos": [
+        49,
+        0,
+        1017,
+        49,
+        18,
+        1035
+      ]
+    },
+    {
+      "parent": -51,
+      "task": "x",
+      "pos": [
+        51,
+        0,
+        1037,
+        51,
+        31,
+        1068
+      ]
+    },
+    {
+      "parent": -51,
+      "task": " ",
+      "pos": [
+        52,
+        0,
+        1069,
+        52,
+        33,
+        1102
+      ]
+    }
+  ],
+  "frontmatter": {
+    "tags": [
+      "sample",
+      "md"
+    ],
+    "aliases": [
+      "sp"
+    ],
+    "link": "[[Audio Recorder]]"
+  },
+  "frontmatterLinks": [
+    {
+      "key": "link",
+      "link": "Audio Recorder",
+      "original": "[[Audio Recorder]]",
+      "displayText": "Audio Recorder"
+    }
+  ],
+  "frontmatterPos": [
+    0,
+    0,
+    0,
+    7,
+    3,
+    74
+  ]
+}
