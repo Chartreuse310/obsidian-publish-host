@@ -61,7 +61,7 @@ img[src$="#icon"] {
 }
 
 .site-body-left-column-site-name {
-    display: none;
+    /*display: none;*/
 }
 
 /* Hides page headers in Publish, use H1 if needed */
