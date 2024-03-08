@@ -1,15 +1,15 @@
 {
-  "name": "obsidian-publish",
+  "name": "obsidian-publish-host",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:jooooock/obsidian-publish.git",
-  "author": "champkeh <findsource@proton.me>",
+  "author": "Jock <findsource@proton.me>",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "deno run -A src/backend/server.ts",
     "parse": "deno run -A parse.ts",
-    "test": "deno run -A src/backend/parser/index.ts"
+    "test": "deno run -A test/index.ts"
   },
   "dependencies": {
     "mdast-util-from-markdown": "^2.0.0"
