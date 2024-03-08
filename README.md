@@ -30,7 +30,7 @@ deno task parse
 ```
 或者
 ```shell
-node run parse
+npm run parse
 ```
 
 > 本仓库下面自带的 `vault` 目录为官方文档对应的 markdown 文件，自行部署时可以删除，但每次修改这个目录后都需要重新执行上面的命令生成新的的 cache 数据。
@@ -41,7 +41,7 @@ deno task dev
 ```
 或者
 ```shell
-node run dev
+npm run dev
 ```
 
 ### 4. 提交到github
