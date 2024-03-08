@@ -41,8 +41,8 @@ img[src$="#icon"] {
 }
 
 .site-body-left-column-site-logo {
-    text-align: left;
-    margin-bottom: 24px;
+    /*text-align: left;*/
+    /*margin-bottom: 24px;*/
 }
 
 .site-header-logo {

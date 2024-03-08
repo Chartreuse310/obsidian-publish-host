@@ -59,12 +59,15 @@ npm run dev
 
 配置文件位于`src/backend/options.ts`，支持以下配置：
 ```ts
-interface Options {
-    // 网站左上角显示的名称
+interface SiteOptions {
+    // 网站名称
     siteName: string
     
     // 网站首页加载的文件
     indexFile: string
+
+    // 网站logo
+    logo: string
     
     // 默认主题
     defaultTheme: "light" | "dark" | "system"
