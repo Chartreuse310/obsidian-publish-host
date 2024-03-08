@@ -1,5 +1,5 @@
 export default {
-    siteName: "Publish Demo",
+    siteName: "Publish Host Demo",
     indexFile: "Home",
     defaultTheme: "light",
     showThemeToggle: true,
