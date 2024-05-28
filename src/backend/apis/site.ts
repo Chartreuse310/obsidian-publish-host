@@ -95,6 +95,8 @@ export function accessNote(req: Request) {
         contentType = 'application/javascript; charset=UTF-8'
     } else if (pathname.endsWith('.md')) {
         contentType = 'text/markdown; charset=utf-8'
+    } else if (pathname.endsWith('.ico')) {
+        contentType = 'image/x-icon'
     }
 
     return new Response(file, {
