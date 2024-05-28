@@ -77,14 +77,32 @@ export function accessNote(req: Request) {
 
     pathname = decodeURIComponent(pathname)
 
-    // 去加载对应 md 文件并返回
-    const file = Deno.readTextFileSync(path.join(`vaults/${vault}/${pathname.replace(/^\/api\/access\//, '')}`))
+    // 去加载对应资源文件并返回
+    const file = Deno.readFileSync(path.join(`vaults/${vault}/${pathname.replace(/^\/api\/access\//, '')}`))
+
+    let contentType = 'text/html; charset=utf-8'
+    if (pathname.endsWith('svg')) {
+        contentType = 'image/svg+xml'
+    } else if (pathname.endsWith('.jpg') || pathname.endsWith('.jpeg')) {
+        contentType = 'image/jpeg'
+    } else if (pathname.endsWith('.png')) {
+        contentType = 'image/png'
+    } else if (pathname.endsWith('.gif')) {
+        contentType = 'image/gif'
+    } else if (pathname.endsWith('.css')) {
+        contentType = 'text/css; charset=UTF-8'
+    } else if (pathname.endsWith('.js')) {
+        contentType = 'application/javascript; charset=UTF-8'
+    } else if (pathname.endsWith('.md')) {
+        contentType = 'text/markdown; charset=utf-8'
+    }
 
     return new Response(file, {
         status: 200,
         headers: {
             "Access-Control-Allow-Origin": "http://localhost:63341",
             "Access-Control-Allow-Credentials": "true",
+            "Content-Type": contentType,
         }
     })
 }
