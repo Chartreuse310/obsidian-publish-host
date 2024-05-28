@@ -8808,8 +8808,6 @@
 
         // 解析 markdown 的 ast
         function __parseMarkdown(mdContent) {
-            debugger
-
             let doc = preprocess()(mdContent)
 
             let parser = new __Remark_Parser(String(doc), doc)
@@ -17591,8 +17589,6 @@
                         return a(_this, void 0, void 0, (function () {
                             let mdSource, mdContent, n, i, a, s, h, u, f, d, p, m, v, g;
                             return o(this, (function (o) {
-                                debugger
-
                                 switch (o.label) {
                                     case 0:
                                         return [4, this.publish.site.loadMarkdownFile(mdFile + ".md")];
@@ -18109,8 +18105,6 @@
                 return a(this, void 0, Promise, (function () {
                     let url, preloadPagePromise, preloadPageResponse;
                     return o(this, (function (i) {
-                        debugger
-
                         switch (i.label) {
                             case 0:
                                 url = this.getInternalUrl(filepath)
@@ -18298,6 +18292,13 @@
                     },
                     text: "Powered by Obsidian Publish",
                 })
+                footerEl.createEl("a", {
+                    attr: {
+                        href: "https://github.com/jooooock/obsidian-publish-host",
+                        target: "_blank"
+                    },
+                    text: "Hosted by Github",
+                })
 
 
                 _this.notFoundEl = renderContainerEl.createDiv("not-found-container", function (el) {
@@ -18381,8 +18382,6 @@
                         xhr, docHead,
                         logoUrl, logoSrc, _gaConfig, D, q, obsidian_css_loaded, publish_css_loaded, F, U, $, W, G, K;
                     return o(this, (function (o) {
-                        debugger
-
                         switch (o.label) {
                             case 0:
                                 _this = this
@@ -18651,7 +18650,6 @@
                 return a(this, void 0, void 0, (function () {
                     let _this, site, renderer, _url, path, subpath, s, l;
                     return o(this, (function (o) {
-                        debugger
                         switch (o.label) {
                             case 0:
                                 _this = this

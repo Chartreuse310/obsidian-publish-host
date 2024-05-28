@@ -93,3 +93,8 @@ body {
         display: none;
     }
 }
+
+.site-footer a {
+    display: block;
+    margin-block: .5em;
+}
