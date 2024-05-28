@@ -4289,3 +4289,8 @@ body {
     page-break-after: always;
   }
 }
+
+.site-footer a {
+  display: block;
+  margin-block: .5em;
+}
