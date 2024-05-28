@@ -1,7 +1,14 @@
 {
+  "name": "@jooooock/obsidian-publish-host",
+  "version": "0.0.1",
   "unstable": ["kv", "cron"],
+  "imports": {
+    "@std/datetime": "jsr:@std/datetime@^0.224.0",
+    "@std/path": "jsr:@std/path@^0.225.1",
+    "@std/http": "jsr:@std/http@^0.224.1"
+  },
   "tasks": {
-    "dev": "deno run -A src/backend/server.ts",
-    "parse": "deno run -A parse.ts"
+    "start": "deno run -A src/backend/server.ts",
+    "fetch": "deno run -A test/fetcher.ts"
   }
 }

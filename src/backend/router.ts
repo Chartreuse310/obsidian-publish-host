@@ -1,11 +1,15 @@
-import {cache, options} from "./apis/markdown.ts";
+import {options, cache, accessNote, pw} from "./apis/site.ts"
+import {typeOf} from "./utils/index.ts";
 
 type APIHandler = (req: Request) => Response | Promise<Response>
 
-const config: Record<string, APIHandler> = {
-    '/api/options': options,
-    '/api/cache': cache,
-}
+type APIRouteMatcher = string | RegExp
+
+const routeConfig: Map<APIRouteMatcher, APIHandler> = new Map()
+routeConfig.set('/api/site/options', options)
+routeConfig.set('/api/site/cache', cache)
+routeConfig.set(/^\/api\/access\//, accessNote)
+routeConfig.set('/api/pw', pw)
 
 /**
  * 处理前端api请求
@@ -13,11 +17,16 @@ const config: Record<string, APIHandler> = {
  * @param req
  */
 export function routeApi(api: string, req: Request) {
-    if (api in config) {
-        return config[api](req)
-    } else {
-        return new Response(null, {
-            status: 502,
-        })
+    for (const [key, handler] of routeConfig) {
+        const type = typeOf(key)
+        if (type === 'String' && api === key) {
+            return handler(req)
+        } else if (type === 'RegExp' && (key as RegExp).test(api)) {
+            return handler(req)
+        }
     }
+
+    return new Response(null, {
+        status: 502,
+    })
 }

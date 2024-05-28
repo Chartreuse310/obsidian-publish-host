@@ -6,62 +6,74 @@
     <style class="preload">
         html, body {
             margin: 0;
-            height: 100%
+            height: 100%;
         }
 
         body.theme-light {
             background-color: #fff;
-            color: #222
+            color: #222;
         }
 
         body.theme-dark {
             background-color: #1e1e1e;
-            color: #dadada
+            color: #dadada;
         }
 
         .preload {
             padding: 20px;
             white-space: pre-wrap;
-            overflow-wrap: break-word
+            overflow-wrap: break-word;
         }
 
         @keyframes rotate {
             from {
-                transform: rotate(0)
+                transform: rotate(0);
             }
 
             to {
-                transform: rotate(360deg)
+                transform: rotate(360deg);
             }
         }
     </style>
-    <script defer="defer" src="/app.js?c41d2033f20704d06ce0"></script>
-    <link rel="preload" href="/app.css?c41d2033f20704d06ce0" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<!--    <base href="https://publish.obsidian.md">-->
+    <script defer="defer" src="app.js"></script>
+    <link rel="preload" href="app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="/app.css?c41d2033f20704d06ce0">
+        <link rel="stylesheet" href="app.css">
     </noscript>
-    <title>docs - Obsidian Publish</title>
-    <link rel="icon" href="/favicon.ico?c41d2033f20704d06ce0">
+    <title>Home - Developer Documentation</title>
+    <link rel="preload" href="publish.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="publish.css">
+    </noscript>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="96x96" href="favicon-96x96.png">
+
     <script type="text/javascript">
         window.siteInfo = {
-            "uid": "",
-            "host": "",
+            "uid": "caa27d6312fe5c26ebc657cc609543be",
+            // "host": "publish-01.obsidian.md",
+            "host": "localhost:8000",
             "status": "active",
-            "slug": "docs",
-            "redirect": null,
-            "customurl": null
+            "slug": null,
+            "redirect": 1,
+            "customurl": "docs.obsidian.md"
         };
         (function () {
-            let f = url => url && fetch(url, {
+            let tryFetch = url => url && fetch(url, {
                 credentials: "include"
             });
-            window.preloadOptions = f("/api/options");
-            window.preloadCache = f("/api/cache");
-            window.preloadPage = f("/notes/Home.md");
+
+            // window.preloadOptions = tryFetch("https://publish-01.obsidian.md/options/caa27d6312fe5c26ebc657cc609543be");
+            // window.preloadCache = tryFetch("https://publish-01.obsidian.md/cache/caa27d6312fe5c26ebc657cc609543be");
+
+            // window.preloadOptions = tryFetch("http://localhost:8000/api/site/options");
+            // window.preloadCache = tryFetch("http://localhost:8000/api/site/cache");
+            // window.preloadPage = tryFetch("https://publish-01.obsidian.md/access/caa27d6312fe5c26ebc657cc609543be/Home.md");
         })();
     </script>
-    <meta name="description" content="docs - Powered by Obsidian Publish.">
-    <meta property="og:description" content="docs - Powered by Obsidian Publish.">
+    <meta name="description" content="Home - Developer Documentation">
+    <meta property="og:description" content="Home - Developer Documentation">
 </head>
 <body class="theme-light">
 <div class="preload" style="text-align:center">
@@ -71,7 +83,6 @@
     </svg>
 </div>
 <script type="text/javascript">
-    // 缓存中的主题配置优先级最高
     (function () {
         let siteTheme = localStorage.getItem('site-theme'),
             classList = document.body.classList;

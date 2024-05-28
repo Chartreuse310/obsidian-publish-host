@@ -10,13 +10,21 @@ function stringify(data: unknown) {
     return JSON.stringify(data);
 }
 
-export function jsonResponse(data: unknown) {
+export function typeOf(data: unknown) {
+    return Object.prototype.toString.call(data).slice(8, -1)
+}
+
+export function jsonResponse(data: unknown, status = 200) {
     return new Response(
         stringify(data),
         {
+            status: status,
             headers: {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": "http://localhost:63341",
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Expose-Headers": "obs-status",
+                "Access-Control-Allow-Headers": "content-type",
                 "obs-status": "active",
             },
         },
