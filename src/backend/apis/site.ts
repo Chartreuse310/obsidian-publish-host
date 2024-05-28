@@ -70,7 +70,6 @@ export function cache(_req: Request) {
 export function accessNote(req: Request) {
     let {pathname, origin} = new URL(req.url)
 
-
     const method = req.method.toUpperCase()
     const date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
     const reqUrl = req.url.replace(new RegExp('^' + origin), "")
