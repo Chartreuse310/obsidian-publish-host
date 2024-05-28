@@ -14640,18 +14640,23 @@
         }
 
         let moment = window.moment
-        let Ho = createDiv("notice-container")
+        let __noticeContainer = createDiv("notice-container")
         let Notice = function () {
-            function e(e, t) {
-                void 0 === t && (t = 4e3);
-                var n = this;
-                activeDocument.body.appendChild(Ho);
-                var r = this.noticeEl = Ho.createDiv({cls: "notice", text: e});
-                Platform.isMobile ? transitionElement(r, (new Jn).addProp("marginBottom", -r.offsetHeight + "px", "0", "")) : transitionElement(r, (new Jn).addProp("transform", "translateX(350px)", "", "")), t && setTimeout((function () {
-                    return n.hide()
-                }), t), r.addEventListener("click", (function () {
-                    return n.hide()
-                }))
+            function e(text, duration = 4000) {
+                let _this = this;
+                activeDocument.body.appendChild(__noticeContainer);
+                let noticeEl = this.noticeEl = __noticeContainer.createDiv({cls: "notice", text: text});
+
+                Platform.isMobile
+                    ? transitionElement(noticeEl, new Jn().addProp("marginBottom", -noticeEl.offsetHeight + "px", "0", ""))
+                    : transitionElement(noticeEl, new Jn().addProp("transform", "translateX(350px)", "", ""))
+
+                duration && setTimeout(function () {
+                    return _this.hide()
+                }, duration)
+                noticeEl.addEventListener("click", function () {
+                    return _this.hide()
+                })
             }
 
             e.prototype.setMessage = function (e) {
@@ -14662,11 +14667,11 @@
                 setTimeout((function () {
                     var t = e.noticeEl;
                     if (Platform.isMobile) transitionElement(t, (new Jn).addProp("opacity", null, "0", ""), (function () {
-                        t.detach(), 0 === Ho.childElementCount && Ho.detach()
+                        t.detach(), 0 === __noticeContainer.childElementCount && __noticeContainer.detach()
                     })); else {
                         var n = getComputedStyle(t), r = -(t.offsetHeight + parseInt(n.marginBottom)) + "px";
                         transitionElement(t, (new Jn).addProp("marginTop", "0", r, ""), (function () {
-                            t.detach(), 0 === Ho.childElementCount && Ho.detach()
+                            t.detach(), 0 === __noticeContainer.childElementCount && __noticeContainer.detach()
                         }))
                     }
                 }))
@@ -16938,47 +16943,79 @@
             t.prototype.onRenderComplete = function () {
             }
             t.prototype._postProcess = function (e) {
-                for (var t = this, n = this.publish.site, r = n.cache, i = e.sourcePath, s = e.promises, l = e.el, c = 0, h = MarkdownPreviewRenderer.postProcessors; c < h.length; c++) {
-                    var u = (0, h[c])(l, e);
+                let _this = this,
+                    site = this.publish.site,
+                    siteCache = site.cache,
+                    sourcePath = e.sourcePath,
+                    s = e.promises,
+                    l = e.el,
+                    h = MarkdownPreviewRenderer.postProcessors
+                for (let c = 0; c < h.length; c++) {
+                    let u = h[c](l, e);
                     u && u.then && s.push(u)
                 }
-                var f = l.findAll("a.internal-link");
-                if (f.length > 0) for (var d = 0, p = f; d < p.length; d++) {
-                    var m = p[d];
-                    if (E = m.getAttribute("data-href")) {
-                        var v = parseLinktext(E), g = v.path, M = v.subpath, y = r.getLinkpathDest(g, i);
-                        m.toggleClass("is-unresolved", !y), y || (y = g || ""), m.setAttr("href", n.getPublicHref(y) + M)
+                let internalLinks = l.findAll("a.internal-link");
+                if (internalLinks.length > 0) {
+                    for (let d = 0; d < internalLinks.length; d++) {
+                        let internalLink = internalLinks[d];
+                        E = internalLink.getAttribute("data-href")
+                        if (E) {
+                            var v = parseLinktext(E),
+                                g = v.path,
+                                M = v.subpath,
+                                y = siteCache.getLinkpathDest(g, sourcePath);
+                            internalLink.toggleClass("is-unresolved", !y)
+                            y || (y = g || "")
+                            internalLink.setAttr("href", site.getPublicHref(y) + M)
+                        }
                     }
                 }
-                var b = l.firstChild;
+                let b = l.firstChild;
                 if (b instanceof HTMLHeadingElement) {
-                    var w = b.getAttr("data-heading");
+                    let w = b.getAttr("data-heading");
                     if (w) {
-                        b.appendText(" "), b.addClass("publish-article-heading");
-                        var k = b.createSpan({cls: "clickable-icon"});
-                        k.addEventListener("click", (function () {
-                            return a(t, void 0, void 0, (function () {
-                                var e;
+                        b.appendText(" ")
+                        b.addClass("publish-article-heading");
+                        let iconEl = b.createSpan({cls: "clickable-icon"});
+                        iconEl.addEventListener("click", function () {
+                            return a(_this, void 0, void 0, (function () {
+                                let e;
                                 return o(this, (function (t) {
-                                    return e = n.getPublicHref(i) + "#" + encodeURIComponentAndReplaceSpace(stripHeadingForLink(w)), history.replaceState(null, null, e), function (e) {
-                                        if (navigator.clipboard && navigator.permissions) navigator.clipboard.writeText(e); else {
-                                            var t = document.createElement("textarea");
-                                            t.value = e, t.style.top = "0", t.style.left = "0", t.style.position = "fixed", document.body.appendChild(t);
+                                    debugger
+
+                                    e = site.getPublicHref(sourcePath) + "#" + encodeURIComponentAndReplaceSpace(stripHeadingForLink(w))
+                                    history.replaceState(null, null, e)
+                                    void function (e) {
+                                        if (navigator.clipboard && navigator.permissions) {
+                                            navigator.clipboard.writeText(e)
+                                        } else {
+                                            let textAreaElement = document.createElement("textarea");
+                                            textAreaElement.value = e
+                                            textAreaElement.style.top = "0"
+                                            textAreaElement.style.left = "0"
+                                            textAreaElement.style.position = "fixed"
+                                            document.body.appendChild(textAreaElement);
                                             try {
-                                                t.focus(), t.select(), document.execCommand("copy")
+                                                textAreaElement.focus()
+                                                textAreaElement.select()
+                                                document.execCommand("copy")
                                             } catch (e) {
                                             }
-                                            document.body.removeChild(t)
+                                            document.body.removeChild(textAreaElement)
                                         }
-                                    }(e), new Notice("Link copied to your clipboard"), [2]
+                                    }(e)
+                                    new Notice("Link copied to your clipboard")
+                                    return [2]
                                 }))
                             }))
-                        })), setIcon(k, "lucide-link"), setTooltip(k, "Copy link")
+                        })
+                        setIcon(iconEl, "lucide-link")
+                        setTooltip(iconEl, "Copy link")
                     }
                 }
                 var x = l.findAll(".internal-embed:not(.is-loaded)");
                 if (x.length > 0) for (var C = 0, A = x; C < A.length; C++) {
-                    var L = A[C], E = L.getAttribute("src"), S = this.loadEmbed(E, i, L);
+                    var L = A[C], E = L.getAttribute("src"), S = this.loadEmbed(E, sourcePath, L);
                     s.push(S)
                 }
                 for (var H = 0, T = l.findAll("img:not([alt])"); H < T.length; H++) {
