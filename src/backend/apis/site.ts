@@ -3,61 +3,12 @@ import * as path from "@std/path"
 import {format} from "@std/datetime/format"
 
 
-const SiteOptions = {
-    "siteName": "Developer Documentation",
-    "indexFile": "Home",
-    "defaultTheme": "system",
-    "showThemeToggle": true,
-    "showHoverPreview": true,
-    "showSearch": true,
-    "showOutline": true,
-    "showBacklinks": true,
-    "navigationOrdering": [
-        "Plugins",
-        "Plugins/Getting started",
-        "Plugins/Getting started/Build a plugin.md",
-        "Plugins/Getting started/Anatomy of a plugin.md",
-        "Plugins/Getting started/Development workflow.md",
-        "Plugins/Getting started/Mobile development.md",
-        "Plugins/Getting started/Third-party tools.md",
-        "Plugins/Getting started/Use React in your plugin.md",
-        "Plugins/Getting started/Use Svelte in your plugin.md",
-        "Plugins/User interface",
-        "Plugins/Editor",
-        "Plugins/Editor/Editor.md",
-        "Plugins/Editor/Markdown post processing.md",
-        "Plugins/Editor/Editor extensions.md",
-        "Plugins/Editor/Decorations.md",
-        "Plugins/Editor/State fields.md",
-        "Plugins/Editor/State management.md",
-        "Plugins/Editor/View plugins.md",
-        "Plugins/Editor/Viewport.md",
-        "Plugins/Editor/Communicating with editor extensions.md",
-        "Plugins/Releasing",
-        "Plugins/Releasing/Release your plugin with GitHub Actions.md",
-        "Plugins/Releasing/Submit your plugin.md",
-        "Plugins/Releasing/Submission requirements for plugins.md",
-        "Plugins/Releasing/Plugin guidelines.md",
-        "Plugins/Releasing/Beta-testing plugins.md",
-        "Plugins/Events.md",
-        "Plugins/Vault.md",
-        "Themes",
-        "Themes/Obsidian Publish themes/About Obsidian Publish themes.md",
-        "Themes/Obsidian Publish themes/Build a Publish theme.md",
-        "Themes/Obsidian Publish themes/Best practices for Publish themes.md",
-        "Reference",
-        "Assets",
-        "Developer policies.md",
-        "Home.md",
-        "publish.css"
-    ],
-    "logo": "Assets/obsidian-lockup-docs.svg"
-}
-
 const vault = "Developer Documentation-caa27d6312fe5c26ebc657cc609543be"
 // const vault = "Obsidian Help-f786db9fac45774fa4f0d8112e232d67"
 
-const SiteCache = JSON.parse(Deno.readTextFileSync(`vaults/${vault}/cache.json`))
+const SiteOptions = JSON.parse(Deno.readTextFileSync(`vaults/${vault}/_options.json`))
+const SiteCache = JSON.parse(Deno.readTextFileSync(`vaults/${vault}/_cache_gen.json`))
+
 
 export function options(_req: Request) {
     return jsonResponse(SiteOptions)
