@@ -1,0 +1,153 @@
+{
+  "main": {
+    "id": "84ef1b63f5083df7",
+    "type": "split",
+    "children": [
+      {
+        "id": "daae88c16454078f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b93e2a640dc5e2d3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Obsidian Help-f786db9fac45774fa4f0d8112e232d67/Home.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c96b3f97fce8a76a",
+    "type": "split",
+    "children": [
+      {
+        "id": "2d5ac9f6ae13fd10",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "67273c4a5a35f9e7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "cffd3fe2d6149f71",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "3d3dfa921ff35b44",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "5ec9f5f16481e41c",
+    "type": "split",
+    "children": [
+      {
+        "id": "6e447117e927de93",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "575bd78697928f97",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Obsidian Help-f786db9fac45774fa4f0d8112e232d67/Home.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "367511b93a0b9b02",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Obsidian Help-f786db9fac45774fa4f0d8112e232d67/Home.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "f68968d6a6d58fbe",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "03f68d24f19e012c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Obsidian Help-f786db9fac45774fa4f0d8112e232d67/Home.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "b93e2a640dc5e2d3",
+  "lastOpenFiles": [
+    "Developer Documentation-caa27d6312fe5c26ebc657cc609543be/Home.md"
+  ]
+}
